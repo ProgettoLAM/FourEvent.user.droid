@@ -30,5 +30,25 @@ public class User {
         private String mName;
 
         private String mPassword;
+
+        private Builder(final String id, final String email, final String name,
+                        final String password){
+
+            this.mId = id;
+            this.mEmail = email;
+            this.mName = name;
+            this.mPassword = password;
+        }
+
+        public static Builder create(final String id, final String email, final String name,
+                                     final String password){
+
+            return new Builder(id,email,name,password);
+        }
+
+        public User build(){
+
+            return new User(mId,mEmail,mName,mPassword);
+        }
     }
 }
