@@ -39,12 +39,24 @@
         android:drawableLeft="@drawable/ic_email"
         android:drawablePadding="5dp"/>
 
+    <ImageView
+        android:id="@+id/ic_alert_email"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_warning"
+        android:layout_toRightOf="@id/email_reg"
+        android:layout_below="@id/title_reg"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="10dp"
+        android:visibility="invisible"
+       />
+
     <EditText
         android:id="@+id/pass_reg"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:textColor="#fff"
-        android:hint="Password"
+        android:hint=" Password"
         android:textColorHint="#BDBDBD"
         android:inputType="textPassword"
         android:textSize="16sp"
@@ -54,12 +66,24 @@
         android:background="@drawable/bottom_border"
         android:drawableLeft="@drawable/ic_password"/>
 
+    <ImageView
+        android:id="@+id/ic_alert_pass"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_warning"
+        android:layout_toRightOf="@id/pass_reg"
+        android:layout_below="@id/email_reg"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="10dp"
+        android:visibility="invisible"
+        />
+
     <EditText
         android:id="@+id/pass2_reg"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:textColor="#fff"
-        android:hint="Ripeti password"
+        android:hint=" Ripeti password"
         android:textColorHint="#BDBDBD"
         android:inputType="textPassword"
         android:textSize="16sp"
@@ -77,6 +101,7 @@
         android:layout_toRightOf="@id/pass2_reg"
         android:layout_below="@id/pass_reg"
         android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
         android:visibility="invisible"/>
 
     <ImageView
@@ -87,6 +112,7 @@
         android:layout_toRightOf="@id/pass2_reg"
         android:layout_below="@id/pass_reg"
         android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
         android:visibility="invisible"/>
 
 
