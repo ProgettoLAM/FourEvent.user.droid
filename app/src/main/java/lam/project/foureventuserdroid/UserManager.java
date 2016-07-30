@@ -72,4 +72,21 @@ public final class UserManager {
 
         return mChacedUser;
     }
+
+    public boolean save(@NonNull final User user){
+
+        mChacedUser = user;
+
+        try{
+
+            JSONObject item = user.toJson();
+            return mSharedPreferences.edit().putString(User.Keys.USER,item.toString()).commit();
+        }
+        catch (JSONException js){
+
+            js.printStackTrace();
+            return false;
+        }
+
+    }
 }
