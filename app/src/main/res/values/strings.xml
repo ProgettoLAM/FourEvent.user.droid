@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FourEvent.user.droid</string>
+    <string name="shared_preferences_name">FourEvent</string>
 </resources>

@@ -2,6 +2,10 @@ package lam.project.foureventuserdroid;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import lam.project.foureventuserdroid.model.User;
 
@@ -10,13 +14,19 @@ import lam.project.foureventuserdroid.model.User;
  */
 public final class UserManager {
 
+    private final String SHARED_PREFERENCES_NAME;
+
     private static UserManager sInstance;
 
     private final SharedPreferences mSharedPreferences;
 
+    private User mChacedUser;
+
     private UserManager(final Context context){
 
-        mSharedPreferences = context.getSharedPreferences(User.Keys.USER,context.MODE_PRIVATE);
+        SHARED_PREFERENCES_NAME = context.getResources().getString(R.string.shared_preferences_name);
+
+        mSharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
     public static UserManager get(Context context){
@@ -37,5 +47,29 @@ public final class UserManager {
         }
 
         return sInstance;
+    }
+
+    public @NonNull User getUser(){
+
+        if(mChacedUser != null){
+
+            return mChacedUser;
+        }
+
+        final String userAsString = mSharedPreferences.getString(User.Keys.USER,null);
+
+        if (userAsString != null){
+
+            try{
+
+                mChacedUser = User.fromJson(new JSONObject(userAsString));
+            }
+            catch (JSONException je){
+
+                je.printStackTrace();
+            }
+        }
+
+        return mChacedUser;
     }
 }
