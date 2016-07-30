@@ -24,20 +24,6 @@
         android:layout_centerHorizontal="true" />
 
     <EditText
-        android:id="@+id/name_reg"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:textColor="#fff"
-        android:hint="Nome e cognome"
-        android:textColorHint="#BDBDBD"
-        android:inputType="text"
-        android:textSize="16sp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/title_reg"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/bottom_border"/>
-
-    <EditText
         android:id="@+id/email_reg"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -47,9 +33,11 @@
         android:inputType="textWebEmailAddress"
         android:textSize="16sp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/name_reg"
+        android:layout_below="@id/title_reg"
         android:layout_marginTop="15dp"
-        android:background="@drawable/bottom_border"/>
+        android:background="@drawable/bottom_border"
+        android:drawableLeft="@drawable/ic_email"
+        android:drawablePadding="5dp"/>
 
     <EditText
         android:id="@+id/pass_reg"
@@ -63,7 +51,43 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/email_reg"
         android:layout_marginTop="15dp"
-        android:background="@drawable/bottom_border"/>
+        android:background="@drawable/bottom_border"
+        android:drawableLeft="@drawable/ic_password"/>
+
+    <EditText
+        android:id="@+id/pass2_reg"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:hint="Ripeti password"
+        android:textColorHint="#BDBDBD"
+        android:inputType="textPassword"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/pass_reg"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bottom_border"
+        android:drawableLeft="@drawable/ic_password"/>
+
+    <ImageView
+        android:id="@+id/ic_check_reg"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_check"
+        android:layout_toRightOf="@id/pass2_reg"
+        android:layout_below="@id/pass_reg"
+        android:layout_marginTop="5dp"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/ic_close_reg"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_close"
+        android:layout_toRightOf="@id/pass2_reg"
+        android:layout_below="@id/pass_reg"
+        android:layout_marginTop="5dp"
+        android:visibility="invisible"/>
 
 
     <Button
@@ -72,7 +96,7 @@
         android:layout_height="wrap_content"
         android:text="Crea Account"
         android:layout_marginTop="15dp"
-        android:layout_below="@id/pass_reg"
+        android:layout_below="@id/pass2_reg"
         android:background="#ef5350"
         android:textColor="#fff"
         android:textSize="16sp"
