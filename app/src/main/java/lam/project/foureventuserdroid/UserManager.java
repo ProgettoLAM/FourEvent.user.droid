@@ -14,8 +14,6 @@ import lam.project.foureventuserdroid.model.User;
  */
 public final class UserManager {
 
-    private final String SHARED_PREFERENCES_NAME;
-
     private static UserManager sInstance;
 
     private final SharedPreferences mSharedPreferences;
@@ -24,7 +22,7 @@ public final class UserManager {
 
     private UserManager(final Context context){
 
-        SHARED_PREFERENCES_NAME = context.getResources().getString(R.string.shared_preferences_name);
+        String SHARED_PREFERENCES_NAME = context.getResources().getString(R.string.shared_preferences_name);
 
         mSharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
