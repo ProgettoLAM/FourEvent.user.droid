@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import lam.project.foureventuserdroid.model.User;
 
 /**
  * Created by Vale on 30/07/2016.
@@ -23,8 +27,9 @@ public class RegistrationActivity extends AppCompatActivity {
     private Button sendAccount;
     private ImageView ic_close;
     private ImageView ic_check;
+    private ImageView ic_warning_email;
+    private ImageView ic_warning_password;
 
-    private TextView txtLogin;
 
     private String email;
     private String password;
@@ -43,29 +48,61 @@ public class RegistrationActivity extends AppCompatActivity {
 
         ic_close = (ImageView) findViewById(R.id.ic_close_reg);
         ic_check = (ImageView) findViewById(R.id.ic_check_reg);
+        ic_warning_email = (ImageView) findViewById(R.id.ic_alert_email);
+        ic_warning_password = (ImageView) findViewById(R.id.ic_alert_pass);
 
         sendAccount = (Button) findViewById(R.id.btn_account);
 
-        txtLogin = (TextView) findViewById(R.id.txt_login);
+        emailField.addTextChangedListener(watcher);
+        passwordField.addTextChangedListener(watcher);
+        passwordField2.addTextChangedListener(watcher);
     }
 
     public void register(final View view){
 
+        email = emailField.getText().toString();
         password = passwordField.getText().toString();
-        password2 = passwordField2.getText().toString();
 
-        if (password.equals(password2)) {
-            ic_close.setVisibility(View.INVISIBLE);
-            ic_check.setVisibility(View.VISIBLE);
-        } else if (!password.equals(password2)) {
-
+        if(email.equals("")) {
+            ic_warning_email.setVisibility(View.VISIBLE);
+        }
+        if(password.equals("")) {
+            ic_warning_password.setVisibility(View.VISIBLE);
         }
     }
 
-    public void goToLogin(final View view){
+    public void goToLogin(final View view) {
 
-        final Intent intent = new Intent(this,LoginActivity.class);
+        final Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
+
+    private final TextWatcher watcher = new TextWatcher() {
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if(passwordField.getText().toString().equals(passwordField2.getText().toString()) && !passwordField.getText().toString().equals("")){
+                ic_check.setVisibility(View.VISIBLE);
+                ic_close.setVisibility(View.INVISIBLE);
+
+            }
+            else if(!passwordField.getText().toString().equals(passwordField2.getText().toString())){
+                ic_close.setVisibility(View.VISIBLE);
+                ic_check.setVisibility(View.INVISIBLE);
+
+            }
+        }
+
+        public void afterTextChanged(Editable s) {
+            if (emailField.getText().toString().length() != 0) {
+                ic_warning_email.setVisibility(View.INVISIBLE);
+            }
+            if(passwordField.getText().toString().length() != 0){
+                ic_warning_password.setVisibility(View.INVISIBLE);
+            }
+        }
+    };
 }
