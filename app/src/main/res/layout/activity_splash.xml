@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/splash_imageview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/splash_size"
+        android:layout_height="@dimen/splash_size"
         android:src="@mipmap/ic_launcher"
         android:layout_centerInParent="true"/>
 
