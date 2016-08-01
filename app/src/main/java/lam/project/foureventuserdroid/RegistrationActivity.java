@@ -3,6 +3,7 @@ package lam.project.foureventuserdroid;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,7 +12,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import lam.project.foureventuserdroid.model.User;
 
@@ -34,6 +50,8 @@ public class RegistrationActivity extends AppCompatActivity {
     private String email;
     private String password;
     private String password2;
+
+    private final static String TAG = "RegistrationActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,17 +76,65 @@ public class RegistrationActivity extends AppCompatActivity {
         passwordField2.addTextChangedListener(watcher);
     }
 
-    public void register(final View view){
-
+    public boolean controlUser() {
         email = emailField.getText().toString();
         password = passwordField.getText().toString();
+        password2 = passwordField2.getText().toString();
 
         if(email.equals("")) {
             ic_warning_email.setVisibility(View.VISIBLE);
+            return false;
         }
         if(password.equals("")) {
             ic_warning_password.setVisibility(View.VISIBLE);
+            return false;
         }
+        if(password2.equals("") || !password.equals(password2)) {
+            return false;
+        }
+        else
+            return true;
+    }
+
+    public  void register(final View view){
+        boolean control = controlUser();
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        if(control) {
+                try {
+                    final User user = User.Builder.create(email,password).build();
+                    String url = "http://annina.cs.unibo.it:8080/api/user";
+
+                    JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.PUT, url, user.toJson(), new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                Snackbar snackbar = Snackbar
+                                        .make(view, response.getString("message"), Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                            }
+                            catch (JSONException ex) {}
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {}
+
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("email", user.email);
+                            params.put("password", user.password);
+
+                            return params;
+                        }
+                    };
+                    queue.add(jsonRequest);
+
+                }
+                catch (JSONException ex) {}
+            }
+
     }
 
     public void goToLogin(final View view) {
