@@ -2,35 +2,24 @@ package lam.project.foureventuserdroid;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import lam.project.foureventuserdroid.model.User;
-import lam.project.foureventuserdroid.utils.UserRequest;
+import lam.project.foureventuserdroid.utils.CustomJsonRequest;
 import lam.project.foureventuserdroid.utils.VolleyRequest;
 
 /**
@@ -99,30 +88,39 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     public  void register(final View view){
-        boolean control = controlUser();
 
-        if(control) {
-                try {
-                    final User user = User.Builder.create(email,password).build();
-                    String url = "http://annina.cs.unibo.it:8080/api/user";
-                    UserRequest request = new UserRequest(Request.Method.PUT, url, user.toJson().toString(), new Response.Listener<User>() {
-                        @Override
-                        public void onResponse(User response) {
-                            Snackbar snackbar = Snackbar
-                                    .make(view, response.email, Snackbar.LENGTH_LONG);
+        if(controlUser()) {
+
+            try {
+
+                final User user = User.Builder.create(email, password).build();
+                String url = getResources().getString(R.string.backend_uri_put_user);
+
+
+                CustomJsonRequest request = new CustomJsonRequest(Request.Method.PUT, url, user.toJson(),
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+
+                                Snackbar snackbar = Snackbar
+                                        .make(view, response.toString(), Snackbar.LENGTH_LONG);
+
                                 snackbar.show();
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
 
-                        }
-                    });
-                    VolleyRequest.get(this).add(request);
+                    }
                 }
-                catch (JSONException ex) {}
-            }
+                );
 
+                VolleyRequest.get(this).add(request);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void goToLogin(final View view) {

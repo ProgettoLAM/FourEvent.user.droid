@@ -17,9 +17,11 @@ public class VolleyRequest {
     private static Context context;
 
     private VolleyRequest(Context context) {
-        this.context = context;
+
+        VolleyRequest.context = context;
 
         if(mRequestQueue == null) {
+
             mRequestQueue = initRequestQueue();
             mRequestQueue.start();
         }
@@ -31,17 +33,31 @@ public class VolleyRequest {
 
     //Singleton, si crea una sola istanza della classe
     public static VolleyRequest get(Context context) {
+
         if(instance == null) {
+
             instance = new VolleyRequest(context);
         }
-        return instance;
 
+        return instance;
     }
+
+    public static VolleyRequest get(){
+
+        if(instance == null){
+
+            throw new IllegalStateException("Context not initialized");
+        }
+
+        return instance;
+    }
+
     public void add(Request request) {
         mRequestQueue.add(request);
     }
 
     public interface QueueProvider {
+
         RequestQueue getRequestQueue();
     }
 }
