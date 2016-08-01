@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.UserRequest;
+import lam.project.foureventuserdroid.utils.VolleyRequest;
 
 /**
  * Created by Vale on 30/07/2016.
@@ -98,39 +100,25 @@ public class RegistrationActivity extends AppCompatActivity {
 
     public  void register(final View view){
         boolean control = controlUser();
-        RequestQueue queue = Volley.newRequestQueue(this);
 
         if(control) {
                 try {
                     final User user = User.Builder.create(email,password).build();
                     String url = "http://annina.cs.unibo.it:8080/api/user";
-
-                    JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.PUT, url, user.toJson(), new Response.Listener<JSONObject>() {
+                    UserRequest request = new UserRequest(Request.Method.PUT, url, user.toJson().toString(), new Response.Listener<User>() {
                         @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                Snackbar snackbar = Snackbar
-                                        .make(view, response.getString("message"), Snackbar.LENGTH_LONG);
+                        public void onResponse(User response) {
+                            Snackbar snackbar = Snackbar
+                                    .make(view, response.email, Snackbar.LENGTH_LONG);
                                 snackbar.show();
-                            }
-                            catch (JSONException ex) {}
                         }
                     }, new Response.ErrorListener() {
                         @Override
-                        public void onErrorResponse(VolleyError error) {}
+                        public void onErrorResponse(VolleyError error) {
 
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            Map<String, String> params = new HashMap<String, String>();
-                            params.put("email", user.email);
-                            params.put("password", user.password);
-
-                            return params;
                         }
-                    };
-                    queue.add(jsonRequest);
-
+                    });
+                    VolleyRequest.get(this).add(request);
                 }
                 catch (JSONException ex) {}
             }
