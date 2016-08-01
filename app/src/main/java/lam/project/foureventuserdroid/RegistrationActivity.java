@@ -98,21 +98,24 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
                 CustomJsonRequest request = new CustomJsonRequest(Request.Method.PUT, url, user.toJson(),
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
 
-                                Snackbar snackbar = Snackbar
-                                        .make(view, response.toString(), Snackbar.LENGTH_LONG);
+                            Snackbar snackbar = Snackbar
+                                    .make(view, response.toString(), Snackbar.LENGTH_LONG);
 
-                                snackbar.show();
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                            snackbar.show();
 
+                            next(user);
+
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
                     }
-                }
                 );
 
                 VolleyRequest.get(this).add(request);
@@ -126,6 +129,14 @@ public class RegistrationActivity extends AppCompatActivity {
     public void goToLogin(final View view) {
 
         final Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void next(User user){
+
+        boolean x = UserManager.get(this).save(user);
+
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
@@ -157,4 +168,5 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         }
     };
+
 }

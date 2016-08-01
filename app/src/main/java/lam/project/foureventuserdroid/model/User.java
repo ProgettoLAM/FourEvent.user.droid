@@ -24,7 +24,6 @@ public class User {
     public static User fromJson(final JSONObject jsonObject) throws JSONException{
 
         final String email = jsonObject.getString(Keys.EMAIL);
-        final String name = jsonObject.getString(Keys.NAME);
         final String password = jsonObject.getString(Keys.PASSWORD);
 
         return Builder.create(email,password).build();
@@ -35,7 +34,6 @@ public class User {
         final JSONObject jsonObject = new JSONObject();
 
         jsonObject.put(Keys.EMAIL, email);
-        jsonObject.put(Keys.NAME, name);
         jsonObject.put(Keys.PASSWORD, password);
 
         return jsonObject;
