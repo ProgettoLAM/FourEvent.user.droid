@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import lam.project.foureventuserdroid.model.User;
+
 /**
  * Created by Vale on 30/07/2016.
  */
