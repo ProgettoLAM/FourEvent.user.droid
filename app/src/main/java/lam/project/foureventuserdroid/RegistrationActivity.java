@@ -1,7 +1,10 @@
 package lam.project.foureventuserdroid;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -87,9 +90,20 @@ public class RegistrationActivity extends AppCompatActivity {
             return true;
     }
 
+
+
     public  void register(final View view){
 
         if(controlUser()) {
+
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+
+            progressDialog.setMessage("Registrazione in corso...");
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+
+            progressDialog.show();
 
             try {
 
@@ -98,21 +112,24 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
                 CustomJsonRequest request = new CustomJsonRequest(Request.Method.PUT, url, user.toJson(),
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
 
-                                Snackbar snackbar = Snackbar
-                                        .make(view, response.toString(), Snackbar.LENGTH_LONG);
+                            Snackbar snackbar = Snackbar
+                                    .make(view, response.toString(), Snackbar.LENGTH_LONG);
 
-                                snackbar.show();
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                            snackbar.show();
 
+                            progressDialog.hide();
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            progressDialog.hide();
+                        }
                     }
-                }
                 );
 
                 VolleyRequest.get(this).add(request);
