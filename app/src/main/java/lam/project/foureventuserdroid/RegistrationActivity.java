@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -34,12 +35,13 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText emailField;
     private EditText passwordField;
     private EditText passwordField2;
-    private Button sendAccount;
+
     private ImageView ic_close;
     private ImageView ic_check;
     private ImageView ic_warning_email;
     private ImageView ic_warning_password;
 
+    private TextView min_char_pass;
 
     private String email;
     private String password;
@@ -58,12 +60,12 @@ public class RegistrationActivity extends AppCompatActivity {
 
         passwordField2 = (EditText) findViewById(R.id.pass2_reg);
 
+        min_char_pass = (TextView) findViewById(R.id.min_char_pass);
+
         ic_close = (ImageView) findViewById(R.id.ic_close_reg);
         ic_check = (ImageView) findViewById(R.id.ic_check_reg);
         ic_warning_email = (ImageView) findViewById(R.id.ic_alert_email);
         ic_warning_password = (ImageView) findViewById(R.id.ic_alert_pass);
-
-        sendAccount = (Button) findViewById(R.id.btn_account);
 
         emailField.addTextChangedListener(watcher);
         passwordField.addTextChangedListener(watcher);
@@ -181,6 +183,12 @@ public class RegistrationActivity extends AppCompatActivity {
             }
             if(passwordField.getText().toString().length() != 0){
                 ic_warning_password.setVisibility(View.INVISIBLE);
+            }
+            if(passwordField.getText().toString().length() != 0 && passwordField.getText().toString().length() < 8){
+                min_char_pass.setVisibility(View.VISIBLE);
+            }
+            if(passwordField.getText().toString().length() >= 8){
+                min_char_pass.setVisibility(View.INVISIBLE);
             }
         }
     };

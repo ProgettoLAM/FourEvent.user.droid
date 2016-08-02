@@ -23,6 +23,7 @@
         android:layout_below="@+id/logoReg"
         android:layout_centerHorizontal="true" />
 
+
     <EditText
         android:id="@+id/email_log"
         android:layout_width="250dp"
@@ -39,6 +40,18 @@
         android:drawableLeft="@drawable/ic_email"
         android:drawablePadding="5dp"/>
 
+    <ImageView
+        android:id="@+id/ic_alert_email"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_warning"
+        android:layout_toRightOf="@id/email_log"
+        android:layout_below="@id/title_log"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="10dp"
+        android:visibility="invisible"
+        />
+
     <EditText
         android:id="@+id/pass_log"
         android:layout_width="250dp"
@@ -54,11 +67,24 @@
         android:background="@drawable/bottom_border"
         android:drawableLeft="@drawable/ic_password"/>
 
+    <ImageView
+        android:id="@+id/ic_alert_pass"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_warning"
+        android:layout_toRightOf="@id/pass_log"
+        android:layout_below="@id/email_log"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="10dp"
+        android:visibility="invisible"
+        />
+
     <Button
         android:id="@+id/btn_login"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="Accedi"
+        android:onClick="login"
         android:layout_marginTop="15dp"
         android:layout_below="@id/pass_log"
         android:background="#ef5350"
@@ -82,6 +108,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Registrati"
+        android:onClick="goToRegistration"
         android:textColor="#fff"
         android:textSize="16sp"
         android:textStyle="bold"
