@@ -1,4 +1,4 @@
-package lam.project.foureventuserdroid;
+package lam.project.foureventuserdroid.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
 
 /**

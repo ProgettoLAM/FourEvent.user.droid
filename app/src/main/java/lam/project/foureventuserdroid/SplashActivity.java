@@ -1,8 +1,6 @@
 package lam.project.foureventuserdroid;
 
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
-import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.UserManager;
 
 public class SplashActivity extends AppCompatActivity {
 

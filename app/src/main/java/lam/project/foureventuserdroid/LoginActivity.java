@@ -7,12 +7,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -23,6 +20,7 @@ import org.json.JSONObject;
 
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.CustomJsonRequest;
+import lam.project.foureventuserdroid.utils.UserManager;
 import lam.project.foureventuserdroid.utils.VolleyRequest;
 
 /**
