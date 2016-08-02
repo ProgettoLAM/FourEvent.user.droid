@@ -56,6 +56,7 @@ public class SplashActivity extends AppCompatActivity {
         Intent intent;
 
         if(exist)
+            //TODO controllare che esista anche online!!
             intent = new Intent(this,MainActivity.class);
         else
             intent = new Intent(this,RegistrationActivity.class);

@@ -121,6 +121,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
                             snackbar.show();
 
+                            next(user);
+
                             progressDialog.hide();
                         }
                     }, new Response.ErrorListener() {
@@ -128,9 +130,9 @@ public class RegistrationActivity extends AppCompatActivity {
                         public void onErrorResponse(VolleyError error) {
 
                             progressDialog.hide();
+
                         }
-                    }
-                );
+                    });
 
                 VolleyRequest.get(this).add(request);
 
@@ -143,6 +145,14 @@ public class RegistrationActivity extends AppCompatActivity {
     public void goToLogin(final View view) {
 
         final Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    private void next(User user){
+
+        UserManager.get(this).save(user);
+
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
@@ -174,4 +184,5 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         }
     };
+
 }
