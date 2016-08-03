@@ -1,7 +1,6 @@
 package lam.project.foureventuserdroid.fragment.eventFragment;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -21,8 +20,8 @@ import java.util.List;
 
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.Event;
-import lam.project.foureventuserdroid.utils.EventListRequest;
-import lam.project.foureventuserdroid.utils.VolleyRequest;
+import lam.project.foureventuserdroid.utils.connection.EventListRequest;
+import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 
 
 /**
@@ -42,6 +41,7 @@ public class AllEventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         mModel = new ArrayList<>();
         setModel();
 
@@ -79,11 +79,6 @@ public class AllEventsFragment extends Fragment {
                         Snackbar.make(getView(), "Error: " + error.getLocalizedMessage(), Snackbar.LENGTH_SHORT)
                                 .setAction("action", null)
                                 .show();
-                        mModel = new ArrayList<>();
-                        mModel.add(Event.Builder.create("title", "date")
-                               .withAddress("address")
-                                .withTag("tag")
-                                .build());
                     }
         });
 
@@ -130,10 +125,10 @@ public class AllEventsFragment extends Fragment {
 
         public void bind(Event event){
 
-            mTitleList.setText(event.title);
-            mAddressList.setText(event.address);
-            mDateList.setText(event.date);
-            mTagList.setText(event.tag);
+            mTitleList.setText(event.mTitle);
+            mAddressList.setText(event.mAddress);
+            mDateList.setText(event.mDate);
+            mTagList.setText(event.mTag);
         }
     }
 

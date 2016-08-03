@@ -19,11 +19,10 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import lam.project.foureventuserdroid.fragment.eventFragment.AllEventsFragment;
 import lam.project.foureventuserdroid.model.User;
-import lam.project.foureventuserdroid.utils.CustomJsonRequest;
+import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.UserManager;
-import lam.project.foureventuserdroid.utils.VolleyRequest;
+import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 
 /**
  * Created by Vale on 30/07/2016.
@@ -112,7 +111,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 String url = getResources().getString(R.string.backend_uri_put_user);
 
 
-                CustomJsonRequest request = new CustomJsonRequest(Request.Method.PUT, url, user.toJson(),
+                CustomRequest request = new CustomRequest(Request.Method.PUT, url, user.toJson(),
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {

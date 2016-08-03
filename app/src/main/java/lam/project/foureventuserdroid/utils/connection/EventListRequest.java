@@ -1,4 +1,4 @@
-package lam.project.foureventuserdroid.utils;
+package lam.project.foureventuserdroid.utils.connection;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;

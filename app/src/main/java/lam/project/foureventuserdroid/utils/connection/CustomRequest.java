@@ -1,4 +1,4 @@
-package lam.project.foureventuserdroid.utils;
+package lam.project.foureventuserdroid.utils.connection;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -19,12 +19,12 @@ import lam.project.foureventuserdroid.model.User;
  * Created by Vale on 01/08/2016.
  */
 
-public class CustomJsonRequest extends JsonObjectRequest{
+public class CustomRequest extends JsonObjectRequest{
 
 
-    public CustomJsonRequest(int method, String url, JSONObject jsonRequest,
-                             Response.Listener<JSONObject> listener,
-                             Response.ErrorListener errorListener) {
+    public CustomRequest(int method, String url, JSONObject jsonRequest,
+                         Response.Listener<JSONObject> listener,
+                         Response.ErrorListener errorListener) {
         super(method, url, jsonRequest, listener, errorListener);
     }
 

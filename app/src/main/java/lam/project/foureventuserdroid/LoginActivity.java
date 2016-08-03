@@ -19,9 +19,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import lam.project.foureventuserdroid.model.User;
-import lam.project.foureventuserdroid.utils.CustomJsonRequest;
+import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.UserManager;
-import lam.project.foureventuserdroid.utils.VolleyRequest;
+import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 
 /**
  * Created by Vale on 31/07/2016.
@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 final JSONObject user = new JSONObject("{\"email\": \""+email+"\", \"password\" : \""+password+"\"}");
 
-                CustomJsonRequest request = new CustomJsonRequest(Request.Method.POST, url, user,
+                CustomRequest request = new CustomRequest(Request.Method.POST, url, user,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
