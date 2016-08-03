@@ -3,13 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="lam.project.foureventuserdroid.SplashActivity">
+    tools:context="lam.project.foureventuserdroid.SplashActivity"
+    android:background="#66BB6A">
 
     <ImageView
         android:id="@+id/splash_imageview"
+        android:layout_width="@dimen/splash_size"
+        android:layout_height="@dimen/splash_size"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginTop="206dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/nameApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"
-        android:layout_centerInParent="true"/>
+        android:text="FourEvent"
+        android:textColor="#fff"
+        android:textSize="32sp"
+        android:fontFamily="Helvetica"
+        android:layout_below="@id/splash_imageview"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tutti gli eventi a portata di touch"
+        android:textColor="#fff"
+        android:textSize="16sp"
+        android:fontFamily="Helvetica"
+        android:layout_below="@id/nameApp"
+        android:layout_centerHorizontal="true"/>
+
 
 </RelativeLayout>
