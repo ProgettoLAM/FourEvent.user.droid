@@ -18,6 +18,7 @@
     <string name="action_logout">Logout</string>
 
     <string name="title_events">Events</string>
+    <string name="title_categories">Argomenti di interesse</string>
 
     <!-- TODO string -->
     <string name="todo_events">TODO: Recycler view events</string>

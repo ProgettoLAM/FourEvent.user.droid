@@ -92,11 +92,11 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
 
-    public  void register(final View view){
+    public void register(final View view){
 
         if(controlUser()) {
 
-            final ProgressDialog progressDialog = new ProgressDialog(this);
+            /*final ProgressDialog progressDialog = new ProgressDialog(this);
 
             progressDialog.setMessage("Registrazione in corso...");
             progressDialog.setIndeterminate(true);
@@ -144,7 +144,12 @@ public class RegistrationActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }*/
+            Intent intent = new Intent(this, CategoriesActivity.class);
+            startActivity(intent);
+            finish();
         }
+
     }
 
     public void goToLogin(final View view) {
@@ -157,7 +162,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         UserManager.get(this).save(user);
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, CategoriesActivity.class);
         startActivity(intent);
         finish();
     }
