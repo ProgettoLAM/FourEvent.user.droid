@@ -1,6 +1,5 @@
 package lam.project.foureventuserdroid;
 
-import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -14,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import lam.project.foureventuserdroid.fragment.EventsFragment;
 import lam.project.foureventuserdroid.fragment.FavouriteFragment;
@@ -21,15 +21,21 @@ import lam.project.foureventuserdroid.fragment.ParticipationFragment;
 import lam.project.foureventuserdroid.fragment.ProfileFragment;
 import lam.project.foureventuserdroid.fragment.SettingsFragment;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
+import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.UserManager;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        user = UserManager.get(this).getUser();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_events);
@@ -45,6 +51,9 @@ public class MainActivity extends AppCompatActivity
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -52,6 +61,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View header = navigationView.getHeaderView(0);
+        TextView text = (TextView) header.findViewById(R.id.name);
+
+        text.setText(user.email);
 
         //Setto la pagina principale come quella di ricerca degli eventi
         getSupportFragmentManager().beginTransaction()
