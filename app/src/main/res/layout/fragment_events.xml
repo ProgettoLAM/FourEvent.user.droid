@@ -5,7 +5,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <lam.project.foureventuserdroid.utils.SlidingTabLayout
+    <lam.project.foureventuserdroid.utils.tabs.SlidingTabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

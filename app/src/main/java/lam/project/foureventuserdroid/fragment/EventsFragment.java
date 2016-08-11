@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import lam.project.foureventuserdroid.R;
-import lam.project.foureventuserdroid.utils.SlidingTabLayout;
-import lam.project.foureventuserdroid.utils.ViewPagerAdapter;
+import lam.project.foureventuserdroid.utils.tabs.SlidingTabLayout;
+import lam.project.foureventuserdroid.utils.tabs.ViewPagerAdapter;
 
 
 /**

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import com.github.fcannizzaro.materialstepper.AbstractStep;
 import com.github.fcannizzaro.materialstepper.style.TabStepper;
 
-import lam.project.foureventuserdroid.utils.StepSample;
+import lam.project.foureventuserdroid.utils.complete_profile.StepSample;
 
 public class CompleteProfileActivity extends TabStepper {
 
@@ -16,13 +16,11 @@ public class CompleteProfileActivity extends TabStepper {
 
         setErrorTimeout(1500);
         setLinear(false);
-        setTitle("Tab Stepper <small>(Classic Tab) </small>");
-        setAlternativeTab(false);
+        setTitle("Completa il profilo");
+        setAlternativeTab(true);
         setDisabledTouch();
         setPreviousVisible();
 
-        addStep(createFragment(new StepSample()));
-        addStep(createFragment(new StepSample()));
         addStep(createFragment(new StepSample()));
         addStep(createFragment(new StepSample()));
         addStep(createFragment(new StepSample()));

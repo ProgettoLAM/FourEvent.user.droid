@@ -1,4 +1,4 @@
-package lam.project.foureventuserdroid.utils;
+package lam.project.foureventuserdroid.utils.complete_profile;
 
 import android.os.Bundle;
 import android.text.Html;
@@ -20,7 +20,7 @@ public class StepSample extends AbstractStep {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.step_profile, container, false);
+        View v = inflater.inflate(R.layout.step1_info, container, false);
         button = (Button) v.findViewById(R.id.button);
 
         if (savedInstanceState != null)
@@ -47,12 +47,25 @@ public class StepSample extends AbstractStep {
 
     @Override
     public String name() {
-        return "Tab " + getArguments().getInt("position", 0);
+
+        for(int i = 0; i < getArguments().size(); i++) {
+            switch (getArguments().getInt("position", i)) {
+                case 1:
+                    return "Dati personali";
+                case 2:
+                    return "Categorie";
+                case 3:
+                    return "Microcrediti";
+
+            }
+        }
+        return null;
+        //return "Tab " + getArguments().getInt("position", 0);
     }
 
     @Override
     public boolean isOptional() {
-        return true;
+        return false;
     }
 
 
@@ -82,6 +95,17 @@ public class StepSample extends AbstractStep {
 
     @Override
     public String error() {
-        return "<b>You must click!</b> <small>this is the condition!</small>";
+        for(int i = 0; i < getArguments().size(); i++) {
+            switch (getArguments().getInt("position", i)) {
+                case 1:
+                    return "Compila i dati";
+                case 2:
+                    return "Scegli almeno una categoria";
+                case 3:
+                    return "Scopri cosa sono i microcrediti";
+
+            }
+        }
+        return null;
     }
 }
