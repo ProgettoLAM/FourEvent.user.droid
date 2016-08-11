@@ -106,9 +106,11 @@ public class RegistrationActivity extends AppCompatActivity {
 
             progressDialog.show();
 
+            final User user = User.Builder.create(email, password).build();
+
             try {
 
-                final User user = User.Builder.create(email, password).build();
+
                 String url = getResources().getString(R.string.backend_uri_put_user);
 
 
@@ -144,13 +146,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
             } catch (JSONException e) {
                 e.printStackTrace();
+
             }
-
-            Intent intent = new Intent(this, CompleteProfileActivity.class);
-            startActivity(intent);
-            finish();
         }
-
     }
 
     public void goToLogin(final View view) {
@@ -161,9 +159,11 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void next(User user){
 
-        UserManager.get(this).save(user);
+        //UserManager.get(this).save(user);
 
         Intent intent = new Intent(this, CompleteProfileActivity.class);
+
+        intent.putExtra(User.Keys.USER,user);
         startActivity(intent);
         finish();
     }

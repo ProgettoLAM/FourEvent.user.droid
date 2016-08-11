@@ -1,12 +1,15 @@
 package lam.project.foureventuserdroid.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * Created by spino on 29/07/16.
  */
-public class User {
+public class User implements Parcelable{
 
     public final String email;
 
@@ -20,6 +23,24 @@ public class User {
         this.name = name;
         this.password = password;
     }
+
+    protected User(Parcel in) {
+        email = in.readString();
+        name = in.readString();
+        password = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public static User fromJson(final JSONObject jsonObject) throws JSONException{
 
@@ -37,6 +58,18 @@ public class User {
         jsonObject.put(Keys.PASSWORD, password);
 
         return jsonObject;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(email);
+        dest.writeString(name);
+        dest.writeString(password);
     }
 
     public static class Keys{
