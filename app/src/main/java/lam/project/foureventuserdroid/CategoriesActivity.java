@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import lam.project.foureventuserdroid.model.Cateogory;
-import lam.project.foureventuserdroid.utils.CategoryManager;
+import lam.project.foureventuserdroid.utils.complete_profile.CategoryManager;
 
 /**
  * Created by Vale on 09/08/2016.
