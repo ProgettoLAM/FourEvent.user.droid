@@ -15,7 +15,7 @@ public class CompleteProfileActivity extends TabStepper {
 
         setErrorTimeout(1500);
         setLinear(false);
-        setTitle("Completa il profilo");
+        setTitle("");
         setAlternativeTab(true);
         setDisabledTouch();
         setPreviousVisible();
