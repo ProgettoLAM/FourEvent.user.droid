@@ -86,7 +86,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         if(controlUser()) {
 
-            /*final ProgressDialog progressDialog = new ProgressDialog(this);
+            final ProgressDialog progressDialog = new ProgressDialog(this);
 
             progressDialog.setMessage("Registrazione in corso...");
             progressDialog.setIndeterminate(true);
@@ -134,7 +134,7 @@ public class RegistrationActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }*/
+
             Intent intent = new Intent(this, CompleteProfileActivity.class);
             startActivity(intent);
             finish();
