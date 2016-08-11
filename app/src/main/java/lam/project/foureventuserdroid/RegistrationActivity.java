@@ -145,7 +145,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            Intent intent = new Intent(this, CategoriesActivity.class);
+            Intent intent = new Intent(this, CompleteProfileActivity.class);
             startActivity(intent);
             finish();
         }
