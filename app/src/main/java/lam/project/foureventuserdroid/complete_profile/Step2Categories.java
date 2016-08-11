@@ -1,27 +1,25 @@
-package lam.project.foureventuserdroid.utils.complete_profile;
+package lam.project.foureventuserdroid.complete_profile;
 
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.github.fcannizzaro.materialstepper.AbstractStep;
 
 import lam.project.foureventuserdroid.R;
 
-public class StepSample extends AbstractStep {
+public class Step2Categories extends AbstractStep {
 
-    private int i = 1;
-    private Button button;
+    private int i = 2;
     private final static String CLICK = "click";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.step1_info, container, false);
-        button = (Button) v.findViewById(R.id.button);
+        View v = inflater.inflate(R.layout.step2_categories, container, false);
+
+        /*button = (Button) v.findViewById(R.id.button);
 
         if (savedInstanceState != null)
             i = savedInstanceState.getInt(CLICK, 0);
@@ -34,15 +32,21 @@ public class StepSample extends AbstractStep {
                 ((Button) view).setText(Html.fromHtml("Tap <b>" + (++i) + "</b>"));
                 mStepper.getExtras().putInt(CLICK, i);
             }
-        });
+        });*/
 
         return v;
+    }
+
+    public void selectedButton(View view) {
+
+        view.setSelected(!view.isSelected());
+
     }
 
     @Override
     public void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
-        state.putInt(CLICK, i);
+
     }
 
     @Override
@@ -65,7 +69,7 @@ public class StepSample extends AbstractStep {
 
     @Override
     public boolean isOptional() {
-        return false;
+        return true;
     }
 
 
@@ -85,12 +89,12 @@ public class StepSample extends AbstractStep {
 
     @Override
     public String optional() {
-        return "You can skip";
+        return null;
     }
 
     @Override
     public boolean nextIf() {
-        return i > 1;
+        return i > 2;
     }
 
     @Override
@@ -108,4 +112,5 @@ public class StepSample extends AbstractStep {
         }
         return null;
     }
+
 }

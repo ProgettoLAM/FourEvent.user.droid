@@ -23,7 +23,7 @@
         <activity android:name=".LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
-        <activity android:name=".CompleteProfileActivity"
+        <activity android:name=".complete_profile.CompleteProfileActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".SplashActivity"
