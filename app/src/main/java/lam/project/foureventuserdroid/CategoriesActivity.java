@@ -8,12 +8,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import lam.project.foureventuserdroid.model.Cateogory;
+import lam.project.foureventuserdroid.utils.CategoryManager;
 
 /**
  * Created by Vale on 09/08/2016.
  */
 
 public class CategoriesActivity extends AppCompatActivity {
+
+    private CategoryManager categoryManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +30,17 @@ public class CategoriesActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.title_categories);
         setSupportActionBar(toolbar);
 
-
+        categoryManager = CategoryManager.get(this);
     }
 
     public void selectedButton(final View view) {
 
         view.setSelected(!view.isSelected());
 
+        final int id = (int) view.getTag();
+        final String title = ((TextView)view).getText().toString();
+
+        categoryManager.AddFavourite(Cateogory.Builder.create(id,title).build());
     }
 
     @Override
