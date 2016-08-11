@@ -1,4 +1,4 @@
-package lam.project.foureventuserdroid.utils.complete_profile;
+package lam.project.foureventuserdroid.complete_profile;
 
 import android.content.Context;
 import android.content.SharedPreferences;

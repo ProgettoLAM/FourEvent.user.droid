@@ -1,11 +1,10 @@
-package lam.project.foureventuserdroid;
+package lam.project.foureventuserdroid.complete_profile;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.github.fcannizzaro.materialstepper.AbstractStep;
 import com.github.fcannizzaro.materialstepper.style.TabStepper;
-
-import lam.project.foureventuserdroid.utils.complete_profile.StepSample;
 
 public class CompleteProfileActivity extends TabStepper {
 
@@ -21,9 +20,9 @@ public class CompleteProfileActivity extends TabStepper {
         setDisabledTouch();
         setPreviousVisible();
 
-        addStep(createFragment(new StepSample()));
-        addStep(createFragment(new StepSample()));
-        addStep(createFragment(new StepSample()));
+        addStep(createFragment(new Step1Info()));
+        addStep(createFragment(new Step2Categories()));
+        addStep(createFragment(new Step3Credits()));
 
         super.onCreate(savedInstanceState);
     }
@@ -33,6 +32,13 @@ public class CompleteProfileActivity extends TabStepper {
         b.putInt("position", i++);
         fragment.setArguments(b);
         return fragment;
+    }
+
+    public void selectedButton(final View view) {
+
+        view.setSelected(!view.isSelected());
+
+
     }
 
 }
