@@ -8,24 +8,28 @@ import org.json.JSONObject;
  */
 public class Cateogory {
 
+    public final int id;
     public final String name;
 
-    private Cateogory(final String name){
+    private Cateogory(final int id,final String name){
 
+        this.id = id;
         this.name = name;
     }
 
     public static Cateogory fromJson(final JSONObject jsonObject) throws JSONException {
 
+        final int id = jsonObject.getInt(Keys.ID);
         final String name = jsonObject.getString(Keys.NAME);
 
-        return Builder.create(name).build();
+        return Builder.create(id,name).build();
     }
 
     public JSONObject toJson() throws JSONException{
 
         final JSONObject jsonObject = new JSONObject();
 
+        jsonObject.put(Keys.ID,id);
         jsonObject.put(Keys.NAME, name);
 
         return jsonObject;
@@ -33,27 +37,31 @@ public class Cateogory {
 
     public static class Keys{
 
+        public static final String ID = "id";
         public static final String NAME = "name";
         public static final String CATEGORY = "category";
     }
 
     public static class Builder{
 
+
+        public final int id;
         public final String name;
 
-        private Builder(final String name){
+        private Builder(final int id,final String name){
 
+            this.id = id;
             this.name = name;
         }
 
-        public static Builder create(final String name){
+        public static Builder create(final int id, final String name){
 
-            return new Builder(name);
+            return new Builder(id,name);
         }
 
         public Cateogory build(){
 
-            return new Cateogory(this.name);
+            return new Cateogory(this.id,this.name);
         }
     }
 }
