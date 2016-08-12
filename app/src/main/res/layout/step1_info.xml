@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:layout_marginTop="30dp">
-
+    android:layout_marginTop="40dp"
+    android:background="#eee">
 
     <EditText
         android:id="@+id/name_info"
@@ -129,7 +129,8 @@
             android:textSize="16dp"
             android:paddingRight="15dp"
             android:layout_marginLeft="40dp"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:buttonTint="#FF9800"/>
 
         <RadioButton
             android:id="@+id/radio_female"
@@ -138,7 +139,8 @@
             android:text="Femmina"
             android:textColor="#666"
             android:textSize="16dp"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:buttonTint="#FF9800"/>
 
     </RadioGroup>
 
