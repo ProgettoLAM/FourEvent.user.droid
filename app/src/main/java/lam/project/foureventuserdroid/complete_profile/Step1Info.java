@@ -3,6 +3,7 @@ package lam.project.foureventuserdroid.complete_profile;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,12 +16,20 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.github.fcannizzaro.materialstepper.AbstractStep;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Calendar;
 
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.connection.CustomRequest;
+import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 
 /**
  * Created by Vale on 11/08/2016.
@@ -153,6 +162,42 @@ public class Step1Info extends AbstractStep{
         }
         else
             user.addName(name).addLocation(location).addBirthDate(birthDate);
+
+        try {
+
+            String url = getResources().getString(R.string.backend_uri_put_user)+"/"+user.email;
+
+            CustomRequest request = new CustomRequest(Request.Method.POST, url, user.toJson(),
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            Snackbar snackbar = Snackbar
+                                    .make(getView(), response.toString(), Snackbar.LENGTH_LONG);
+
+                            snackbar.show();
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    //progressDialog.hide();
+
+                    Snackbar snackbar = Snackbar
+                            .make(getView(), error.toString(), Snackbar.LENGTH_LONG);
+
+                    snackbar.show();
+
+                }
+            });
+
+            VolleyRequest.get(getContext()).add(request);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+        }
 
         return i > 1;
     }
