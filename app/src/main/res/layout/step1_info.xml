@@ -2,15 +2,147 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:layout_marginTop="30dp">
 
-    <Button
-        android:id="@+id/button"
+
+    <EditText
+        android:id="@+id/name_info"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:textColor="#666"
+        android:hint="Nome"
+        android:textColorHint="#999"
+        android:inputType="text"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bottom_border_info"
+        android:drawableLeft="@drawable/ic_profile"
+        android:drawablePadding="5dp" />
+
+    <ImageView
+        android:id="@+id/ic_alert_name"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_warning"
+        android:layout_toRightOf="@id/name_info"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="10dp"
+        android:visibility="invisible"
+        />
+
+    <EditText
+        android:id="@+id/surname_info"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:textColor="#666"
+        android:hint="Cognome"
+        android:textColorHint="#999"
+        android:inputType="text"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/name_info"
+        android:background="@drawable/bottom_border_info"
+        android:drawableLeft="@drawable/ic_profile"
+        android:drawablePadding="5dp"/>
+
+    <ImageView
+        android:id="@+id/ic_alert_surname"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_warning"
+        android:layout_toRightOf="@id/surname_info"
+        android:layout_below="@id/name_info"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="10dp"
+        android:visibility="invisible" />
+
+    <EditText
+        android:id="@+id/location_info"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:textColor="#666"
+        android:hint="Località"
+        android:textColorHint="#999"
+        android:inputType="text"
+        android:textSize="16sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/surname_info"
+        android:background="@drawable/bottom_border_info"
+        android:drawableLeft="@drawable/ic_gps"
+        android:drawablePadding="5dp"/>
+
+    <ImageView
+        android:id="@+id/ic_alert_location"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_warning"
+        android:layout_toRightOf="@id/location_info"
+        android:layout_below="@id/surname_info"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="10dp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/date_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:padding="16dp"
-        android:text="Tap" />
+        android:textSize="16dp"
+        android:layout_marginLeft="40dp"
+        android:layout_below="@id/location_info"
+        android:text="Data di nascita"
+        android:textColor="#000"/>
+
+    <ImageView
+        android:id="@+id/date_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_below="@id/date_txt"
+        android:src="@drawable/ic_calendar" />
+
+    <TextView
+        android:id="@+id/date_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textSize="16dp"
+        android:layout_below="@id/date_txt"
+        android:layout_toRightOf="@id/date_icon"
+        android:text=""/>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/date_info">
+
+        <RadioButton
+            android:id="@+id/radio_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Maschio"
+            android:textColor="#666"
+            android:textSize="16dp"
+            android:paddingRight="15dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"/>
+
+        <RadioButton
+            android:id="@+id/radio_female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Femmina"
+            android:textColor="#666"
+            android:textSize="16dp"
+            android:layout_marginTop="20dp"/>
+
+    </RadioGroup>
+
+
+
 
 </RelativeLayout>

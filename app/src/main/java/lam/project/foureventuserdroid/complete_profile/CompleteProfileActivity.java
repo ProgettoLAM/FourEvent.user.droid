@@ -1,5 +1,6 @@
 package lam.project.foureventuserdroid.complete_profile;
 
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.View;
 
@@ -38,7 +39,7 @@ public class CompleteProfileActivity extends TabStepper {
 
         view.setSelected(!view.isSelected());
 
-
     }
+
 
 }
