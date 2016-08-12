@@ -163,7 +163,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, CompleteProfileActivity.class);
 
-        intent.putExtra(User.Keys.USER,user);
+        intent.putExtra(User.Keys.EMAIL,user.email);
+        intent.putExtra(User.Keys.PASSWORD,user.password);
+
         startActivity(intent);
         finish();
     }

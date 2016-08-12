@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.github.fcannizzaro.materialstepper.AbstractStep;
 import com.github.fcannizzaro.materialstepper.style.TabStepper;
@@ -35,7 +36,10 @@ public class CompleteProfileActivity extends TabStepper {
         super.onCreate(savedInstanceState);
 
         Intent srcIntent = getIntent();
-        final User user = (User) srcIntent.getParcelableExtra(User.Keys.USER);
+        final String email = srcIntent.getStringExtra(User.Keys.EMAIL);
+        final String password = srcIntent.getStringExtra(User.Keys.PASSWORD);
+
+
 
     }
 
@@ -49,6 +53,10 @@ public class CompleteProfileActivity extends TabStepper {
     public void selectedButton(final View view) {
 
         view.setSelected(!view.isSelected());
-    }
 
+        int tag = (int) view.getTag();
+        String text = ((TextView) view).getText().toString();
+
+        Log.d(TAG,"Tag : "+tag+" title : "+text);
+    }
 }
