@@ -1,13 +1,20 @@
 package lam.project.foureventuserdroid.complete_profile;
 
-import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.github.fcannizzaro.materialstepper.AbstractStep;
 import com.github.fcannizzaro.materialstepper.style.TabStepper;
 
+import org.json.JSONException;
+
+import lam.project.foureventuserdroid.model.User;
+
 public class CompleteProfileActivity extends TabStepper {
+
+    private static final String TAG = CompleteProfileActivity.class.getSimpleName();
 
     private int i = 1;
 
@@ -26,6 +33,10 @@ public class CompleteProfileActivity extends TabStepper {
         addStep(createFragment(new Step3Credits()));
 
         super.onCreate(savedInstanceState);
+
+        Intent srcIntent = getIntent();
+        final User user = (User) srcIntent.getParcelableExtra(User.Keys.USER);
+
     }
 
     private AbstractStep createFragment(AbstractStep fragment) {
@@ -38,8 +49,6 @@ public class CompleteProfileActivity extends TabStepper {
     public void selectedButton(final View view) {
 
         view.setSelected(!view.isSelected());
-
     }
-
 
 }
