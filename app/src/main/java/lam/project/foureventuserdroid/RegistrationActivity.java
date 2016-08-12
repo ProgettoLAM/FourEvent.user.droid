@@ -162,7 +162,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private void next(User user){
 
         UserManager.get(this).save(user);
-        Intent intent = new Intent(this, CompleteProfileActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
 
         intent.putExtra(User.Keys.USER, user);
 
