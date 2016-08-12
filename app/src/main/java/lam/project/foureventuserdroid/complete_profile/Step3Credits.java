@@ -33,19 +33,7 @@ public class Step3Credits extends AbstractStep {
     @Override
     public String name() {
 
-        for(int i = 0; i < getArguments().size(); i++) {
-            switch (getArguments().getInt("position", i)) {
-                case 1:
-                    return "Dati personali";
-                case 2:
-                    return "Categorie";
-                case 3:
-                    return "Microcrediti";
-
-            }
-        }
         return null;
-        //return "Tab " + getArguments().getInt("position", 0);
     }
 
     @Override
@@ -86,17 +74,7 @@ public class Step3Credits extends AbstractStep {
 
     @Override
     public String error() {
-        /*for(int i = 0; i < getArguments().size(); i++) {
-            switch (getArguments().getInt("position", i)) {
-                case 1:
-                    return "Compila i dati";
-                case 2:
-                    return "Scegli almeno una categoria";
-                case 3:
-                    return "Scopri cosa sono i microcrediti";
 
-            }
-        }*/
         return null;
     }
 }

@@ -5,13 +5,13 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -39,7 +39,7 @@ import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 public class Step1Info extends AbstractStep{
 
     private int i = 1;
-    private ImageView calendarDate;
+    private LinearLayout birth_date;
     private static TextView dateInfo;
 
     private EditText nameField;
@@ -56,11 +56,19 @@ public class Step1Info extends AbstractStep{
     private User user;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.step1_info, container, false);
 
-        calendarDate = (ImageView) v.findViewById(R.id.date_icon);
+        birth_date = (LinearLayout) v.findViewById(R.id.birth_date);
         dateInfo = (TextView) v.findViewById(R.id.date_info);
 
         nameField = (EditText) v.findViewById(R.id.name_info);
@@ -70,7 +78,7 @@ public class Step1Info extends AbstractStep{
         locationField = (EditText) v.findViewById(R.id.location_info);
 
 
-        calendarDate.setOnClickListener(new View.OnClickListener() {
+        birth_date.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -86,17 +94,17 @@ public class Step1Info extends AbstractStep{
     @Override
     public String name() {
 
-        for(int i = 0; i < getArguments().size(); i++) {
+        /*for(int i = 0; i < getArguments().size(); i++) {
             switch (getArguments().getInt("position", i)) {
                 case 1:
-                    return "Dati personali";
+                    return "";
                 case 2:
-                    return "Categorie";
+                    return "";
                 case 3:
                     return "Microcrediti";
 
             }
-        }
+        }*/
         return null;
         //return "Tab " + getArguments().getInt("position", 0);
     }
@@ -186,7 +194,7 @@ public class Step1Info extends AbstractStep{
 
     @Override
     public String error() {
-        for(int i = 0; i < getArguments().size(); i++) {
+       /* for(int i = 0; i < getArguments().size(); i++) {
             switch (getArguments().getInt("position", i)) {
                 case 1:
                     return "Compila i dati";
@@ -196,7 +204,7 @@ public class Step1Info extends AbstractStep{
                     return "Scopri cosa sono i microcrediti";
 
             }
-        }
+        }*/
         return null;
     }
 

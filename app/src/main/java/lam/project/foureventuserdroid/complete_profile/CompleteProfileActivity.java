@@ -20,7 +20,7 @@ public class CompleteProfileActivity extends TabStepper {
         setErrorTimeout(1500);
         setLinear(false);
         setTitle("");
-        setAlternativeTab(true);
+        setAlternativeTab(false);
         setDisabledTouch();
         //setPreviousVisible();
 
@@ -54,9 +54,9 @@ public class CompleteProfileActivity extends TabStepper {
 
         view.setSelected(!view.isSelected());
 
-        int tag = (int) view.getTag();
+        /*int tag = (int) view.getTag();
         String text = ((TextView) view).getText().toString();
 
-        Log.d(TAG,"Tag : "+tag+" title : "+text);
+        Log.d(TAG,"Tag : "+tag+" title : "+text);*/
     }
 }
