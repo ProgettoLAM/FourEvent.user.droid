@@ -4,14 +4,10 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.text.Editable;
-import android.text.Html;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,8 +16,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.github.fcannizzaro.materialstepper.AbstractStep;
-
-import org.w3c.dom.Text;
 
 import java.util.Calendar;
 
@@ -43,14 +37,14 @@ public class Step1Info extends AbstractStep{
     private EditText surnameField;
     private EditText locationField;
     private RadioGroup radioGroup;
-    private RadioButton sexField;
+    private RadioButton genderField;
 
     private String name;
-    private String surname;
     private String location;
+    private String gender;
+    private String birthDate;
 
-    private String email = CompleteProfileActivity.email;
-    private String password = CompleteProfileActivity.password;
+    private User user = CompleteProfileActivity.user;
 
 
     @Override
@@ -160,9 +154,14 @@ public class Step1Info extends AbstractStep{
 
         int selectedId = radioGroup.getCheckedRadioButtonId();
 
-        sexField = (RadioButton) view.findViewById(selectedId);
+        genderField = (RadioButton) view.findViewById(selectedId);
 
-        Log.d("sex", sexField.getText().toString());
+        name = nameField.getText().toString() +" "+surnameField.getText().toString();
+        location = locationField.getText().toString();
+        gender = genderField.getText().toString();
+        birthDate = dateInfo.getText().toString();
+
+        user.addName(name).addLocation(location).addGender(gender).addBirthDate(birthDate);
         return i > 1;
     }
 

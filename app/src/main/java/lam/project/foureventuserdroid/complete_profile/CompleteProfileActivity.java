@@ -18,9 +18,7 @@ public class CompleteProfileActivity extends TabStepper {
 
     private int i = 1;
 
-    public static String email;
-
-    public static String password;
+    public static User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +38,7 @@ public class CompleteProfileActivity extends TabStepper {
 
         Intent srcIntent = getIntent();
 
-        final User user = (User) srcIntent.getParcelableExtra(User.Keys.USER);
-        email = user.email;
-        password = user.password;
+        user = (User) srcIntent.getParcelableExtra(User.Keys.USER);
 
     }
 

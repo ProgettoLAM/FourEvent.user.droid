@@ -125,9 +125,10 @@ public class RegistrationActivity extends AppCompatActivity {
 
                             snackbar.show();
 
+                            progressDialog.hide();
+
                             next(user);
 
-                            progressDialog.hide();
                         }
                     }, new Response.ErrorListener() {
                         @Override

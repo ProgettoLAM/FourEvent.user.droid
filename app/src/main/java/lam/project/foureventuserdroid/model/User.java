@@ -17,13 +17,13 @@ public class User implements Parcelable{
 
     public final String password;
 
-    public final String name;
+    public String name;
 
-    public final String birthDate;
+    public String birthDate;
 
-    public final String location;
+    public String location;
 
-    public final String gender;
+    public String gender;
 
     private User(final String email, final String password, final String name,
                  final String birthDate, final String location, final String gender){
@@ -34,6 +34,23 @@ public class User implements Parcelable{
         this.birthDate = birthDate;
         this.location = location;
         this.gender = gender;
+    }
+
+    public User addName(String name) {
+        this.name = name;
+        return this;
+    }
+    public User addLocation(String location) {
+        this.location = location;
+        return this;
+    }
+    public User addGender(String gender) {
+        this.gender = gender;
+        return this;
+    }
+    public User addBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+        return this;
     }
 
     protected User(Parcel in) {
@@ -85,29 +102,23 @@ public class User implements Parcelable{
 
         Builder builder = Builder.create(email,password);
 
-        String name = jsonObject.getString(Keys.NAME);
-        String birthDate = jsonObject.getString(Keys.BIRTH_DATE);
-        String location = jsonObject.getString(Keys.LOCATION);
-        String gender = jsonObject.getString(Keys.GENDER);
-
-        if(name != null){
-
-            builder.withName(name);
+        if (jsonObject.has(Keys.NAME)) {
+            builder.withName(jsonObject.getString(Keys.NAME));
         }
 
-        if(birthDate != null){
+        if(jsonObject.has(Keys.BIRTH_DATE)){
 
-            builder.withBirthDate(birthDate);
+            builder.withBirthDate(jsonObject.getString(Keys.BIRTH_DATE));
         }
 
-        if(location != null){
+        if(jsonObject.has(Keys.LOCATION)){
 
-            builder.withLocation(location);
+            builder.withLocation(jsonObject.getString(Keys.LOCATION));
         }
 
-        if(gender != null){
+        if(jsonObject.has(Keys.GENDER)){
 
-            builder.withGender(gender);
+            builder.withGender(jsonObject.getString(Keys.GENDER));
         }
 
         return builder.build();
