@@ -1,5 +1,6 @@
 package lam.project.foureventuserdroid.complete_profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.Button;
 
 import com.github.fcannizzaro.materialstepper.AbstractStep;
 
+import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
 
 /**
@@ -18,8 +20,6 @@ import lam.project.foureventuserdroid.R;
 public class Step3Credits extends AbstractStep {
 
     private int i = 3;
-    private Button button;
-    private final static String CLICK = "click";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,11 +29,6 @@ public class Step3Credits extends AbstractStep {
         return v;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle state) {
-        super.onSaveInstanceState(state);
-        state.putInt(CLICK, i);
-    }
 
     @Override
     public String name() {
@@ -55,7 +50,7 @@ public class Step3Credits extends AbstractStep {
 
     @Override
     public boolean isOptional() {
-        return false;
+        return true;
     }
 
 
@@ -75,17 +70,23 @@ public class Step3Credits extends AbstractStep {
 
     @Override
     public String optional() {
-        return "You can skip";
+        return null;
     }
 
     @Override
     public boolean nextIf() {
+        CompleteManager.get(getContext()).setStep(CompleteManager.THIRD_STEP);
+
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+
         return i > 3;
     }
 
     @Override
     public String error() {
-        for(int i = 0; i < getArguments().size(); i++) {
+        /*for(int i = 0; i < getArguments().size(); i++) {
             switch (getArguments().getInt("position", i)) {
                 case 1:
                     return "Compila i dati";
@@ -95,7 +96,7 @@ public class Step3Credits extends AbstractStep {
                     return "Scopri cosa sono i microcrediti";
 
             }
-        }
+        }*/
         return null;
     }
 }

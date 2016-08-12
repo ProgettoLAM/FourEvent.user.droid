@@ -19,6 +19,14 @@ public class CompleteManager {
 
     private final String STEP = "step";
 
+    public final static int NO_STEP = 0;
+
+    public final static int FIRST_STEP = 1;
+
+    public final static int SECOND_STEP = 2;
+
+    public final static int THIRD_STEP = 3;
+
 
     private CompleteManager(final Context context){
 
@@ -49,7 +57,7 @@ public class CompleteManager {
 
     public int getStep(){
 
-        return mSharedPreferences.getInt(STEP,0);
+        return mSharedPreferences.getInt(STEP, NO_STEP);
     }
 
     public boolean setStep(int step){

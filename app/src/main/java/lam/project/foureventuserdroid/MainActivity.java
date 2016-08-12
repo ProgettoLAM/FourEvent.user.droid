@@ -25,22 +25,18 @@ import lam.project.foureventuserdroid.fragment.SettingsFragment;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
 import lam.project.foureventuserdroid.model.User;
 
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        CompleteManager manager = CompleteManager.get(this);
-
-        int step = manager.getStep();
+        int step = CompleteManager.get(this).getStep();
 
         //se il profilo è completo
-        if (step == 3) {
+        if (step == CompleteManager.THIRD_STEP) {
 
             setContentView(R.layout.activity_main);
 
@@ -71,16 +67,12 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.anchor_point, new EventsFragment())
                     .commit();
 
-            Intent srcIntent = getIntent();
-
-            currentUser = srcIntent.getParcelableExtra(User.Keys.USER);
         }
         else{
 
             Intent completeProfileIntent = new Intent(this,CompleteProfileActivity.class);
-
             startActivity(completeProfileIntent);
-            finish();
+            //finish();
         }
     }
 

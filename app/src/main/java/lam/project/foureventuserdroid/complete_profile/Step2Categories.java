@@ -12,27 +12,11 @@ import lam.project.foureventuserdroid.R;
 public class Step2Categories extends AbstractStep {
 
     private int i = 2;
-    private final static String CLICK = "click";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.step2_categories, container, false);
-
-        /*button = (Button) v.findViewById(R.id.button);
-
-        if (savedInstanceState != null)
-            i = savedInstanceState.getInt(CLICK, 0);
-
-        button.setText(Html.fromHtml("Tap <b>" + i + "</b>"));
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((Button) view).setText(Html.fromHtml("Tap <b>" + (++i) + "</b>"));
-                mStepper.getExtras().putInt(CLICK, i);
-            }
-        });*/
 
         return v;
     }
@@ -43,11 +27,6 @@ public class Step2Categories extends AbstractStep {
 
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle state) {
-        super.onSaveInstanceState(state);
-
-    }
 
     @Override
     public String name() {
@@ -94,6 +73,8 @@ public class Step2Categories extends AbstractStep {
 
     @Override
     public boolean nextIf() {
+
+        CompleteManager.get(getContext()).setStep(CompleteManager.SECOND_STEP);
         return i > 2;
     }
 

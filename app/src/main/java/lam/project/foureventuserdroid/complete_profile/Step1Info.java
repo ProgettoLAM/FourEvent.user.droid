@@ -28,6 +28,7 @@ import java.util.Calendar;
 
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.UserManager;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 
@@ -40,7 +41,6 @@ public class Step1Info extends AbstractStep{
     private int i = 1;
     private ImageView calendarDate;
     private static TextView dateInfo;
-    private final static String CLICK = "click";
 
     private EditText nameField;
     private EditText surnameField;
@@ -56,19 +56,6 @@ public class Step1Info extends AbstractStep{
     private User user;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            user = bundle.getParcelable("user");
-            Log.d("user", user.email);
-
-        }
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.step1_info, container, false);
@@ -82,8 +69,6 @@ public class Step1Info extends AbstractStep{
         radioGroup = (RadioGroup) v.findViewById(R.id.radio_info);
         locationField = (EditText) v.findViewById(R.id.location_info);
 
-        if (savedInstanceState != null)
-            i = savedInstanceState.getInt(CLICK, 0);
 
         calendarDate.setOnClickListener(new View.OnClickListener() {
 
@@ -97,11 +82,6 @@ public class Step1Info extends AbstractStep{
         return v;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle state) {
-        super.onSaveInstanceState(state);
-        state.putInt(CLICK, i);
-    }
 
     @Override
     public String name() {
@@ -153,6 +133,9 @@ public class Step1Info extends AbstractStep{
         location = locationField.getText().toString();
         birthDate = dateInfo.getText().toString();
 
+        UserManager manager = UserManager.get(getContext());
+        user = manager.getUser();
+
         int selectedId = radioGroup.getCheckedRadioButtonId();
 
         if(selectedId != -1) {
@@ -182,8 +165,6 @@ public class Step1Info extends AbstractStep{
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
-                    //progressDialog.hide();
-
                     Snackbar snackbar = Snackbar
                             .make(getView(), error.toString(), Snackbar.LENGTH_LONG);
 
@@ -199,6 +180,7 @@ public class Step1Info extends AbstractStep{
 
         }
 
+        CompleteManager.get(getContext()).setStep(CompleteManager.FIRST_STEP);
         return i > 1;
     }
 
