@@ -98,14 +98,14 @@ public class RegistrationActivity extends AppCompatActivity {
         if(controlUser()) {
 
 
-            final ProgressDialog progressDialog = new ProgressDialog(this);
+            /*final ProgressDialog progressDialog = new ProgressDialog(this);
 
             progressDialog.setMessage("Registrazione in corso...");
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
 
-            progressDialog.show();
+            progressDialog.show();*/
 
             final User user = User.Builder.create(email, password).build();
 
@@ -125,7 +125,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                             snackbar.show();
 
-                            progressDialog.hide();
+                            //progressDialog.hide();
 
                             next(user);
 
@@ -134,7 +134,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
 
-                            progressDialog.hide();
+                            //progressDialog.hide();
 
                             Snackbar snackbar = Snackbar
                                     .make(view, error.toString(), Snackbar.LENGTH_LONG);

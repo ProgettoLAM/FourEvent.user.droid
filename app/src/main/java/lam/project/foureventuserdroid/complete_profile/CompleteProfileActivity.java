@@ -23,12 +23,15 @@ public class CompleteProfileActivity extends TabStepper {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        Intent srcIntent = getIntent();
+        user = (User) srcIntent.getParcelableExtra(User.Keys.USER);
+
         setErrorTimeout(1500);
         setLinear(false);
         setTitle("");
         setAlternativeTab(true);
         setDisabledTouch();
-        setPreviousVisible();
+        //setPreviousVisible();
 
         addStep(createFragment(new Step1Info()));
         addStep(createFragment(new Step2Categories()));
@@ -36,15 +39,12 @@ public class CompleteProfileActivity extends TabStepper {
 
         super.onCreate(savedInstanceState);
 
-        Intent srcIntent = getIntent();
-
-        user = (User) srcIntent.getParcelableExtra(User.Keys.USER);
-
     }
 
     private AbstractStep createFragment(AbstractStep fragment) {
         Bundle b = new Bundle();
         b.putInt("position", i++);
+        b.putParcelable("user",user);
         fragment.setArguments(b);
         return fragment;
     }

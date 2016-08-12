@@ -39,13 +39,25 @@ public class Step1Info extends AbstractStep{
     private RadioGroup radioGroup;
     private RadioButton genderField;
 
-    private String name;
-    private String location;
-    private String gender;
+    public String name;
+    public String location;
+    public String gender;
     private String birthDate;
 
-    private User user = CompleteProfileActivity.user;
+    private User user;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            user = bundle.getParcelable("user");
+            Log.d("user", user.email);
+
+        }
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,16 +73,6 @@ public class Step1Info extends AbstractStep{
         radioGroup = (RadioGroup) v.findViewById(R.id.radio_info);
         locationField = (EditText) v.findViewById(R.id.location_info);
 
-
-        /*ic_warning_name = (ImageView) v.findViewById(R.id.ic_alert_name);
-        ic_warning_surname = (ImageView) v.findViewById(R.id.ic_alert_surname);
-        ic_warning_location = (ImageView) v.findViewById(R.id.ic_alert_location);
-
-        nameField.addTextChangedListener(watcher);
-        surnameField.addTextChangedListener(watcher);
-        locationField.addTextChangedListener(watcher);*/
-
-
         if (savedInstanceState != null)
             i = savedInstanceState.getInt(CLICK, 0);
 
@@ -85,20 +87,6 @@ public class Step1Info extends AbstractStep{
         });
         return v;
     }
-
-    /*public void onRadioButtonClicked(View view) {
-
-        boolean checked = ((RadioButton) view).isChecked();
-
-        switch(view.getId()) {
-            case R.id.radio_male:
-                if (checked)
-                    break;
-            case R.id.radio_female:
-                if (checked)
-                    break;
-        }
-    }*/
 
     @Override
     public void onSaveInstanceState(Bundle state) {
@@ -149,43 +137,25 @@ public class Step1Info extends AbstractStep{
         return null;
     }
 
+    @Override
+    public boolean nextIf() {
 
-    public boolean nextIf(final View view) {
+        name = nameField.getText().toString()+ " "+ surnameField.getText().toString();
+        location = locationField.getText().toString();
+        birthDate = dateInfo.getText().toString();
 
         int selectedId = radioGroup.getCheckedRadioButtonId();
 
-        genderField = (RadioButton) view.findViewById(selectedId);
-
-        name = nameField.getText().toString() +" "+surnameField.getText().toString();
-        location = locationField.getText().toString();
-        gender = genderField.getText().toString();
-        birthDate = dateInfo.getText().toString();
-
-        user.addName(name).addLocation(location).addGender(gender).addBirthDate(birthDate);
-        return i > 1;
-    }
-
-    /*public int controlInfo() {
-        name = nameField.getText().toString();
-        surname = surnameField.getText().toString();
-        location = locationField.getText().toString();
-
-        if(name.equals("")) {
-            ic_warning_name.setVisibility(View.VISIBLE);
-            return 0;
-        }
-        if(surname.equals("")) {
-            ic_warning_surname.setVisibility(View.VISIBLE);
-            return 0;
-        }
-        if(location.equals("")) {
-            ic_warning_location.setVisibility(View.VISIBLE);
-            return 0;
+        if(selectedId != -1) {
+            genderField = (RadioButton) getActivity().findViewById(selectedId);
+            gender = genderField.getText().toString();
+            user.addName(name).addLocation(location).addGender(gender).addBirthDate(birthDate);
         }
         else
-            return 2;
-    }*/
+            user.addName(name).addLocation(location).addBirthDate(birthDate);
 
+        return i > 1;
+    }
 
     @Override
     public String error() {
@@ -202,29 +172,6 @@ public class Step1Info extends AbstractStep{
         }
         return null;
     }
-
-    /*private final TextWatcher watcher = new TextWatcher() {
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        public void afterTextChanged(Editable s) {
-            if (nameField.getText().toString().length() != 0) {
-                ic_warning_name.setVisibility(View.INVISIBLE);
-            }
-            if(surnameField.getText().toString().length() != 0){
-                ic_warning_surname.setVisibility(View.INVISIBLE);
-            }
-            if(locationField.getText().toString().length() != 0){
-                ic_warning_location.setVisibility(View.INVISIBLE);
-            }
-        }
-    };*/
-
 
     //Classe relativa alla visualizzazione del dialog del calendario per la selezione della data di nascita
     public static class SelectDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
