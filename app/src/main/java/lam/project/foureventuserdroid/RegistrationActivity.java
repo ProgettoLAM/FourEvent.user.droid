@@ -97,6 +97,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         if(controlUser()) {
 
+
             final ProgressDialog progressDialog = new ProgressDialog(this);
 
             progressDialog.setMessage("Registrazione in corso...");
@@ -159,12 +160,10 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void next(User user){
 
-        //UserManager.get(this).save(user);
-
+        UserManager.get(this).save(user);
         Intent intent = new Intent(this, CompleteProfileActivity.class);
 
-        intent.putExtra(User.Keys.EMAIL,user.email);
-        intent.putExtra(User.Keys.PASSWORD,user.password);
+        intent.putExtra(User.Keys.USER, user);
 
         startActivity(intent);
         finish();

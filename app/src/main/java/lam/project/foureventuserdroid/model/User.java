@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * Created by spino on 29/07/16.
  */
-public class User{
+public class User implements Parcelable{
 
     public final String email;
 
@@ -35,6 +35,48 @@ public class User{
         this.location = location;
         this.gender = gender;
     }
+
+    protected User(Parcel in) {
+        email = in.readString();
+        password = in.readString();
+        boolean present = in.readByte() == Keys.PRESENT;
+        if(present) {
+            name = in.readString();
+        }
+        else
+            name = null;
+
+        if(present) {
+            birthDate = in.readString();
+        }
+        else
+            birthDate = null;
+
+        if(present) {
+           location = in.readString();
+        }
+        else
+            location = null;
+
+        if(present) {
+            gender = in.readString();
+        }
+        else
+            gender = null;
+
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public static User fromJson(final JSONObject jsonObject) throws JSONException{
 
@@ -71,34 +113,74 @@ public class User{
         return builder.build();
     }
 
-    public JSONObject toJson() throws JSONException{
+    public JSONObject toJson() throws JSONException {
 
         final JSONObject jsonObject = new JSONObject();
 
         jsonObject.put(Keys.EMAIL, email);
         jsonObject.put(Keys.PASSWORD, password);
 
-        if(name != null){
+        if (name != null) {
 
             jsonObject.put(Keys.NAME, name);
         }
 
-        if(birthDate != null){
+        if (birthDate != null) {
 
             jsonObject.put(Keys.BIRTH_DATE, birthDate);
         }
 
-        if(location != null){
+        if (location != null) {
 
             jsonObject.put(Keys.LOCATION, location);
         }
 
-        if(gender != null){
+        if (gender != null) {
 
             jsonObject.put(Keys.GENDER, gender);
         }
 
         return jsonObject;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(email);
+        dest.writeString(password);
+
+        if (name != null) {
+            dest.writeByte(Keys.PRESENT);
+            dest.writeString(name);
+        }
+        else
+            dest.writeByte(Keys.NOT_PRESENT);
+
+        if (birthDate != null) {
+            dest.writeByte(Keys.PRESENT);
+            dest.writeString(birthDate);
+        }
+        else
+            dest.writeByte(Keys.NOT_PRESENT);
+
+        if (location != null) {
+            dest.writeByte(Keys.PRESENT);
+            dest.writeString(location);
+        }
+        else
+            dest.writeByte(Keys.NOT_PRESENT);
+
+        if (gender != null) {
+            dest.writeByte(Keys.PRESENT);
+            dest.writeString(gender);
+        }
+        else
+            dest.writeByte(Keys.NOT_PRESENT);
+
     }
 
     public static class Keys{
@@ -120,6 +202,10 @@ public class User{
         public static final String FEMALE = "F";
 
         public static final String USER = "user";
+
+        public static final Byte PRESENT = 1;
+
+        public static final Byte NOT_PRESENT = 0;
     }
 
     public static class Builder{
@@ -175,7 +261,6 @@ public class User{
         }
 
         public User build(){
-
             return new User(mEmail,mPassword,mName,mBirthDate,mLocation,mGender);
         }
     }

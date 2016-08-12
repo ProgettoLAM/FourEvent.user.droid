@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.github.fcannizzaro.materialstepper.AbstractStep;
 import com.github.fcannizzaro.materialstepper.style.TabStepper;
 
-import org.json.JSONException;
 
 import lam.project.foureventuserdroid.model.User;
 
@@ -18,6 +17,10 @@ public class CompleteProfileActivity extends TabStepper {
     private static final String TAG = CompleteProfileActivity.class.getSimpleName();
 
     private int i = 1;
+
+    public static String email;
+
+    public static String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +39,10 @@ public class CompleteProfileActivity extends TabStepper {
         super.onCreate(savedInstanceState);
 
         Intent srcIntent = getIntent();
-        final String email = srcIntent.getStringExtra(User.Keys.EMAIL);
-        final String password = srcIntent.getStringExtra(User.Keys.PASSWORD);
 
-
+        final User user = (User) srcIntent.getParcelableExtra(User.Keys.USER);
+        email = user.email;
+        password = user.password;
 
     }
 

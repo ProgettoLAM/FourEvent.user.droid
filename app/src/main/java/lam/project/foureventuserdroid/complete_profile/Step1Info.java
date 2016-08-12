@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.github.fcannizzaro.materialstepper.AbstractStep;
@@ -23,6 +26,7 @@ import org.w3c.dom.Text;
 import java.util.Calendar;
 
 import lam.project.foureventuserdroid.R;
+import lam.project.foureventuserdroid.model.User;
 
 /**
  * Created by Vale on 11/08/2016.
@@ -38,14 +42,15 @@ public class Step1Info extends AbstractStep{
     private EditText nameField;
     private EditText surnameField;
     private EditText locationField;
-
-    private ImageView ic_warning_name;
-    private ImageView ic_warning_surname;
-    private ImageView ic_warning_location;
+    private RadioGroup radioGroup;
+    private RadioButton sexField;
 
     private String name;
     private String surname;
     private String location;
+
+    private String email = CompleteProfileActivity.email;
+    private String password = CompleteProfileActivity.password;
 
 
     @Override
@@ -59,14 +64,17 @@ public class Step1Info extends AbstractStep{
         nameField = (EditText) v.findViewById(R.id.name_info);
         surnameField = (EditText) v.findViewById(R.id.surname_info);
         locationField = (EditText) v.findViewById(R.id.location_info);
+        radioGroup = (RadioGroup) v.findViewById(R.id.radio_info);
+        locationField = (EditText) v.findViewById(R.id.location_info);
 
-        ic_warning_name = (ImageView) v.findViewById(R.id.ic_alert_name);
+
+        /*ic_warning_name = (ImageView) v.findViewById(R.id.ic_alert_name);
         ic_warning_surname = (ImageView) v.findViewById(R.id.ic_alert_surname);
         ic_warning_location = (ImageView) v.findViewById(R.id.ic_alert_location);
 
         nameField.addTextChangedListener(watcher);
         surnameField.addTextChangedListener(watcher);
-        locationField.addTextChangedListener(watcher);
+        locationField.addTextChangedListener(watcher);*/
 
 
         if (savedInstanceState != null)
@@ -134,7 +142,7 @@ public class Step1Info extends AbstractStep{
 
     @Override
     public void onNext() {
-       System.out.println("onNext");
+        System.out.println("onNext");
     }
 
     @Override
@@ -147,12 +155,18 @@ public class Step1Info extends AbstractStep{
         return null;
     }
 
-    @Override
-    public boolean nextIf() {
-            return i > 1;
+
+    public boolean nextIf(final View view) {
+
+        int selectedId = radioGroup.getCheckedRadioButtonId();
+
+        sexField = (RadioButton) view.findViewById(selectedId);
+
+        Log.d("sex", sexField.getText().toString());
+        return i > 1;
     }
 
-    public int controlInfo() {
+    /*public int controlInfo() {
         name = nameField.getText().toString();
         surname = surnameField.getText().toString();
         location = locationField.getText().toString();
@@ -171,7 +185,7 @@ public class Step1Info extends AbstractStep{
         }
         else
             return 2;
-    }
+    }*/
 
 
     @Override
@@ -190,7 +204,7 @@ public class Step1Info extends AbstractStep{
         return null;
     }
 
-    private final TextWatcher watcher = new TextWatcher() {
+    /*private final TextWatcher watcher = new TextWatcher() {
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
         }
@@ -210,7 +224,7 @@ public class Step1Info extends AbstractStep{
                 ic_warning_location.setVisibility(View.INVISIBLE);
             }
         }
-    };
+    };*/
 
 
     //Classe relativa alla visualizzazione del dialog del calendario per la selezione della data di nascita
