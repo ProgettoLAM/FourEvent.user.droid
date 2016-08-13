@@ -63,7 +63,7 @@ public class Step3Credits extends AbstractStep {
 
     @Override
     public boolean nextIf() {
-        CompleteManager.get(getContext()).setStep(CompleteManager.THIRD_STEP);
+        CompleteManager.get(getContext()).setStep(CompleteManager.COMPLETE);
 
         Intent intent = new Intent(getContext(), MainActivity.class);
         startActivity(intent);

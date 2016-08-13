@@ -60,8 +60,6 @@ public class Step2Categories extends AbstractStep {
 
     @Override
     public boolean nextIf() {
-
-        CompleteManager.get(getContext()).setStep(CompleteManager.SECOND_STEP);
         return i > 2;
     }
 

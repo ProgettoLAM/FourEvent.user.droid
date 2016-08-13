@@ -29,14 +29,13 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
+    //TODO distinzione tra profilo completato e profilo non completato 0/1
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int step = CompleteManager.get(this).getStep();
-
         //se il profilo è completo
-        if (step == CompleteManager.THIRD_STEP) {
+        if (CompleteManager.get(this).getStep() == CompleteManager.COMPLETE) {
 
             setContentView(R.layout.activity_main);
 

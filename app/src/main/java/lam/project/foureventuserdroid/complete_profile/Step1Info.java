@@ -188,7 +188,6 @@ public class Step1Info extends AbstractStep{
 
         }
 
-        CompleteManager.get(getContext()).setStep(CompleteManager.FIRST_STEP);
         return i > 1;
     }
 
