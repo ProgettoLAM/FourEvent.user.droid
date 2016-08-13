@@ -32,7 +32,7 @@
 
     <!-- Stringhe url Volley -->
     <string name="backend_uri_put_user">http://annina.cs.unibo.it:8080/api/user</string>
-    <string name="url_service">http://annina.cs.unibo.it:8080/api/events</string>
+    <string name="url_service">http://annina.cs.unibo.it:8080/api/event</string>
 
     <!-- Stringhe categorie -->
     <string name="musica">Musica</string>

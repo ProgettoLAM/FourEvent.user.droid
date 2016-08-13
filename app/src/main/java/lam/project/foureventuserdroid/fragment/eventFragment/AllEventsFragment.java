@@ -125,7 +125,7 @@ public class AllEventsFragment extends Fragment {
         private TextView mTagList;
 
         private ImageView mFavouriteList;
-        private ImageView mShareList;
+        private TextView mPrice;
 
         public AllEventsViewHolder(View itemView) {
             super(itemView);
@@ -136,7 +136,7 @@ public class AllEventsFragment extends Fragment {
             mTagList = (TextView) itemView.findViewById(R.id.tag_list);
 
             mFavouriteList = (ImageView) itemView.findViewById(R.id.favourite_list);
-            mShareList = (ImageView) itemView.findViewById(R.id.share_list);
+            mPrice = (TextView) itemView.findViewById(R.id.price_list);
         }
 
         public void bind(Event event){

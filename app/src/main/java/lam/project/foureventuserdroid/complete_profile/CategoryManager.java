@@ -74,9 +74,9 @@ public class CategoryManager{
                 for(int i=0; i<categoriesJson.length(); i++){
 
                     JSONObject categoryJson = new JSONObject(categoriesJson.getJSONObject(i).toString());
-                    Category cateogory = Category.fromJson(categoryJson);
+                    Category category = Category.fromJson(categoryJson);
 
-                    tmpCategories.add(cateogory);
+                    tmpCategories.add(category);
                 }
 
                 mFavouriteCache = tmpCategories;
@@ -135,9 +135,9 @@ public class CategoryManager{
             try{
                 final JSONArray array = new JSONArray();
 
-                for(Category cateogory : mFavouriteCache){
+                for(Category category : mFavouriteCache){
 
-                    JSONObject item = cateogory.toJson();
+                    JSONObject item = category.toJson();
                     array.put(item);
                 }
 
