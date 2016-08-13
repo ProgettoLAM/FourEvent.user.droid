@@ -3,10 +3,14 @@ package lam.project.foureventuserdroid.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.LinkedList;
 import java.util.List;
+
+import lam.project.foureventuserdroid.R;
 
 /**
  * Created by spino on 29/07/16.
@@ -70,8 +74,8 @@ public class User implements Parcelable{
         return this;
     }
 
-    public User addCategory(Category category) {
-        this.categories.add(category);
+    public User addCategories(List<Category> categories) {
+        this.categories = categories;
         return this;
     }
 
@@ -102,6 +106,12 @@ public class User implements Parcelable{
         }
         else
             gender = null;
+
+        if(present) {
+            in.readTypedList(categories,Category.CREATOR);
+        }
+        else
+            categories = null;
     }
 
 
@@ -131,7 +141,24 @@ public class User implements Parcelable{
             builder.withGender(jsonObject.getString(Keys.GENDER));
         }
 
-        return builder.build();
+        User user = builder.build();
+
+        if(jsonObject.has(Keys.CATEGORIES)){
+
+            List<Category> categories = new LinkedList<>();
+            JSONArray jsonArray = new JSONArray(jsonObject.getString(Keys.CATEGORIES));
+
+            for(int i=0; i<jsonArray.length(); i++) {
+
+                Category category = Category.fromJson(jsonArray.getJSONObject(i));
+
+                categories.add(category);
+            }
+
+            user.addCategories(categories);
+        }
+
+        return user;
     }
 
     public JSONObject toJson() throws JSONException {
@@ -159,6 +186,18 @@ public class User implements Parcelable{
         if (gender != null) {
 
             jsonObject.put(Keys.GENDER, gender);
+        }
+
+        if(categories != null) {
+
+            JSONArray array = new JSONArray();
+
+            for(Category category : categories){
+
+                array.put(category.toJson());
+            }
+
+            jsonObject.put(Keys.CATEGORIES,array);
         }
 
         return jsonObject;
@@ -202,6 +241,13 @@ public class User implements Parcelable{
         else
             dest.writeByte(Keys.NOT_PRESENT);
 
+        if (categories != null) {
+
+            dest.writeByte(Keys.PRESENT);
+            dest.writeTypedList(categories);
+        }
+        else
+            dest.writeByte(Keys.NOT_PRESENT);
     }
 
     public static class Keys{
@@ -217,10 +263,6 @@ public class User implements Parcelable{
         public static final String LOCATION = "location";
 
         public static final String GENDER = "gender";
-
-        public static final String MALE = "M";
-
-        public static final String FEMALE = "F";
 
         public static final String USER = "user";
 

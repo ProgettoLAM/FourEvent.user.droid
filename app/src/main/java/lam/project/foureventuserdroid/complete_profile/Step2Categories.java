@@ -11,6 +11,7 @@ import com.github.fcannizzaro.materialstepper.AbstractStep;
 
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.Category;
+import lam.project.foureventuserdroid.model.User;
 
 public class Step2Categories extends AbstractStep {
 
@@ -23,9 +24,7 @@ public class Step2Categories extends AbstractStep {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.step2_categories, container, false);
-
-        return v;
+        return inflater.inflate(R.layout.step2_categories, container, false);
     }
 
     public static void selectedButton(View view) {
@@ -91,6 +90,13 @@ public class Step2Categories extends AbstractStep {
 
     @Override
     public boolean nextIf() {
+
+
+        User user = getStepDataFor(1).getParcelable(User.Keys.USER);
+
+        user.addCategories(CategoryManager.get().getFavouriteCategories());
+
+        getStepDataFor(2).putParcelable(User.Keys.USER,user);
 
         return i > 2;
     }
