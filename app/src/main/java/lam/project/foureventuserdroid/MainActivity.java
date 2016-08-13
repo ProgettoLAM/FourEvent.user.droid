@@ -11,11 +11,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import lam.project.foureventuserdroid.complete_profile.CompleteManager;
+import lam.project.foureventuserdroid.complete_profile.StepManager;
 import lam.project.foureventuserdroid.complete_profile.CompleteProfileActivity;
 import lam.project.foureventuserdroid.fragment.EventsFragment;
 import lam.project.foureventuserdroid.fragment.FavouriteFragment;
@@ -23,7 +22,6 @@ import lam.project.foureventuserdroid.fragment.ParticipationFragment;
 import lam.project.foureventuserdroid.fragment.ProfileFragment;
 import lam.project.foureventuserdroid.fragment.SettingsFragment;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
-import lam.project.foureventuserdroid.model.User;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,7 +33,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         //se il profilo è completo
-        if (CompleteManager.get(this).getStep() == CompleteManager.COMPLETE) {
+        if (StepManager.get(this).getStep() == StepManager.COMPLETE) {
 
             setContentView(R.layout.activity_main);
 
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity
 
             Intent completeProfileIntent = new Intent(this,CompleteProfileActivity.class);
             startActivity(completeProfileIntent);
-            //finish();
+            finish();
         }
     }
 

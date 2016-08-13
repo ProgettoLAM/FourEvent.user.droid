@@ -2,11 +2,9 @@ package lam.project.foureventuserdroid.complete_profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.github.fcannizzaro.materialstepper.AbstractStep;
 
@@ -32,7 +30,6 @@ public class Step3Credits extends AbstractStep {
 
     @Override
     public String name() {
-
         return null;
     }
 
@@ -63,7 +60,7 @@ public class Step3Credits extends AbstractStep {
 
     @Override
     public boolean nextIf() {
-        CompleteManager.get(getContext()).setStep(CompleteManager.COMPLETE);
+        StepManager.get(getContext()).setStep(StepManager.COMPLETE);
 
         Intent intent = new Intent(getContext(), MainActivity.class);
         startActivity(intent);

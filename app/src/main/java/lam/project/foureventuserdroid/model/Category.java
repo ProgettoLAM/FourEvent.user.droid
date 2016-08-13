@@ -6,18 +6,18 @@ import org.json.JSONObject;
 /**
  * Created by spino on 10/08/16.
  */
-public class Cateogory {
+public class Category {
 
     public final int id;
     public final String name;
 
-    private Cateogory(final int id,final String name){
+    public Category(final int id, final String name){
 
         this.id = id;
         this.name = name;
     }
 
-    public static Cateogory fromJson(final JSONObject jsonObject) throws JSONException {
+    public static Category fromJson(final JSONObject jsonObject) throws JSONException {
 
         final int id = jsonObject.getInt(Keys.ID);
         final String name = jsonObject.getString(Keys.NAME);
@@ -59,9 +59,9 @@ public class Cateogory {
             return new Builder(id,name);
         }
 
-        public Cateogory build(){
+        public Category build(){
 
-            return new Cateogory(this.id,this.name);
+            return new Category(this.id,this.name);
         }
     }
 }

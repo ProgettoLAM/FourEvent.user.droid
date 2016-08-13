@@ -5,12 +5,14 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -49,19 +51,13 @@ public class Step1Info extends AbstractStep{
     private RadioButton genderField;
 
     public String name;
+    public String surname;
+    public String completename;
     public String location;
     public String gender;
     private String birthDate;
 
     private User user;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -97,9 +93,9 @@ public class Step1Info extends AbstractStep{
         /*for(int i = 0; i < getArguments().size(); i++) {
             switch (getArguments().getInt("position", i)) {
                 case 1:
-                    return "";
+                    return "Dati personali";
                 case 2:
-                    return "";
+                    return "Categorie";
                 case 3:
                     return "Microcrediti";
 
@@ -137,7 +133,9 @@ public class Step1Info extends AbstractStep{
     @Override
     public boolean nextIf() {
 
-        name = nameField.getText().toString()+ " "+ surnameField.getText().toString();
+        name = nameField.getText().toString();
+        surname = surnameField.getText().toString();
+        completename = nameField.getText().toString()+ " "+ surnameField.getText().toString();
         location = locationField.getText().toString();
         birthDate = dateInfo.getText().toString();
 
@@ -146,17 +144,22 @@ public class Step1Info extends AbstractStep{
 
         int selectedId = radioGroup.getCheckedRadioButtonId();
 
-        if(selectedId != -1) {
+        if(name.trim().length() == 0 && surname.trim().length() == 0 && selectedId == -1 &&
+                location.trim().length() == 0 && birthDate.equals("Data di nascita")) {
+            return true;
+        }
+
+        else if(selectedId != -1) {
             genderField = (RadioButton) getActivity().findViewById(selectedId);
             gender = genderField.getText().toString();
-            user.addName(name).addLocation(location).addGender(gender).addBirthDate(birthDate);
+            user.addName(completename).addLocation(location).addGender(gender).addBirthDate(birthDate);
         }
         else
-            user.addName(name).addLocation(location).addBirthDate(birthDate);
+            user.addName(completename).addLocation(location).addBirthDate(birthDate);
 
         try {
 
-            String url = getResources().getString(R.string.backend_uri_put_user)+"/"+user.email;
+            String url = getResources().getString(R.string.backend_uri_put_user) + "/" + user.email;
 
             CustomRequest request = new CustomRequest(Request.Method.POST, url, user.toJson(),
                     new Response.Listener<JSONObject>() {
@@ -187,13 +190,11 @@ public class Step1Info extends AbstractStep{
             e.printStackTrace();
 
         }
-
-        return i > 1;
+        return true;
     }
-
     @Override
     public String error() {
-       /* for(int i = 0; i < getArguments().size(); i++) {
+        for(int i = 0; i < getArguments().size(); i++) {
             switch (getArguments().getInt("position", i)) {
                 case 1:
                     return "Compila i dati";
@@ -203,7 +204,7 @@ public class Step1Info extends AbstractStep{
                     return "Scopri cosa sono i microcrediti";
 
             }
-        }*/
+        }
         return null;
     }
 

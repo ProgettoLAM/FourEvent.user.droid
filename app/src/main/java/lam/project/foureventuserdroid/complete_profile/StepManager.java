@@ -3,17 +3,14 @@ package lam.project.foureventuserdroid.complete_profile;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.util.List;
-
 import lam.project.foureventuserdroid.R;
-import lam.project.foureventuserdroid.model.Cateogory;
 
 /**
  * Created by spino on 12/08/16.
  */
-public class CompleteManager {
+public class StepManager {
 
-    private static CompleteManager sInstance;
+    private static StepManager sInstance;
 
     private final SharedPreferences mSharedPreferences;
 
@@ -24,24 +21,24 @@ public class CompleteManager {
     public final static int COMPLETE = 1;
 
 
-    private CompleteManager(final Context context){
+    private StepManager(final Context context){
 
         String SHARED_PREFERENCES_NAME = context.getResources().getString(R.string.shared_preferences_name);
 
         mSharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    public static CompleteManager get(Context context){
+    public static StepManager get(Context context){
 
         if(sInstance == null){
 
-            sInstance = new CompleteManager(context);
+            sInstance = new StepManager(context);
         }
 
         return sInstance;
     }
 
-    public static CompleteManager get(){
+    public static StepManager get(){
 
         if(sInstance == null){
 

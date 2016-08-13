@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by spino on 29/07/16.
@@ -25,8 +26,10 @@ public class User implements Parcelable{
 
     public String gender;
 
+    public Category category;
+
     private User(final String email, final String password, final String name,
-                 final String birthDate, final String location, final String gender){
+                 final String birthDate, final String location, final String gender, final Category category){
 
         this.email = email;
         this.password = password;
@@ -34,7 +37,20 @@ public class User implements Parcelable{
         this.birthDate = birthDate;
         this.location = location;
         this.gender = gender;
+        this.category = category;
     }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public User addName(String name) {
         this.name = name;
@@ -52,8 +68,12 @@ public class User implements Parcelable{
         this.birthDate = birthDate;
         return this;
     }
+    public User addCategory(Category category) {
+        this.category = category;
+        return this;
+    }
 
-    protected User(Parcel in) {
+   protected User(Parcel in) {
         email = in.readString();
         password = in.readString();
         boolean present = in.readByte() == Keys.PRESENT;
@@ -81,19 +101,9 @@ public class User implements Parcelable{
         else
             gender = null;
 
+
     }
 
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 
     public static User fromJson(final JSONObject jsonObject) throws JSONException{
 
@@ -214,6 +224,8 @@ public class User implements Parcelable{
 
         public static final String USER = "user";
 
+        public static final Category CATEGORY = new Category(0,"category");
+
         public static final Byte PRESENT = 1;
 
         public static final Byte NOT_PRESENT = 0;
@@ -232,6 +244,8 @@ public class User implements Parcelable{
         private String mLocation;
 
         private String mGender;
+
+        private Category mCategory;
 
         //TODO completare la classe, aggiungendo i parametri, completare i metodi e usare la classe
         //TODO parcelable, utilizzare il metodo opzionale anche per trasformazione JSON
@@ -271,8 +285,13 @@ public class User implements Parcelable{
             return this;
         }
 
+        public Builder withCategory(final Category category) {
+            this.mCategory = category;
+            return this;
+        }
+
         public User build(){
-            return new User(mEmail,mPassword,mName,mBirthDate,mLocation,mGender);
+            return new User(mEmail,mPassword,mName,mBirthDate,mLocation,mGender, mCategory);
         }
     }
 }

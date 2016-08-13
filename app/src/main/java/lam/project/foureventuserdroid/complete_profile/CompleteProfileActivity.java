@@ -41,9 +41,10 @@ public class CompleteProfileActivity extends TabStepper {
 
     public void selectedButton(final View view) {
 
-        view.setSelected(!view.isSelected());
+        Step2Categories.selectedButton(view);
+        //view.setSelected(!view.isSelected());
 
-        /*int tag = (int) view.getTag();
+        /*int tag = (Integer) view.getTag();
         String text = ((TextView) view).getText().toString();
 
         Log.d(TAG,"Tag : "+tag+" title : "+text);*/

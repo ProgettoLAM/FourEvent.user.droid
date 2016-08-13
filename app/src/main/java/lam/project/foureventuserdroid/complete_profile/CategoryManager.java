@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import lam.project.foureventuserdroid.R;
-import lam.project.foureventuserdroid.model.Cateogory;
+import lam.project.foureventuserdroid.model.Category;
 
 /**
  * Created by spino on 10/08/16.
@@ -23,7 +23,7 @@ public class CategoryManager{
 
     private final SharedPreferences mSharedPreferences;
 
-    private List<Cateogory> mFavouriteCache;
+    private List<Category> mFavouriteCache;
 
     private boolean mDirty;
 
@@ -55,26 +55,26 @@ public class CategoryManager{
         return sInstance;
     }
 
-    public List<Cateogory> getFavouriteCategories(){
+    public List<Category> getFavouriteCategories(){
 
         if(!mDirty && mFavouriteCache != null){
 
             return mFavouriteCache;
         }
 
-        final String categoriesString = mSharedPreferences.getString(Cateogory.Keys.CATEGORY,null);
+        final String categoriesString = mSharedPreferences.getString(Category.Keys.CATEGORY,null);
 
         if (categoriesString != null){
 
             try{
 
-                List<Cateogory> tmpCategories = new LinkedList<>();
+                List<Category> tmpCategories = new LinkedList<>();
                 JSONArray categoriesJson = new JSONArray(categoriesString);
 
                 for(int i=0; i<categoriesJson.length(); i++){
 
                     JSONObject categoryJson = new JSONObject(categoriesJson.getJSONObject(i).toString());
-                    Cateogory cateogory = Cateogory.fromJson(categoryJson);
+                    Category cateogory = Category.fromJson(categoryJson);
 
                     tmpCategories.add(cateogory);
                 }
@@ -94,9 +94,9 @@ public class CategoryManager{
         return mFavouriteCache;
     }
 
-    public boolean AddFavourite(@NonNull final Cateogory newCategory){
+    public boolean AddFavourite(@NonNull final Category newCategory){
 
-        List<Cateogory> currentFavourite = getFavouriteCategories();
+        List<Category> currentFavourite = getFavouriteCategories();
 
         if(currentFavourite == null){
 
@@ -107,7 +107,7 @@ public class CategoryManager{
 
         for(int i=0; i<currentFavourite.size(); i++){
 
-            final Cateogory item = currentFavourite.get(i);
+            final Category item = currentFavourite.get(i);
             if(item.id == newCategory.id){
 
                 duplicateIndex = i;
@@ -135,14 +135,14 @@ public class CategoryManager{
             try{
                 final JSONArray array = new JSONArray();
 
-                for(Cateogory cateogory : mFavouriteCache){
+                for(Category cateogory : mFavouriteCache){
 
                     JSONObject item = cateogory.toJson();
                     array.put(item);
                 }
 
                 final String arrayAsString = array.toString();
-                return mSharedPreferences.edit().putString(Cateogory.Keys.CATEGORY,
+                return mSharedPreferences.edit().putString(Category.Keys.CATEGORY,
                         arrayAsString).commit();
 
             } catch (JSONException e) {
