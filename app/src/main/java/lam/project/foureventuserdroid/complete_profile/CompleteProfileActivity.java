@@ -24,6 +24,10 @@ public class CompleteProfileActivity extends TabStepper {
         setDisabledTouch();
         //setPreviousVisible();
 
+        addStep(createFragment(new Step1Info()));
+        addStep(createFragment(new Step2Categories()));
+        addStep(createFragment(new Step3Credits()));
+
         super.onCreate(savedInstanceState);
 
     }
