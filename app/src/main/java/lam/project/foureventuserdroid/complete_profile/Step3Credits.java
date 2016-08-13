@@ -24,7 +24,7 @@ public class Step3Credits extends AbstractStep {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.step1_info, container, false);
+        View v = inflater.inflate(R.layout.step3_credits, container, false);
 
         return v;
     }

@@ -18,9 +18,7 @@ public class CompleteProfileActivity extends TabStepper {
     protected void onCreate(Bundle savedInstanceState) {
 
         //setErrorTimeout(1500);
-        //setLinear(false);
-        setTitle("");
-        //setAlternativeTab(true);
+        setTitle("Completa il tuo profilo");
 
         addStep(createFragment(new Step1Info()));
         addStep(createFragment(new Step2Categories()));
