@@ -1,10 +1,15 @@
 package lam.project.foureventuserdroid.complete_profile;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.github.fcannizzaro.materialstepper.AbstractStep;
 import com.github.fcannizzaro.materialstepper.style.TabStepper;
+
+import lam.project.foureventuserdroid.R;
 
 public class CompleteProfileActivity extends TabStepper {
 

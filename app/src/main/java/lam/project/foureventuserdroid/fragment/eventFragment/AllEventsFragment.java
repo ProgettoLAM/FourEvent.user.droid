@@ -34,6 +34,9 @@ public class AllEventsFragment extends Fragment {
 
     List<Event> mModel;
 
+    ImageView sadEmoticon;
+    TextView notEvents;
+
     public AllEventsFragment() {
         // Required empty public constructor
     }
@@ -46,6 +49,9 @@ public class AllEventsFragment extends Fragment {
         setModel();
 
         final View rootView = inflater.inflate(R.layout.fragment_all_events, container, false);
+
+        sadEmoticon = (ImageView) rootView.findViewById(R.id.sad_emoticon);
+        notEvents = (TextView) rootView.findViewById(R.id.not_events);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.all_events_recycler_view);
 
@@ -68,9 +74,14 @@ public class AllEventsFragment extends Fragment {
                 new Response.Listener<List<Event>>() {
                     @Override
                     public void onResponse(List<Event> response) {
+                        mRecyclerView.setVisibility(View.VISIBLE);
+
                         mModel.clear();
                         mModel.addAll(response);
                         mAdapter.notifyDataSetChanged();
+
+                        sadEmoticon.setVisibility(View.INVISIBLE);
+                        notEvents.setVisibility(View.INVISIBLE);
                     }
                 },
                 new Response.ErrorListener() {
@@ -79,6 +90,11 @@ public class AllEventsFragment extends Fragment {
                         Snackbar.make(getView(), "Error: " + error.getLocalizedMessage(), Snackbar.LENGTH_SHORT)
                                 .setAction("action", null)
                                 .show();
+
+                        sadEmoticon.setVisibility(View.VISIBLE);
+                        notEvents.setVisibility(View.VISIBLE);
+                        mRecyclerView.setVisibility(View.INVISIBLE);
+
                     }
         });
 
