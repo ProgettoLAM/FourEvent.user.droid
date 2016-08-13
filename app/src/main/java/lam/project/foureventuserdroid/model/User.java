@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,10 +25,10 @@ public class User implements Parcelable{
 
     public String gender;
 
-    public Category category;
+    public List<Category> categories;
 
     private User(final String email, final String password, final String name,
-                 final String birthDate, final String location, final String gender, final Category category){
+                 final String birthDate, final String location, final String gender){
 
         this.email = email;
         this.password = password;
@@ -37,7 +36,6 @@ public class User implements Parcelable{
         this.birthDate = birthDate;
         this.location = location;
         this.gender = gender;
-        this.category = category;
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -56,24 +54,28 @@ public class User implements Parcelable{
         this.name = name;
         return this;
     }
+
     public User addLocation(String location) {
         this.location = location;
         return this;
     }
+
     public User addGender(String gender) {
         this.gender = gender;
         return this;
     }
+
     public User addBirthDate(String birthDate) {
         this.birthDate = birthDate;
         return this;
     }
+
     public User addCategory(Category category) {
-        this.category = category;
+        this.categories.add(category);
         return this;
     }
 
-   protected User(Parcel in) {
+    protected User(Parcel in) {
         email = in.readString();
         password = in.readString();
         boolean present = in.readByte() == Keys.PRESENT;
@@ -100,8 +102,6 @@ public class User implements Parcelable{
         }
         else
             gender = null;
-
-
     }
 
 
@@ -224,7 +224,7 @@ public class User implements Parcelable{
 
         public static final String USER = "user";
 
-        public static final Category CATEGORY = new Category(0,"category");
+        public static final String CATEGORIES = "categories";
 
         public static final Byte PRESENT = 1;
 
@@ -244,8 +244,6 @@ public class User implements Parcelable{
         private String mLocation;
 
         private String mGender;
-
-        private Category mCategory;
 
         //TODO completare la classe, aggiungendo i parametri, completare i metodi e usare la classe
         //TODO parcelable, utilizzare il metodo opzionale anche per trasformazione JSON
@@ -285,13 +283,8 @@ public class User implements Parcelable{
             return this;
         }
 
-        public Builder withCategory(final Category category) {
-            this.mCategory = category;
-            return this;
-        }
-
         public User build(){
-            return new User(mEmail,mPassword,mName,mBirthDate,mLocation,mGender, mCategory);
+            return new User(mEmail,mPassword,mName,mBirthDate,mLocation,mGender);
         }
     }
 }

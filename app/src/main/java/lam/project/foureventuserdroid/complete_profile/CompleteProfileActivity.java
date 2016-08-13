@@ -20,6 +20,8 @@ public class CompleteProfileActivity extends TabStepper {
         //setErrorTimeout(1500);
         setTitle("Completa il tuo profilo");
 
+        CategoryManager.get(this);
+
         addStep(createFragment(new Step1Info()));
         addStep(createFragment(new Step2Categories()));
         addStep(createFragment(new Step3Credits()));
