@@ -1,24 +1,26 @@
 package lam.project.foureventuserdroid.complete_profile;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+
 import com.github.fcannizzaro.materialstepper.AbstractStep;
 import com.github.fcannizzaro.materialstepper.style.TabStepper;
 
-import lam.project.foureventuserdroid.R;
-
 public class CompleteProfileActivity extends TabStepper {
 
-    private static final String TAG = CompleteProfileActivity.class.getSimpleName();
+    //private static final String TAG = CompleteProfileActivity.class.getSimpleName();
 
     private int i = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //setErrorTimeout(1500);
+        setErrorTimeout(1500);
+        setLinear(false);
         setTitle("Completa il tuo profilo");
+        setAlternativeTab(false);
+        setDisabledTouch();
+        //setPreviousVisible();
 
         CategoryManager.get(this);
 
