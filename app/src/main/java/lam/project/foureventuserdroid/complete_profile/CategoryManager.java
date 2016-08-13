@@ -94,7 +94,7 @@ public class CategoryManager{
         return mFavouriteCache;
     }
 
-    public boolean AddFavourite(@NonNull final Category newCategory){
+    public boolean AddOrRemoveFavourite(@NonNull final Category newCategory){
 
         List<Category> currentFavourite = getFavouriteCategories();
 
@@ -115,7 +115,7 @@ public class CategoryManager{
             }
         }
 
-        if(duplicateIndex > 0){
+        if(duplicateIndex > -1){
 
             mFavouriteCache.remove(duplicateIndex);
             mDirty = false;

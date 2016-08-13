@@ -144,8 +144,7 @@ public class Step1Info extends AbstractStep{
         location = locationField.getText().toString();
         birthDate = dateInfo.getText().toString();
 
-        UserManager manager = UserManager.get(getContext());
-        user = manager.getUser();
+        user = UserManager.get().getUser();
 
         int selectedId = radioGroup.getCheckedRadioButtonId();
 
@@ -162,39 +161,8 @@ public class Step1Info extends AbstractStep{
         else
             user.addName(completename).addLocation(location).addBirthDate(birthDate);
 
-        try {
+        getStepDataFor(1).putParcelable(User.Keys.USER,user);
 
-            String url = getResources().getString(R.string.backend_uri_put_user) + "/" + user.email;
-
-            CustomRequest request = new CustomRequest(Request.Method.POST, url, user.toJson(),
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-
-                            Snackbar snackbar = Snackbar
-                                    .make(getView(), response.toString(), Snackbar.LENGTH_LONG);
-
-                            snackbar.show();
-
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                    Snackbar snackbar = Snackbar
-                            .make(getView(), error.toString(), Snackbar.LENGTH_LONG);
-
-                    snackbar.show();
-
-                }
-            });
-
-            VolleyRequest.get(getContext()).add(request);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-
-        }
         return true;
     }
     @Override
