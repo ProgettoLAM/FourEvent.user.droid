@@ -4,30 +4,19 @@
     android:layout_height="match_parent"
     android:background="#fff">
 
-    <TextView
-        android:id="@+id/title_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:paddingLeft="18dp"
-        android:paddingTop="20dp"
-        android:text="Dati personali"
-        android:textColor="#999"/>
 
     <EditText
         android:id="@+id/name_info"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:textColor="#000"
-        android:layout_below="@id/title_info"
         android:hint="Nome"
         android:textColorHint="#999"
         android:inputType="text"
         android:textSize="16sp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:background="@drawable/bottom_border_info"
-        />
+        android:background="@drawable/bottom_border_info"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -36,7 +25,6 @@
         android:layout_toStartOf="@id/name_info"
         android:layout_toLeftOf="@id/name_info"
         android:layout_marginTop="15dp"
-        android:layout_below="@id/title_info"
         android:layout_marginRight="5dp"/>
 
     <EditText
