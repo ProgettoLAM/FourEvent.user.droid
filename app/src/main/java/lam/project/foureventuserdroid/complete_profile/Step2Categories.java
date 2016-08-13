@@ -14,7 +14,6 @@ import java.util.List;
 
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.Category;
-import lam.project.foureventuserdroid.model.User;
 
 public class Step2Categories extends AbstractStep {
 
