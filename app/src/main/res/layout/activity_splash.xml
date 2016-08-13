@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="lam.project.foureventuserdroid.SplashActivity"
-    android:background="#66BB6A">
+    android:background="#FBC02D">
 
     <ImageView
         android:id="@+id/splash_imageview"
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="FourEvent"
-        android:textColor="#fff"
+        android:textColor="#E53935"
         android:textSize="32sp"
         android:fontFamily="Helvetica"
         android:layout_below="@id/splash_imageview"
@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tutti gli eventi a portata di touch"
-        android:textColor="#fff"
+        android:textColor="#E53935"
         android:textSize="16sp"
         android:fontFamily="Helvetica"
         android:layout_below="@id/nameApp"

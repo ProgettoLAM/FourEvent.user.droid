@@ -2,9 +2,12 @@
     <string name="app_name">FourEvent.user.droid</string>
     <string name="shared_preferences_name">FourEvent</string>
 
+    <string name="title_events">Events</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!-- Stringhe navigation drawer -->
     <string name="action_events">Events</string>
     <string name="action_favourites">Favourites</string>
     <string name="action_participations">Participations</string>
@@ -17,9 +20,8 @@
     <string name="action_vote">Vote us!</string>
     <string name="action_logout">Logout</string>
 
-    <string name="title_events">Events</string>
 
-    <!-- TODO string -->
+    <!-- Stringhe fragment navigation drawer -->
     <string name="todo_events">TODO: Recycler view events</string>
     <string name="todo_favourites">TODO: Recycler view favourites</string>
     <string name="todo_participations">TODO: Recycler view participations</string>
@@ -28,8 +30,28 @@
     <string name="todo_wallet">TODO: Recycler view wallet</string>
     <string name="todo_settings">TODO: Recycler view settings</string>
 
+    <!-- Stringhe url Volley -->
     <string name="backend_uri_put_user">http://annina.cs.unibo.it:8080/api/user</string>
     <string name="url_service">http://annina.cs.unibo.it:8080/api/events</string>
+
+    <!-- Stringhe categorie -->
+    <string name="musica">Musica</string>
+    <string name="tecnologia">Tecnologia</string>
+    <string name="lettura">Lettura</string>
+    <string name="sport">Sport</string>
+    <string name="moda">Moda</string>
+    <string name="fotografia">Fotografia</string>
+    <string name="marketing">Marketing</string>
+    <string name="natura">Natura</string>
+    <string name="arte">Arte</string>
+    <string name="cibo">Cibo</string>
+    <string name="viaggi">Viaggi</string>
+    <string name="videogiochi">Videogiochi</string>
+
+    <string name="male">M</string>
+    <string name="female">F</string>
+
+
 
 
 </resources>

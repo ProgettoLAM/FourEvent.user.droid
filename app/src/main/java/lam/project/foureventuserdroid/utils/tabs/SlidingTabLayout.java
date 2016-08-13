@@ -1,4 +1,4 @@
-package lam.project.foureventuserdroid.utils;
+package lam.project.foureventuserdroid.utils.tabs;
 
 /*
  * Copyright 2014 Google Inc. All rights reserved.

@@ -1,4 +1,4 @@
-package lam.project.foureventuserdroid.utils;
+package lam.project.foureventuserdroid.utils.tabs;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

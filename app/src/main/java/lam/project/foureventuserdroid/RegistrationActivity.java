@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,9 +20,10 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import lam.project.foureventuserdroid.complete_profile.CompleteProfileActivity;
 import lam.project.foureventuserdroid.model.User;
-import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.UserManager;
+import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 
 /**
@@ -51,6 +53,9 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_registration);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         emailField = (EditText) findViewById(R.id.email_reg);
 
@@ -92,22 +97,25 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
 
-    public  void register(final View view){
+    public void register(final View view){
 
         if(controlUser()) {
 
-            final ProgressDialog progressDialog = new ProgressDialog(this);
+
+            /*final ProgressDialog progressDialog = new ProgressDialog(this);
 
             progressDialog.setMessage("Registrazione in corso...");
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
 
-            progressDialog.show();
+            progressDialog.show();*/
+
+            final User user = User.Builder.create(email, password).build();
 
             try {
 
-                final User user = User.Builder.create(email, password).build();
+
                 String url = getResources().getString(R.string.backend_uri_put_user);
 
 
@@ -121,15 +129,16 @@ public class RegistrationActivity extends AppCompatActivity {
 
                             snackbar.show();
 
+                            //progressDialog.hide();
+
                             next(user);
 
-                            progressDialog.hide();
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
 
-                            progressDialog.hide();
+                            //progressDialog.hide();
 
                             Snackbar snackbar = Snackbar
                                     .make(view, error.toString(), Snackbar.LENGTH_LONG);
@@ -143,6 +152,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
             } catch (JSONException e) {
                 e.printStackTrace();
+
             }
         }
     }
@@ -156,8 +166,10 @@ public class RegistrationActivity extends AppCompatActivity {
     private void next(User user){
 
         UserManager.get(this).save(user);
-
         Intent intent = new Intent(this, MainActivity.class);
+
+        intent.putExtra(User.Keys.USER, user);
+
         startActivity(intent);
         finish();
     }
