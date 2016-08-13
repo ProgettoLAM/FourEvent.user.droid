@@ -14,6 +14,7 @@ import java.util.List;
 
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.Category;
+import lam.project.foureventuserdroid.model.User;
 
 public class Step2Categories extends AbstractStep {
 
@@ -21,8 +22,9 @@ public class Step2Categories extends AbstractStep {
 
     private static final String TAG = CompleteProfileActivity.class.getSimpleName();
 
-    private static List<Category> categoryList = new ArrayList<Category>();
+    private static List<Category> categoryList = new ArrayList<>();
 
+    private static int tag = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,20 +38,22 @@ public class Step2Categories extends AbstractStep {
 
         view.setSelected(!view.isSelected());
 
-        String text = ((TextView) view).getText().toString();
-        int tag = 1;
+        String title = ((TextView) view).getText().toString();
+        Object tagInfo = view.getTag();
+        tag = Integer.parseInt(tagInfo.toString());
 
         if(view.isSelected()) {
-            categoryList.add(new Category(tag, text));
+            categoryList.add(new Category(tag, title));
+        }
+        else if(!view.isSelected()) {
+            categoryList.remove(new Category(tag, title));
         }
 
-        if(!view.isSelected()) {
-            categoryList.remove(new Category(tag, text));
+        for(int i = 0; i< categoryList.size(); i++) {
+            Log.d(TAG," tag: "+ categoryList.get(i).id +" title: "+categoryList.get(i).name);
+
         }
 
-        //int tag = (int) view.getTag();
-
-        Log.d(TAG," title : "+ categoryList.get(0));
 
     }
 

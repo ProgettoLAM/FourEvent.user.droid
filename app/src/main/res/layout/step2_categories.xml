@@ -33,9 +33,6 @@
 
 
                     <Button
-                        android:id="@+id/btn_party"
-                        android:width="120dp"
-                        android:height="105dp"
                         android:text="Musica"
                         android:tag="0"
                         android:textColor="#fff"
