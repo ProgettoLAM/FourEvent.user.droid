@@ -24,6 +24,7 @@ import lam.project.foureventuserdroid.fragment.ParticipationFragment;
 import lam.project.foureventuserdroid.fragment.ProfileFragment;
 import lam.project.foureventuserdroid.fragment.SettingsFragment;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
+import lam.project.foureventuserdroid.fragment.eventFragment.AllEventsFragment;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.UserManager;
 
@@ -44,15 +45,6 @@ public class MainActivity extends AppCompatActivity
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             toolbar.setTitle(R.string.title_events);
             setSupportActionBar(toolbar);
-
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -168,5 +160,9 @@ public class MainActivity extends AppCompatActivity
 
         }
     };
+
+    public void clickFavourite(final View view) {
+        AllEventsFragment.clickFavourite(view);
+    }
 
 }
