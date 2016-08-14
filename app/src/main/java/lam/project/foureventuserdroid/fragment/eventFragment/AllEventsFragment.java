@@ -1,11 +1,16 @@
 package lam.project.foureventuserdroid.fragment.eventFragment;
 
 
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +42,8 @@ public class AllEventsFragment extends Fragment {
     ImageView sadEmoticon;
     TextView notEvents;
 
+    FloatingActionButton fab;
+
     public AllEventsFragment() {
         // Required empty public constructor
     }
@@ -53,6 +60,15 @@ public class AllEventsFragment extends Fragment {
         sadEmoticon = (ImageView) rootView.findViewById(R.id.sad_emoticon);
         notEvents = (TextView) rootView.findViewById(R.id.not_events);
 
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.all_events_recycler_view);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -65,7 +81,40 @@ public class AllEventsFragment extends Fragment {
         mAdapter = new AllEventsAdapter(mModel);
         mRecyclerView.setAdapter(mAdapter);
 
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx,int dy){
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy >0) {
+                    if (fab.isShown()) {
+                        fab.hide();
+                    }
+                }
+                else if (dy <0) {
+                    // Scroll Up
+                    if (!fab.isShown()) {
+                        fab.show();
+                    }
+                }
+            }
+        });
+
         return rootView;
+    }
+
+    public static void clickFavourite(View view) {
+
+        ImageView icon = (ImageView) view;
+        Object tag = icon.getTag();
+
+        int ic_star = R.drawable.ic_star_empty;
+
+        if( tag != null && ((Integer)tag).intValue() == ic_star) {
+            ic_star = R.drawable.ic_star;
+        }
+        icon.setTag(ic_star);
+        icon.setBackgroundResource(ic_star);
+
     }
 
     private void setModel(){
@@ -125,7 +174,7 @@ public class AllEventsFragment extends Fragment {
         private TextView mTagList;
 
         private ImageView mFavouriteList;
-        private TextView mPrice;
+        private TextView mPriceList;
 
         public AllEventsViewHolder(View itemView) {
             super(itemView);
@@ -136,7 +185,7 @@ public class AllEventsFragment extends Fragment {
             mTagList = (TextView) itemView.findViewById(R.id.tag_list);
 
             mFavouriteList = (ImageView) itemView.findViewById(R.id.favourite_list);
-            mPrice = (TextView) itemView.findViewById(R.id.price_list);
+            mPriceList = (TextView) itemView.findViewById(R.id.price_list);
         }
 
         public void bind(Event event){
@@ -145,6 +194,12 @@ public class AllEventsFragment extends Fragment {
             mAddressList.setText(event.mAddress);
             mDateList.setText(event.mDate);
             mTagList.setText(event.mTag);
+            if(event.mPrice.equals("FREE")){
+                mPriceList.setText(event.mPrice);
+                mPriceList.setTextColor(Color.parseColor("#4CAF50"));
+            }
+            else
+                mPriceList.setText(event.mPrice+ "€");
         }
     }
 

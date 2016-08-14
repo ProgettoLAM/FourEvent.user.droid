@@ -48,8 +48,10 @@
     <string name="viaggi">Viaggi</string>
     <string name="videogiochi">Videogiochi</string>
 
+    <!-- Altro -->
     <string name="male">M</string>
     <string name="female">F</string>
+    <string name="euro">\u20ac</string>
 
 
 
