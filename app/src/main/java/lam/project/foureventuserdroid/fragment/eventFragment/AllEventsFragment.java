@@ -79,7 +79,7 @@ public class AllEventsFragment extends Fragment {
         });
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.all_events_recycler_view);
-
+        mAdapter = new AllEventsAdapter(mModel);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -87,7 +87,6 @@ public class AllEventsFragment extends Fragment {
 
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new AllEventsAdapter(mModel);
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

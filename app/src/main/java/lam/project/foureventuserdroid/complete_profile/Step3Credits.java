@@ -71,6 +71,7 @@ public class Step3Credits extends AbstractStep {
     @Override
     public boolean nextIf() {
 
+        //TODO gestire caso in cui non arriva niente dallo step 2
         User user = getStepDataFor(2).getParcelable(User.Keys.USER);
 
         try {

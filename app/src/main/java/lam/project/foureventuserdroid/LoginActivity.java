@@ -88,14 +88,14 @@ public class LoginActivity extends AppCompatActivity {
     public void login(final View view) {
         if(controlUser()) {
 
-            final ProgressDialog progressDialog = new ProgressDialog(this);
+            /*final ProgressDialog progressDialog = new ProgressDialog(this);
 
             progressDialog.setMessage("Login in corso...");
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
 
-            progressDialog.show();
+            progressDialog.show();*/
 
                 email = emailField.getText().toString();
                 password = passwordField.getText().toString();
@@ -120,13 +120,13 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                                 catch (JSONException ex ) {}
 
-                                progressDialog.hide();
+                                //progressDialog.hide();
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        progressDialog.hide();
+                        //progressDialog.hide();
 
                         Snackbar snackbar = Snackbar
                                 .make(view, "Email / password sbagliata", Snackbar.LENGTH_LONG);
