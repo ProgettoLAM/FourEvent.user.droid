@@ -21,8 +21,9 @@ import org.json.JSONObject;
 
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
-import lam.project.foureventuserdroid.utils.UserManager;
+import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
+import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 /**
  * Created by Vale on 31/07/2016.

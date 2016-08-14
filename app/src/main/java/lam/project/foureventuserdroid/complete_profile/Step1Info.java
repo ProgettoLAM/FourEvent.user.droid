@@ -3,7 +3,6 @@ package lam.project.foureventuserdroid.complete_profile;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,21 +15,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.github.fcannizzaro.materialstepper.AbstractStep;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Calendar;
 
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
-import lam.project.foureventuserdroid.utils.UserManager;
-import lam.project.foureventuserdroid.utils.connection.CustomRequest;
-import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
+import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
+import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 /**
  * Created by Vale on 11/08/2016.

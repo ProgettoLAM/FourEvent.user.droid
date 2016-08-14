@@ -1,6 +1,5 @@
 package lam.project.foureventuserdroid;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -20,11 +19,10 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import lam.project.foureventuserdroid.complete_profile.CompleteProfileActivity;
 import lam.project.foureventuserdroid.model.User;
-import lam.project.foureventuserdroid.utils.UserManager;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
+import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 /**
  * Created by Vale on 30/07/2016.

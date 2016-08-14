@@ -9,7 +9,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import lam.project.foureventuserdroid.utils.UserManager;
+import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
+import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 public class SplashActivity extends AppCompatActivity {
 

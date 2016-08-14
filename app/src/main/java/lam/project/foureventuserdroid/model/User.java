@@ -10,8 +10,6 @@ import org.json.JSONObject;
 import java.util.LinkedList;
 import java.util.List;
 
-import lam.project.foureventuserdroid.R;
-
 /**
  * Created by spino on 29/07/16.
  */

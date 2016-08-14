@@ -103,7 +103,6 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_star_empty"
                     android:layout_alignParentRight="true"
-                    android:onClick="clickFavourite"
                     android:layout_marginTop="-6dp"/>
 
             </RelativeLayout>

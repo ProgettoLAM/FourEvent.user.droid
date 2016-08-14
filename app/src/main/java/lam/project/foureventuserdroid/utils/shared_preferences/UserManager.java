@@ -1,4 +1,4 @@
-package lam.project.foureventuserdroid.utils;
+package lam.project.foureventuserdroid.utils.shared_preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;

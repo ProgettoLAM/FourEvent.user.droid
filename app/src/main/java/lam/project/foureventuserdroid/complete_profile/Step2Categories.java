@@ -12,6 +12,7 @@ import com.github.fcannizzaro.materialstepper.AbstractStep;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.Category;
 import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.shared_preferences.CategoryManager;
 
 public class Step2Categories extends AbstractStep {
 

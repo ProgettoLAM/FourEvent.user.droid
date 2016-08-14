@@ -1,10 +1,13 @@
 package lam.project.foureventuserdroid.fragment.eventFragment;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -21,12 +24,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
+import lam.project.foureventuserdroid.DetailsEventActivity;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.utils.connection.EventListRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
+import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 
 
 /**
@@ -37,10 +43,12 @@ public class AllEventsFragment extends Fragment {
     RecyclerView mRecyclerView;
     AllEventsAdapter mAdapter;
 
-    List<Event> mModel;
+    public static List<Event> mModel;
+    public static List<Event> favouriteEvents;
 
     ImageView sadEmoticon;
     TextView notEvents;
+    ImageView favourite;
 
     FloatingActionButton fab;
 
@@ -59,6 +67,7 @@ public class AllEventsFragment extends Fragment {
 
         sadEmoticon = (ImageView) rootView.findViewById(R.id.sad_emoticon);
         notEvents = (TextView) rootView.findViewById(R.id.not_events);
+        favourite = (ImageView) rootView.findViewById(R.id.favourite_list);
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +100,6 @@ public class AllEventsFragment extends Fragment {
                     }
                 }
                 else if (dy <0) {
-                    // Scroll Up
                     if (!fab.isShown()) {
                         fab.show();
                     }
@@ -100,21 +108,6 @@ public class AllEventsFragment extends Fragment {
         });
 
         return rootView;
-    }
-
-    public static void clickFavourite(View view) {
-
-        ImageView icon = (ImageView) view;
-        Object tag = icon.getTag();
-
-        int ic_star = R.drawable.ic_star_empty;
-
-        if( tag != null && ((Integer)tag).intValue() == ic_star) {
-            ic_star = R.drawable.ic_star;
-        }
-        icon.setTag(ic_star);
-        icon.setBackgroundResource(ic_star);
-
     }
 
     private void setModel(){
@@ -151,22 +144,7 @@ public class AllEventsFragment extends Fragment {
 
     }
 
-    /*Si attacca il fragment al MainActivity tramite l'interfaccia
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if(context instanceof VolleyRequest.QueueProvider) {
-            mQueueProvider = (VolleyRequest.QueueProvider) context;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mQueueProvider = null;
-    }*/
-
-    public final static class AllEventsViewHolder extends RecyclerView.ViewHolder{
+    public final class AllEventsViewHolder extends RecyclerView.ViewHolder{
 
         private TextView mTitleList;
         private TextView mAddressList;
@@ -176,7 +154,8 @@ public class AllEventsFragment extends Fragment {
         private ImageView mFavouriteList;
         private TextView mPriceList;
 
-        public AllEventsViewHolder(View itemView) {
+        private AllEventsViewHolder(View itemView) {
+
             super(itemView);
 
             mTitleList = (TextView) itemView.findViewById(R.id.title_list);
@@ -186,6 +165,61 @@ public class AllEventsFragment extends Fragment {
 
             mFavouriteList = (ImageView) itemView.findViewById(R.id.favourite_list);
             mPriceList = (TextView) itemView.findViewById(R.id.price_list);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), DetailsEventActivity.class);
+                    startActivity(intent);
+                    Log.d("funziona", "si");
+                }
+            });
+
+            mFavouriteList.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Event event = mModel.get(getAdapterPosition());
+                    Context context = v.getContext();
+
+                    ImageView icon = (ImageView) v;
+                    Object tag = icon.getTag();
+                    int ic_star = R.drawable.ic_star_empty;
+
+                    if( tag != null && ((Integer)tag).intValue() == ic_star) {
+                        ic_star = R.drawable.ic_star;
+
+                        //Salvataggio evento nei preferiti, se cliccata la stella
+                        FavouriteManager.get(context).save(event);
+                        List<Event> events = FavouriteManager.get(context).getFavouriteEvents();
+                        for(Event evt : events) {
+                            Log.d("evento aggiunto", evt.mTitle);
+                        }
+                    }
+                    else {
+                        FavouriteManager.get(context).removeEvent(event);
+                        List<Event> events = FavouriteManager.get(context).getFavouriteEvents();
+                        for(Event evt : events) {
+                            Log.d("eventi rimasti", evt.mTitle);
+                        }
+                    }
+                    icon.setTag(ic_star);
+                    icon.setBackgroundResource(ic_star);
+                }
+            });
+
+            //TODO far visualizzare all'apertura della app solo le stelle degli eventi salvati
+            favouriteEvents = FavouriteManager.get(itemView.getContext()).getFavouriteEvents();
+            if (!favouriteEvents.isEmpty()) {
+                for (Event evt : favouriteEvents) {
+                    for (Event evt2 : mModel) {
+                        if(evt.mTitle.equals(evt2.mTitle)) {
+                            mFavouriteList.setTag(R.drawable.ic_star);
+                            mFavouriteList.setBackgroundResource(R.drawable.ic_star);
+                        }
+                    }
+                }
+            }
+
         }
 
         public void bind(Event event){
@@ -194,6 +228,7 @@ public class AllEventsFragment extends Fragment {
             mAddressList.setText(event.mAddress);
             mDateList.setText(event.mDate);
             mTagList.setText(event.mTag);
+
             if(event.mPrice.equals("FREE")){
                 mPriceList.setText(event.mPrice);
                 mPriceList.setTextColor(Color.parseColor("#4CAF50"));
@@ -203,7 +238,7 @@ public class AllEventsFragment extends Fragment {
         }
     }
 
-    public final static class AllEventsAdapter extends RecyclerView.Adapter<AllEventsViewHolder>{
+    public final class AllEventsAdapter extends RecyclerView.Adapter<AllEventsViewHolder>{
 
         private final List<Event> mModel;
 
@@ -226,6 +261,7 @@ public class AllEventsFragment extends Fragment {
         public void onBindViewHolder(AllEventsViewHolder holder, int position) {
 
             holder.bind(mModel.get(position));
+
         }
 
         @Override

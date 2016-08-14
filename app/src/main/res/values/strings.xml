@@ -3,6 +3,8 @@
     <string name="shared_preferences_name">FourEvent</string>
 
     <string name="title_events">Events</string>
+    <string name="title_details">Dettagli</string>
+
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -52,8 +54,6 @@
     <string name="male">M</string>
     <string name="female">F</string>
     <string name="euro">\u20ac</string>
-
-
 
 
 </resources>

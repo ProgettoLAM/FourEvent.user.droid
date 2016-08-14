@@ -1,9 +1,7 @@
 package lam.project.foureventuserdroid;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -11,8 +9,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -26,14 +22,10 @@ import lam.project.foureventuserdroid.fragment.SettingsFragment;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
 import lam.project.foureventuserdroid.fragment.eventFragment.AllEventsFragment;
 import lam.project.foureventuserdroid.model.User;
-import lam.project.foureventuserdroid.utils.UserManager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private User user;
-
-    //TODO distinzione tra profilo completato e profilo non completato 0/1
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,9 +152,5 @@ public class MainActivity extends AppCompatActivity
 
         }
     };
-
-    public void clickFavourite(final View view) {
-        AllEventsFragment.clickFavourite(view);
-    }
 
 }

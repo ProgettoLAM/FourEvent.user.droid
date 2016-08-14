@@ -1,4 +1,4 @@
-package lam.project.foureventuserdroid.complete_profile;
+package lam.project.foureventuserdroid.utils.shared_preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,7 +17,7 @@ import lam.project.foureventuserdroid.model.Category;
 /**
  * Created by spino on 10/08/16.
  */
-public class CategoryManager{
+public class CategoryManager {
 
     private static CategoryManager sInstance;
 
