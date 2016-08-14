@@ -54,9 +54,6 @@ public class EventsFragment extends Fragment {
 
         tabLayout.setViewPager(pager);
 
-
-
-
         return rootView;
     }
 

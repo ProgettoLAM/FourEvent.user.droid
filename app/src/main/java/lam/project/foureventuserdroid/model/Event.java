@@ -22,18 +22,21 @@ public class Event {
 
     public final float mLongitude;
 
+    public final String mPrice;
+
     public static Event fromJson(final JSONObject jsonObject) throws JSONException{
 
         final String title = jsonObject.getString(Keys.TITLE);
         final String date = jsonObject.getString(Keys.DATE);
         final String tag = jsonObject.getString(Keys.TAG);
         final String address = jsonObject.getString(Keys.ADDRESS);
+        final String price = jsonObject.getString(Keys.PRICE);
 
         final float latitude = BigDecimal.valueOf(jsonObject.getDouble(Keys.LATITUDE)).floatValue();
         final float longitude = BigDecimal.valueOf(jsonObject.getDouble(Keys.LONGITUDE)).floatValue();
 
         return Builder.create(title,date).withTag(tag).withAddress(address)
-                .withLocation(latitude,longitude).build();
+                .withLocation(latitude,longitude).withPrice(price).build();
     }
 
     public JSONObject toJson() throws JSONException{
@@ -46,6 +49,7 @@ public class Event {
         jsonObject.put(Keys.ADDRESS, mAddress);
         jsonObject.put(Keys.LATITUDE, mLatitude);
         jsonObject.put(Keys.LONGITUDE, mLongitude);
+        jsonObject.put(Keys.PRICE, mPrice);
 
         return jsonObject;
     }
@@ -58,11 +62,12 @@ public class Event {
         public static final String ADDRESS = "address";
         public static final String LATITUDE = "latitude";
         public static final String LONGITUDE = "longitude";
+        public static final String PRICE = "price";
 
     }
 
     private Event(final String title, final String mDate, final String tag, final String address,
-                  final float latitude, final float longitude){
+                  final float latitude, final float longitude, final String price){
 
         this.mTitle = title;
         this.mDate = mDate;
@@ -70,6 +75,7 @@ public class Event {
         this.mAddress = address;
         this.mLatitude = latitude;
         this.mLongitude = longitude;
+        this.mPrice = price;
     }
 
     public static class Builder{
@@ -80,6 +86,7 @@ public class Event {
         private String mAddress;
         private float mLatitude;
         private float mLongitude;
+        private String mPrice;
 
         private Builder(final String title, final String date){
 
@@ -111,9 +118,14 @@ public class Event {
             return this;
         }
 
+        public Builder withPrice(final String price) {
+            this.mPrice = price;
+            return this;
+        }
+
         public Event build(){
 
-            return new Event(mTitle, mDate, mTag, mAddress, mLatitude, mLongitude);
+            return new Event(mTitle, mDate, mTag, mAddress, mLatitude, mLongitude, mPrice);
         }
     }
 }
