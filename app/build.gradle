@@ -33,6 +33,7 @@ dependencies {
     compile 'me.neavo:volley:2014.12.09'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.fcannizzaro:material-stepper:1.2.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
     testCompile 'junit:junit:4.12'
 }
