@@ -3,6 +3,7 @@ package lam.project.foureventuserdroid;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,8 +30,6 @@ public class DetailsEventActivity extends AppCompatActivity {
     private GoogleMap googleMap;
     private LatLng HOME = new LatLng (42.5034442, 14.1723788);
 
-    FloatingActionButton fab1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,10 +43,9 @@ public class DetailsEventActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        Intent srcIntent = getIntent();
+        Event currentEvent = (Event) getIntent().getParcelableExtra(Event.Keys.EVENT);
 
-        Event currentEvent = srcIntent.getParcelableExtra(Event.Keys.EVENT);
-
+        setInfo(currentEvent);
     }
 
     private void initMap() {
@@ -67,7 +66,27 @@ public class DetailsEventActivity extends AppCompatActivity {
         initMap();
     }
 
+    private void setInfo(Event event){
 
+        String participations = event.mCurrentTicket+"/"+event.mMaxTicket;
+
+        ((TextView) findViewById(R.id.detail_title)).setText(event.mTitle);
+        ((TextView) findViewById(R.id.detail_date)).setText(event.mStartDate);
+        ((TextView) findViewById(R.id.detail_distance)).setText(event.mAddress);
+        ((TextView) findViewById(R.id.detail_desc)).setText(event.mDescription);
+        ((TextView) findViewById(R.id.detail_tickets)).setText(participations);
+
+        final View.OnClickListener listener = new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+                Snackbar.make(v.getRootView(),"Bought",Snackbar.LENGTH_LONG)
+                        .setAction("action", null)
+                        .show();
+            }
+        };
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

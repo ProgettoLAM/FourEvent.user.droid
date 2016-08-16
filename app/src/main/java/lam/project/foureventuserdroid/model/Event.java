@@ -106,21 +106,13 @@ public class Event implements Parcelable{
             mParticipation = in.readInt();
 
         }
-        else
-            mParticipation = 0;
-
         if(present) {
             mCurrentTicket = in.readInt();
 
         }
-        else
-            mCurrentTicket = 0;
-
         if(present) {
             mMaxTicket = in.readInt();
         }
-        else
-            mMaxTicket = 0;
     }
 
     public static Event fromJson(final JSONObject jsonObject) throws JSONException{
