@@ -12,7 +12,9 @@
         android:layout_width="fill_parent"
         android:layout_height="260dp"
         android:layout_margin="5dp"
-        card_view:cardCornerRadius="2dp">
+        card_view:cardCornerRadius="2dp"
+        card_view:contentPadding="5dp"
+        card_view:cardElevation="3dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -22,7 +24,7 @@
                 android:id="@+id/img_event"
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
-                android:scaleType="center"
+                android:scaleType="centerCrop"
                 android:src="@drawable/img_porchetta" />
 
 
@@ -31,12 +33,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sagra della porchetta"
-                android:textColor="#363F45"
+                android:textColor="@color/darkerText"
                 android:paddingTop="16dp"
                 android:paddingLeft="16dp"
                 android:textSize="18sp"
                 android:layout_below="@id/img_event"
-                />
+                android:textStyle="normal|bold" />
 
 
             <LinearLayout
@@ -55,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Via dell'arrosticino 9"
-                    android:textColor="#999"
+                    android:textColor="@color/lightText"
                     android:textSize="15sp" />
 
                 <TextView
@@ -64,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:text="28 lug - 31 lug"
-                    android:textColor="#999"
+                    android:textColor="@color/lightText"
                     android:layout_weight="1" />
 
             </LinearLayout>
@@ -82,28 +84,33 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Festival"
-                    android:textColor="#E53935"
+                    android:textColor="@color/red"
                     android:textSize="15sp"
                     android:layout_alignParentLeft="true" />
 
-
-                <TextView
-                    android:id="@+id/price_list"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="35dp"
-                    android:layout_marginTop="2dp"
-                    android:text="FREE"
-                    android:textColor="#363F45" />
+                    android:orientation="horizontal"
+                    android:layout_alignParentRight="true">
 
-                <ImageView
-                    android:id="@+id/favourite_list"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_star_empty"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginTop="-6dp"/>
+                    <TextView
+                        android:id="@+id/price_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="FREE"
+                        android:textColor="@color/darkerText" />
+
+                    <ImageView
+                        android:id="@+id/favourite_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/ic_star_empty"
+                        android:layout_toRightOf="@id/price_list"/>
+                </RelativeLayout>
 
             </RelativeLayout>
         </RelativeLayout>
