@@ -153,6 +153,8 @@ public class AllEventsFragment extends Fragment {
         private ImageView mFavouriteList;
         private TextView mPriceList;
 
+        private Event event;
+
         private AllEventsViewHolder(View itemView) {
 
             super(itemView);
@@ -168,9 +170,11 @@ public class AllEventsFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Intent intent = new Intent(v.getContext(), DetailsEventActivity.class);
+
+                    intent.putExtra(Event.Keys.EVENT,event);
                     startActivity(intent);
-                    Log.d("funziona", "si");
                 }
             });
 
@@ -222,6 +226,8 @@ public class AllEventsFragment extends Fragment {
         }
 
         public void bind(Event event){
+
+            this.event = event;
 
             mTitleList.setText(event.mTitle);
             mAddressList.setText(event.mAddress);

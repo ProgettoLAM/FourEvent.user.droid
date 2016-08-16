@@ -1,6 +1,7 @@
 package lam.project.foureventuserdroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.NavUtils;
@@ -19,6 +20,8 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import lam.project.foureventuserdroid.model.Event;
 
 public class DetailsEventActivity extends AppCompatActivity {
 
@@ -39,6 +42,10 @@ public class DetailsEventActivity extends AppCompatActivity {
         //Per la visualizzazione del button back sulla toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        Intent srcIntent = getIntent();
+
+        Event currentEvent = srcIntent.getParcelableExtra(Event.Keys.EVENT);
 
     }
 
