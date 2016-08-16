@@ -1,12 +1,17 @@
 package lam.project.foureventuserdroid;
 
 import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,6 +24,8 @@ public class DetailsEventActivity extends AppCompatActivity {
 
     private GoogleMap googleMap;
     private LatLng HOME = new LatLng (42.5034442, 14.1723788);
+
+    FloatingActionButton fab1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +40,8 @@ public class DetailsEventActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
     }
+
     private void initMap() {
         if (googleMap == null) {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();

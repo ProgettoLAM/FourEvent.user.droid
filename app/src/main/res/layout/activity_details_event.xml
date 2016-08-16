@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout android:layout_width="match_parent"
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
 
     <include
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"
-        android:layout_height="81dp" />
+        android:layout_height="81dp"
+        android:id="@+id/include" />
 
     <fragment
         android:id="@+id/map"
@@ -17,45 +20,129 @@
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
+    <include layout="@layout/fab_layout" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_below="@+id/map"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingTop="4dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/detail_title"
-                android:text="Sagra del divano"
-                android:gravity="center"
-                android:textSize="34sp"
+                android:text="Arduino BABY"
+                android:textSize="24sp"
                 android:textColor="@color/colorPrimary"
-                android:fontFamily="serif" />
+                android:fontFamily="sans-serif" />
 
-            <TextView
-                android:text="25 Agosto 2016"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/detail_date"
-                android:gravity="right" />
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
 
-            <TextView
-                android:text="Descrizione di questo fantastico evento! E' il migliore evento a cui possiate partecipare!"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_calendar"/>
+
+                <TextView
+                    android:id="@+id/detail_date"
+                    android:text="SAB 20 Agosto ALLE 16:00"
+                    android:layout_marginLeft="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    tools:ignore="RtlHardcoded" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_location"/>
+
+                <TextView
+                    android:id="@+id/detail_distance"
+                    android:text="1.6 KM"
+                    android:layout_marginLeft="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:text="Tra fili elettrici, circuiti, led e Arduini (tutto rigorosamente a bassissima tensione) insegneremo come creare svariati giochi e utili applicazioni! Divertimento e apprendimento assicurato!"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
                 android:id="@+id/detail_desc"
                 android:layout_marginTop="20dp"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#dcdcdc"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/detail_buy"
+                    android:text="Acquista"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:background="@drawable/flat_button"
+                    android:textColor="@color/flat_button_color"
+                    android:elevation="0dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/detail_tickets"
+                    android:text="25/25 partecipanti"
+                    android:layout_marginLeft="24dp"
+                    android:textColor="@color/red"/>
+
+            </LinearLayout>
+
+
+
+
         </LinearLayout>
 
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            app:backgroundTint="?attr/colorPrimary"
+            app:fabSize="normal"
+            app:elevation="2dp"
+            app:srcCompat="@drawable/ic_star_empty"/>
         <!--
         <LinearLayout
             android:layout_width="match_parent"
@@ -154,6 +241,4 @@
     </LinearLayout>
 
 
-
-
-</LinearLayout>
+</RelativeLayout>
