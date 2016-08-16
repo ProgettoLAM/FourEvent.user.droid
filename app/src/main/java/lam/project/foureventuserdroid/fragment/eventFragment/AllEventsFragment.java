@@ -3,11 +3,8 @@ package lam.project.foureventuserdroid.fragment.eventFragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -22,9 +19,9 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 
 import lam.project.foureventuserdroid.DetailsEventActivity;
@@ -48,7 +45,7 @@ public class AllEventsFragment extends Fragment {
 
     ImageView sadEmoticon;
     TextView notEvents;
-    ImageView favourite;
+    ImageView imgEvent;
 
     FloatingActionButton fab;
 
@@ -67,7 +64,7 @@ public class AllEventsFragment extends Fragment {
 
         sadEmoticon = (ImageView) rootView.findViewById(R.id.sad_emoticon);
         notEvents = (TextView) rootView.findViewById(R.id.not_events);
-        favourite = (ImageView) rootView.findViewById(R.id.favourite_list);
+
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -169,6 +166,10 @@ public class AllEventsFragment extends Fragment {
             mFavouriteList = (ImageView) itemView.findViewById(R.id.favourite_list);
             mPriceList = (TextView) itemView.findViewById(R.id.price_list);
 
+            imgEvent = (ImageView) itemView.findViewById(R.id.img_event);
+
+            Picasso.with(itemView.getContext()).load("http://annina.cs.unibo.it:8080/api/event/img/img00.jpg").resize(1200,600).into(imgEvent);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -233,7 +234,7 @@ public class AllEventsFragment extends Fragment {
 
             mTitleList.setText(event.mTitle);
             mAddressList.setText(event.mAddress);
-            mDateList.setText(event.mDate);
+            mDateList.setText(event.mStartDate);
             mTagList.setText(event.mTag);
 
             if(event.mPrice.equals("FREE")){
