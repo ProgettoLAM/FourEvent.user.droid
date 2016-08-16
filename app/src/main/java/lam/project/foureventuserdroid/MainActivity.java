@@ -1,23 +1,16 @@
 package lam.project.foureventuserdroid;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -27,10 +20,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import lam.project.foureventuserdroid.complete_profile.StepManager;
@@ -47,8 +37,6 @@ import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    private User user;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -87,11 +75,6 @@ public class MainActivity extends AppCompatActivity
             navigationView.setNavigationItemSelectedListener(this);
 
 
-                //Setto la pagina principale come quella di ricerca degli eventi
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.anchor_point, new EventsFragment())
-                    .commit();
-
             if(savedInstanceState != null){
 
                 mResolvingError = savedInstanceState.getBoolean(RESOLVING_ERROR_STATE_KEY,false);
@@ -117,7 +100,7 @@ public class MainActivity extends AppCompatActivity
             mOnConnectionFailedListener = new GoogleApiClient.OnConnectionFailedListener() {
 
                 @Override
-                public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                public void onConnectionFailed(ConnectionResult connectionResult) {
 
                     if(mResolvingError){
 
@@ -158,7 +141,7 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.anchor_point, new EventsFragment())
                     .commit();
 
-            user = UserManager.get(getApplicationContext()).getUser();
+            User user = UserManager.get(getApplicationContext()).getUser();
 
             TextView name = (TextView) headerView.findViewById(R.id.name);
             TextView location = (TextView) headerView.findViewById(R.id.location);
@@ -272,7 +255,6 @@ public class MainActivity extends AppCompatActivity
 
         public ErrorDialogFragment() {}
 
-        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
