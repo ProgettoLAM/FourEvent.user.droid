@@ -3,11 +3,8 @@ package lam.project.foureventuserdroid.fragment.eventFragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -25,7 +22,6 @@ import com.android.volley.VolleyError;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 
 import lam.project.foureventuserdroid.DetailsEventActivity;
@@ -229,7 +225,7 @@ public class AllEventsFragment extends Fragment {
 
             mTitleList.setText(event.mTitle);
             mAddressList.setText(event.mAddress);
-            mDateList.setText(event.mDate);
+            mDateList.setText(event.mStartDate);
             mTagList.setText(event.mTag);
 
             if(event.mPrice.equals("FREE")){
