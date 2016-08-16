@@ -89,8 +89,6 @@ public class Event implements Parcelable{
 
     protected Event(Parcel in) {
 
-        boolean present = in.readByte() == Keys.PRESENT;
-
         mTitle = in.readString();
         mDescription = in.readString();
         mStartDate = in.readString();
@@ -102,16 +100,28 @@ public class Event implements Parcelable{
         mPrice = in.readString();
         mImage = in.readString();
 
+        boolean present = in.readByte() == Keys.PRESENT;
         if(present) {
+
             mParticipation = in.readInt();
-
+        }else{
+            mParticipation = 0;
         }
+
+        present = in.readByte() == Keys.PRESENT;
         if(present) {
+
             mCurrentTicket = in.readInt();
-
+        }else{
+            mCurrentTicket = 0;
         }
+
+        present = in.readByte() == Keys.PRESENT;
         if(present) {
+
             mMaxTicket = in.readInt();
+        }else{
+            mMaxTicket = 0;
         }
     }
 
