@@ -135,8 +135,6 @@ public class Event implements Parcelable{
         final String address = jsonObject.getString(Keys.ADDRESS);
         final String price = jsonObject.getString(Keys.PRICE);
         final String image = jsonObject.getString(Keys.IMAGE);
-        final int participation = jsonObject.getInt(Keys.PARTICIPATION);
-
         final float latitude = BigDecimal.valueOf(jsonObject.getDouble(Keys.LATITUDE)).floatValue();
         final float longitude = BigDecimal.valueOf(jsonObject.getDouble(Keys.LONGITUDE)).floatValue();
 

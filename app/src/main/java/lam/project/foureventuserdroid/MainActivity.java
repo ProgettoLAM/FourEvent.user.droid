@@ -22,6 +22,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -39,10 +41,14 @@ import lam.project.foureventuserdroid.fragment.ParticipationFragment;
 import lam.project.foureventuserdroid.fragment.ProfileFragment;
 import lam.project.foureventuserdroid.fragment.SettingsFragment;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
+import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private User user;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -57,11 +63,6 @@ public class MainActivity extends AppCompatActivity
 
     private boolean mResolvingError;
 
-    public interface ConnectionCallbacks{
-
-        void onConnected(Bundle connectionHint);
-        void onConnectionSuspended(int cause);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,13 +86,13 @@ public class MainActivity extends AppCompatActivity
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
 
-            if(savedInstanceState == null){
 
                 //Setto la pagina principale come quella di ricerca degli eventi
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.anchor_point, new EventsFragment())
-                        .commit();
-            }else{
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.anchor_point, new EventsFragment())
+                    .commit();
+
+            if(savedInstanceState != null){
 
                 mResolvingError = savedInstanceState.getBoolean(RESOLVING_ERROR_STATE_KEY,false);
             }
@@ -149,6 +150,20 @@ public class MainActivity extends AppCompatActivity
                     .addConnectionCallbacks(mConnectionCallbacks)
                     .addOnConnectionFailedListener(mOnConnectionFailedListener)
                     .build();
+
+            View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+
+            //Setto la pagina principale come quella di ricerca degli eventi
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.anchor_point, new EventsFragment())
+                    .commit();
+
+            user = UserManager.get(getApplicationContext()).getUser();
+
+            TextView name = (TextView) headerView.findViewById(R.id.name);
+            TextView location = (TextView) headerView.findViewById(R.id.location);
+            name.setText(user.name);
+            location.setText(user.location);
 
         } else {
 
@@ -297,4 +312,5 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
+
 }
