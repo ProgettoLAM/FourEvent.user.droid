@@ -3,6 +3,7 @@ package lam.project.foureventuserdroid;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -67,7 +68,24 @@ public class DetailsEventActivity extends AppCompatActivity {
 
     private void setInfo(Event event){
 
+        String participations = event.mCurrentTicket+"/"+event.mMaxTicket;
+
         ((TextView) findViewById(R.id.detail_title)).setText(event.mTitle);
+        ((TextView) findViewById(R.id.detail_date)).setText(event.mStartDate);
+        ((TextView) findViewById(R.id.detail_distance)).setText(event.mAddress);
+        ((TextView) findViewById(R.id.detail_desc)).setText(event.mDescription);
+        ((TextView) findViewById(R.id.detail_tickets)).setText(participations);
+
+        final View.OnClickListener listener = new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+                Snackbar.make(v.getRootView(),"Bought",Snackbar.LENGTH_LONG)
+                        .setAction("action", null)
+                        .show();
+            }
+        };
     }
 
     @Override
