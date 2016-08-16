@@ -90,9 +90,12 @@ public class AllEventsFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx,int dy){
+
                 super.onScrolled(recyclerView, dx, dy);
+
                 if (dy >0) {
                     if (fab.isShown()) {
                         fab.hide();
@@ -153,9 +156,8 @@ public class AllEventsFragment extends Fragment {
         private ImageView mFavouriteList;
         private TextView mPriceList;
 
-        private Event event;
 
-        private AllEventsViewHolder(View itemView) {
+        private AllEventsViewHolder(final View itemView) {
 
             super(itemView);
 
@@ -171,9 +173,9 @@ public class AllEventsFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent = new Intent(v.getContext(), DetailsEventActivity.class);
+                    Intent intent = new Intent(itemView.getContext(),DetailsEventActivity.class);
 
-                    intent.putExtra(Event.Keys.EVENT,event);
+                    intent.putExtra(Event.Keys.EVENT,mModel.get(getAdapterPosition()));
                     startActivity(intent);
                 }
             });
@@ -181,7 +183,9 @@ public class AllEventsFragment extends Fragment {
             mFavouriteList.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Event event = mModel.get(getAdapterPosition());
+
                     Context context = v.getContext();
 
                     ImageView icon = (ImageView) v;
@@ -226,8 +230,6 @@ public class AllEventsFragment extends Fragment {
         }
 
         public void bind(Event event){
-
-            this.event = event;
 
             mTitleList.setText(event.mTitle);
             mAddressList.setText(event.mAddress);

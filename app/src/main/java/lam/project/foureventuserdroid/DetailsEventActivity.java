@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,8 +29,6 @@ public class DetailsEventActivity extends AppCompatActivity {
     private GoogleMap googleMap;
     private LatLng HOME = new LatLng (42.5034442, 14.1723788);
 
-    FloatingActionButton fab1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,10 +42,9 @@ public class DetailsEventActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        Intent srcIntent = getIntent();
+        Event currentEvent = (Event) getIntent().getParcelableExtra(Event.Keys.EVENT);
 
-        Event currentEvent = srcIntent.getParcelableExtra(Event.Keys.EVENT);
-
+        setInfo(currentEvent);
     }
 
     private void initMap() {
@@ -67,7 +65,10 @@ public class DetailsEventActivity extends AppCompatActivity {
         initMap();
     }
 
+    private void setInfo(Event event){
 
+        ((TextView) findViewById(R.id.detail_title)).setText(event.mTitle);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
