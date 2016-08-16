@@ -2,7 +2,7 @@
     <string name="app_name">FourEvent.user.droid</string>
     <string name="shared_preferences_name">FourEvent</string>
 
-    <string name="title_events">Events</string>
+    <string name="title_events">Eventi</string>
     <string name="title_details">Dettagli</string>
 
 
@@ -10,22 +10,21 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- Stringhe navigation drawer -->
-    <string name="action_events">Events</string>
-    <string name="action_favourites">Favourites</string>
-    <string name="action_participations">Participations</string>
+    <string name="action_events">Eventi</string>
+    <string name="action_favourites">Preferiti</string>
+    <string name="action_participations">Partecipazioni</string>
 
-    <string name="action_profile">Profile</string>
-    <string name="action_wallett">Wallett</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_profile">Profilo</string>
+    <string name="action_wallett">Portafoglio</string>
+    <string name="action_settings">Impostazioni</string>
 
 
-    <string name="action_vote">Vote us!</string>
-    <string name="action_logout">Logout</string>
+    <string name="action_vote">Vota la nostra app!</string>
+    <string name="action_logout">Esci</string>
 
 
     <!-- Stringhe fragment navigation drawer -->
     <string name="todo_events">TODO: Recycler view events</string>
-    <string name="todo_favourites">TODO: Recycler view favourites</string>
     <string name="todo_participations">TODO: Recycler view participations</string>
 
     <string name="todo_profile">TODO: Recycler view profile</string>
