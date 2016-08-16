@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient googleApiClient;
     private boolean resolvingError;
     private LocationRequest mLocationRequest;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +83,19 @@ public class MainActivity extends AppCompatActivity
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
 
+            View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+
             //Setto la pagina principale come quella di ricerca degli eventi
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.anchor_point, new EventsFragment())
                     .commit();
+
+            user = UserManager.get(getApplicationContext()).getUser();
+
+            TextView name = (TextView) headerView.findViewById(R.id.name);
+            TextView location = (TextView) headerView.findViewById(R.id.location);
+            name.setText(user.name);
+            location.setText(user.location);
 
         } else {
 
@@ -268,10 +278,6 @@ public class MainActivity extends AppCompatActivity
     //Gestione delle informazioni di localizzazione
     @Override
     public void onLocationChanged(final Location location) {
-        double latitude = location.getLatitude();
-        updateText(R.id.latitude, String.valueOf(latitude));
-        double longitude = location.getLongitude();
-        updateText(R.id.longitude, String.valueOf(longitude));
 
         //Metodo per evitare che i tempi di latenza bloccano l'Activity
         new AsyncTask<Void,Void,String>()
@@ -293,18 +299,9 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             protected void onPostExecute(String result) {
-                String location;
-                String name;
 
                 if (result!=null)
                     updateText(R.id.location, result);
-                else {
-                    location = UserManager.get().getUser().location;
-                    updateText(R.id.location, location);
-                }
-
-                name = UserManager.get().getUser().name;
-                updateText(R.id.name, name);
 
             }
         }.execute();
@@ -319,5 +316,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnectionSuspended(int i) {}
+
 
 }

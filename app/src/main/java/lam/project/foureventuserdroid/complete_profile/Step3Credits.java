@@ -3,6 +3,7 @@ package lam.project.foureventuserdroid.complete_profile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
+import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 /**
  * Created by Vale on 11/08/2016.
@@ -72,7 +74,7 @@ public class Step3Credits extends AbstractStep {
     public boolean nextIf() {
 
         //TODO gestire caso in cui non arriva niente dallo step 2
-        User user = getStepDataFor(2).getParcelable(User.Keys.USER);
+        final User user = getStepDataFor(2).getParcelable(User.Keys.USER);
 
         try {
 
@@ -92,6 +94,8 @@ public class Step3Credits extends AbstractStep {
                         snackbar.show();
 
                         StepManager.get(getContext()).setStep(StepManager.COMPLETE);
+
+                        UserManager.get().save(user);
 
                         Intent intent = new Intent(getContext(), MainActivity.class);
                         startActivity(intent);
