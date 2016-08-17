@@ -121,6 +121,7 @@ public class FavouriteFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), DetailsEventActivity.class);
+                    intent.putExtra(Event.Keys.EVENT,mModel.get(getAdapterPosition()));
                     startActivity(intent);
                 }
             });
