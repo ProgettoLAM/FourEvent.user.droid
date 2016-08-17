@@ -1,16 +1,16 @@
 package lam.project.foureventuserdroid;
 
-import android.*;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -25,13 +25,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.identity.intents.Address;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import lam.project.foureventuserdroid.complete_profile.StepManager;
 import lam.project.foureventuserdroid.complete_profile.CompleteProfileActivity;
@@ -55,6 +61,9 @@ public class MainActivity extends AppCompatActivity
     private static final String RESOLVING_ERROR_STATE_KEY = "RESOLVING_ERROR_STATE_KEY";
 
     private static final int REQUEST_ACCESS_LOCATION = 2;
+    private static final int MAX_GEOCODER_RESULTS = 5;
+
+    View headerView;
 
     private boolean mResolvingError;
 
@@ -91,7 +100,7 @@ public class MainActivity extends AppCompatActivity
 
             User user = UserManager.get(getApplicationContext()).getUser();
 
-            View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+            this.headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
 
             TextView name = (TextView) headerView.findViewById(R.id.name);
             TextView location = (TextView) headerView.findViewById(R.id.location);
@@ -238,6 +247,11 @@ public class MainActivity extends AppCompatActivity
 
             mGoogleApiClient.connect();
         }
+
+        if(mCurrentLocation != null){
+
+            getGeocodeLocation(mCurrentLocation);
+        }
     }
 
     @Override
@@ -326,7 +340,7 @@ public class MainActivity extends AppCompatActivity
             mCurrentLocation = LocationServices.FusedLocationApi
                     .getLastLocation(mGoogleApiClient);
 
-            manageLocationPermission();
+            getGeocodeLocation(mCurrentLocation);
         }
     }
 
@@ -364,7 +378,7 @@ public class MainActivity extends AppCompatActivity
         LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setNumUpdates(1)
-                .setExpirationDuration(1000L);
+                .setExpirationDuration(500L);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -382,7 +396,92 @@ public class MainActivity extends AppCompatActivity
                     public void onLocationChanged(Location location) {
 
                         mCurrentLocation = location;
+
+                        getGeocodeLocation(mCurrentLocation);
                     }
                 });
+    }
+
+    public void getGeocodeLocation(final Location location) {
+
+        if (location != null) {
+
+            if(Geocoder.isPresent()) {
+
+                final GeoCoderAsyncTask geoCoderAsyncTask = new GeoCoderAsyncTask(this,MAX_GEOCODER_RESULTS);
+
+                geoCoderAsyncTask.execute(location);
+
+            } else {
+
+                Toast.makeText(this,"Geocoder not aviabile", Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+
+            Toast.makeText(this,"Geocoder not aviabile", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    public class GeoCoderAsyncTask extends AsyncTask<Location, Object, List<android.location.Address>> {
+
+        private int mMaxResult;
+        private MainActivity mActivityRef;
+
+        GeoCoderAsyncTask(MainActivity mActivityRef, final int MAX_GEOCODE_RESULT){
+
+            this.mActivityRef = mActivityRef;
+            this.mMaxResult = MAX_GEOCODE_RESULT;
+        }
+
+        @Override
+        protected List<android.location.Address> doInBackground(Location... params) {
+
+            //context null
+
+            MainActivity activity = mActivityRef;
+
+            if(activity == null) {
+
+                return null;
+            }
+
+            final Geocoder geocoder = new Geocoder(activity, Locale.getDefault());
+
+            final Location location = params[0];
+
+            List<android.location.Address> geoAddress = null;
+
+            try{
+
+                geoAddress = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(), mMaxResult);
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+
+            return geoAddress;
+        }
+
+        @Override
+        protected void onPostExecute(List<android.location.Address> addresses) {
+
+            if(addresses != null) {
+
+                updateDrawerHeader(addresses.get(0).getLocality());
+            }
+        }
+    }
+
+    private void updateDrawerHeader(final String addressText) {
+
+        if(headerView != null){
+
+            TextView txtLocation = (TextView) headerView.findViewById(R.id.location);
+
+            txtLocation.setText(addressText);
+        }
     }
 }
