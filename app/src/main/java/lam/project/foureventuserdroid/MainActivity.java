@@ -309,7 +309,34 @@ public class MainActivity extends AppCompatActivity
 
     public void manageLocationPermission() {
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+
+                new AlertDialog.Builder(this)
+                        .setTitle("title")
+                        .setMessage("message")
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                ActivityCompat.requestPermissions(MainActivity.this,
+                                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                                        REQUEST_ACCESS_LOCATION);
+                            }
+                        })
+                        .create()
+                        .show();
+            } else {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        REQUEST_ACCESS_LOCATION);
+            }
+
+        } else if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -335,6 +362,7 @@ public class MainActivity extends AppCompatActivity
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         REQUEST_ACCESS_LOCATION);
             }
+
         } else {
 
             mCurrentLocation = LocationServices.FusedLocationApi
@@ -423,7 +451,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     public class GeoCoderAsyncTask extends AsyncTask<Location, Object, List<android.location.Address>> {
 
         private int mMaxResult;
@@ -477,11 +504,8 @@ public class MainActivity extends AppCompatActivity
 
     private void updateDrawerHeader(final String addressText) {
 
-        if(headerView != null){
+        TextView txtLocation = (TextView) headerView.findViewById(R.id.location);
 
-            TextView txtLocation = (TextView) headerView.findViewById(R.id.location);
-
-            txtLocation.setText(addressText);
-        }
+        txtLocation.setText(addressText);
     }
 }
