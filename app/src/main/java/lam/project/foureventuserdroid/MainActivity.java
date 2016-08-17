@@ -1,16 +1,24 @@
 package lam.project.foureventuserdroid;
 
+import android.*;
+import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +29,8 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import lam.project.foureventuserdroid.complete_profile.StepManager;
@@ -40,16 +50,15 @@ public class MainActivity extends AppCompatActivity
 
     private GoogleApiClient mGoogleApiClient;
 
-    private GoogleApiClient.ConnectionCallbacks mConnectionCallbacks;
-    private GoogleApiClient.OnConnectionFailedListener mOnConnectionFailedListener;
-
     final static String DIALOG_ERROR_TAG = "DIALOG_ERROR_TAG";
-
     private static final int REQUEST_RESOLVE_ERROR = 2;
-
     private static final String RESOLVING_ERROR_STATE_KEY = "RESOLVING_ERROR_STATE_KEY";
 
+    private static final int REQUEST_ACCESS_LOCATION = 2;
+
     private boolean mResolvingError;
+
+    private Location mCurrentLocation;
 
 
     @Override
@@ -74,68 +83,7 @@ public class MainActivity extends AppCompatActivity
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
 
-
-            if(savedInstanceState != null){
-
-                mResolvingError = savedInstanceState.getBoolean(RESOLVING_ERROR_STATE_KEY,false);
-            }
-
-
-            mConnectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
-
-                int CAUSE_SERVICE_DISCONNECTED = 1;
-                int CAUSE_NETWORK_LOST = 2;
-
-                @Override
-                public void onConnected(Bundle connectionHint) {
-
-                }
-
-                @Override
-                public void onConnectionSuspended(int cause) {
-
-                }
-            };
-
-            mOnConnectionFailedListener = new GoogleApiClient.OnConnectionFailedListener() {
-
-                @Override
-                public void onConnectionFailed(ConnectionResult connectionResult) {
-
-                    if(mResolvingError){
-
-                        return;
-                    }
-
-                    else if (connectionResult.hasResolution()) {
-
-                        try{
-
-                            mResolvingError = true;
-                            connectionResult.startResolutionForResult(MainActivity.this,
-                                    REQUEST_RESOLVE_ERROR);
-
-                        } catch (IntentSender.SendIntentException e) {
-
-                            mGoogleApiClient.connect();
-                        }
-                    }
-
-                    else {
-
-                        mResolvingError = true;
-                    }
-                }
-            };
-
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addApi(LocationServices.API)
-                    .addConnectionCallbacks(mConnectionCallbacks)
-                    .addOnConnectionFailedListener(mOnConnectionFailedListener)
-                    .build();
-
-            View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
-
+            //V
             //Setto la pagina principale come quella di ricerca degli eventi
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.anchor_point, new EventsFragment())
@@ -143,10 +91,58 @@ public class MainActivity extends AppCompatActivity
 
             User user = UserManager.get(getApplicationContext()).getUser();
 
+            View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+
             TextView name = (TextView) headerView.findViewById(R.id.name);
             TextView location = (TextView) headerView.findViewById(R.id.location);
             name.setText(user.name);
             location.setText(user.location);
+
+
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+
+                        int CAUSE_SERVICE_DISCONNECTED = 1;
+                        int CAUSE_NETWORK_LOST = 2;
+
+                        @Override
+                        public void onConnected(Bundle bundle) {
+
+                            manageLocationPermission();
+                        }
+
+                        @Override
+                        public void onConnectionSuspended(int i) {
+
+                        }
+                    })
+                    .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                        @Override
+                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                            if (mResolvingError) {
+
+                                return;
+                            } else if (connectionResult.hasResolution()) {
+
+                                try {
+
+                                    mResolvingError = true;
+                                    connectionResult.startResolutionForResult(MainActivity.this,
+                                            REQUEST_RESOLVE_ERROR);
+
+                                } catch (IntentSender.SendIntentException e) {
+
+                                    mGoogleApiClient.connect();
+                                }
+                            } else {
+
+                                mResolvingError = true;
+                            }
+                        }
+                    })
+                    .build();
 
         } else {
 
@@ -238,7 +234,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
-        if(!mResolvingError){
+        if (!mResolvingError) {
 
             mGoogleApiClient.connect();
         }
@@ -251,9 +247,10 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
     }
 
-    public static class ErrorDialogFragment extends DialogFragment{
+    public static class ErrorDialogFragment extends DialogFragment {
 
-        public ErrorDialogFragment() {}
+        public ErrorDialogFragment() {
+        }
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -261,7 +258,7 @@ public class MainActivity extends AppCompatActivity
             int errorCode = this.getArguments().getInt(DIALOG_ERROR_TAG);
 
             return GoogleApiAvailability.getInstance().getErrorDialog(
-                    this.getActivity(),errorCode,REQUEST_RESOLVE_ERROR
+                    this.getActivity(), errorCode, REQUEST_RESOLVE_ERROR
             );
         }
 
@@ -271,23 +268,24 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void onDialogDismissed() {}
+    private void onDialogDismissed() {
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        outState.putBoolean(RESOLVING_ERROR_STATE_KEY,mResolvingError);
+        outState.putBoolean(RESOLVING_ERROR_STATE_KEY, mResolvingError);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_RESOLVE_ERROR){
+        if (requestCode == REQUEST_RESOLVE_ERROR) {
 
             mResolvingError = false;
 
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
 
-                if(!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()){
+                if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
 
                     mGoogleApiClient.connect();
                 }
@@ -295,4 +293,96 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void manageLocationPermission() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                new AlertDialog.Builder(this)
+                        .setTitle("title")
+                        .setMessage("message")
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                ActivityCompat.requestPermissions(MainActivity.this,
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        REQUEST_ACCESS_LOCATION);
+                            }
+                        })
+                        .create()
+                        .show();
+            } else {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_ACCESS_LOCATION);
+            }
+        } else {
+
+            mCurrentLocation = LocationServices.FusedLocationApi
+                    .getLastLocation(mGoogleApiClient);
+
+            manageLocationPermission();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_ACCESS_LOCATION) {
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                startLocationListener();
+            } else {
+
+                new AlertDialog.Builder(this)
+                        .setTitle("Title")
+                        .setMessage("Message")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                finish();
+                            }
+                        }).create().show();
+            }
+        }
+    }
+
+    public void startLocationListener() {
+
+        updateLocation();
+    }
+
+    private void updateLocation() {
+
+        LocationRequest locationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setNumUpdates(1)
+                .setExpirationDuration(1000L);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        LocationServices.FusedLocationApi
+                .requestLocationUpdates(mGoogleApiClient, locationRequest, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+
+                        mCurrentLocation = location;
+                    }
+                });
+    }
 }
