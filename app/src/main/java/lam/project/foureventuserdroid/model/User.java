@@ -17,7 +17,7 @@ public class User implements Parcelable{
 
     public final String email;
 
-    public final String password;
+    public String password;
 
     public String name;
 
@@ -74,6 +74,11 @@ public class User implements Parcelable{
 
     public User addCategories(List<Category> categories) {
         this.categories = categories;
+        return this;
+    }
+
+    public User updatePassword(String password) {
+        this.password = password;
         return this;
     }
 
