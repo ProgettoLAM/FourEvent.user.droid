@@ -103,7 +103,7 @@ public class ProfileFragment extends Fragment {
                         oldPassword = oldPasswordField.getText().toString();
                         newPassword = newPasswordField.getText().toString();
 
-                        if(user.password.equals(oldPassword)) {
+                        if(user.password.equals(oldPassword) && newPassword.length() >= 8) {
 
                             try {
 
@@ -147,6 +147,11 @@ public class ProfileFragment extends Fragment {
 
                                 e.printStackTrace();
                             }
+                        }
+                        else if(newPassword.length() < 8) {
+                            snackbar = Snackbar
+                                    .make(getView(), "La password deve essere almeno di 8 caratteri", Snackbar.LENGTH_LONG);
+                            snackbar.show();
                         }
 
                         else {
