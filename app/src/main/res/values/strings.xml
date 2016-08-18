@@ -33,6 +33,7 @@
 
     <!-- Stringhe url Volley -->
     <string name="backend_uri_put_user">http://annina.cs.unibo.it:8080/api/user</string>
+    <string name="backend_uri_change_pass">http://annina.cs.unibo.it:8080/api/user/changepassword</string>
     <string name="url_service">http://annina.cs.unibo.it:8080/api/event</string>
 
     <!-- Stringhe categorie -->
