@@ -44,6 +44,5 @@ public class CompleteProfileActivity extends TabStepper {
     public void selectedButton(final View view) {
 
         Step2Categories.selectedButton(view);
-
     }
 }

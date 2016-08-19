@@ -3,6 +3,7 @@ package lam.project.foureventuserdroid.complete_profile;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,11 @@ public class Step1Info extends AbstractStep{
     }
 
     @Override
+    public String name() {
+        return null;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.step1_info, container, false);
@@ -84,79 +90,47 @@ public class Step1Info extends AbstractStep{
     }
 
 
-    @Override
-    public String name() {
-
-        /*for(int i = 0; i < getArguments().size(); i++) {
-            switch (getArguments().getInt("position", i)) {
-                case 1:
-                    return "Dati personali";
-                case 2:
-                    return "Categorie";
-                case 3:
-                    return "Microcrediti";
-
-            }
-        }*/
-        return null;
-        //return "Tab " + getArguments().getInt("position", 0);
-    }
-
-    @Override
-    public boolean isOptional() {
-        return true;
-    }
-
-
-    @Override
-    public void onStepVisible() {
-    }
-
-    @Override
-    public void onNext() {
-        System.out.println("onNext");
-    }
-
-    @Override
-    public void onPrevious() {
-        System.out.println("onPrevious");
-    }
-
-    @Override
-    public String optional() {
-        return null;
-    }
 
     @Override
     public boolean nextIf() {
 
-        name = nameField.getText().toString();
-        surname = surnameField.getText().toString();
-        completename = nameField.getText().toString()+ " "+ surnameField.getText().toString();
-        location = locationField.getText().toString();
-        birthDate = dateInfo.getText().toString();
 
-        user = UserManager.get().getUser();
+        if(!nameField.getText().toString().matches("") &&
+                !surnameField.getText().toString().matches("")){
 
-        int selectedId = radioGroup.getCheckedRadioButtonId();
+            name = nameField.getText().toString();
+            surname = surnameField.getText().toString();
+            completename = nameField.getText().toString()+ " "+ surnameField.getText().toString();
+            location = locationField.getText().toString();
+            birthDate = dateInfo.getText().toString();
 
-        if(name.trim().length() == 0 && surname.trim().length() == 0 && selectedId == -1 &&
-                location.trim().length() == 0 && birthDate.equals("Data di nascita")) {
-            return true;
+            user = UserManager.get().getUser();
+
+            int selectedId = radioGroup.getCheckedRadioButtonId();
+
+            if(name.trim().length() == 0 && surname.trim().length() == 0 && selectedId == -1 &&
+                    location.trim().length() == 0 && birthDate.equals("Data di nascita")) {
+                return true;
+            }
+
+            else if(selectedId != -1) {
+                genderField = (RadioButton) getActivity().findViewById(selectedId);
+                gender = genderField.getText().toString();
+                user.addName(completename).addLocation(location).addGender(gender).addBirthDate(birthDate);
+            }
+            else
+                user.addName(completename).addLocation(location).addBirthDate(birthDate);
+
+            getStepDataFor(1).putParcelable(User.Keys.USER,user);
+
+        } else {
+
+            Snackbar.make(getView(),"Nome e Cognome obbligatori", Snackbar.LENGTH_SHORT).show();
         }
-
-        else if(selectedId != -1) {
-            genderField = (RadioButton) getActivity().findViewById(selectedId);
-            gender = genderField.getText().toString();
-            user.addName(completename).addLocation(location).addGender(gender).addBirthDate(birthDate);
-        }
-        else
-            user.addName(completename).addLocation(location).addBirthDate(birthDate);
-
-        getStepDataFor(1).putParcelable(User.Keys.USER,user);
 
         return true;
     }
+
     @Override
     public String error() {
         for(int i = 0; i < getArguments().size(); i++) {
