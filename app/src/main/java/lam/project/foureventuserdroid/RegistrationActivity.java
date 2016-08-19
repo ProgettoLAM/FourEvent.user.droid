@@ -1,5 +1,6 @@
 package lam.project.foureventuserdroid;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import lam.project.foureventuserdroid.complete_profile.StepManager;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
@@ -100,14 +102,14 @@ public class RegistrationActivity extends AppCompatActivity {
         if(controlUser()) {
 
 
-            /*final ProgressDialog progressDialog = new ProgressDialog(this);
+            final ProgressDialog progressDialog = new ProgressDialog(this);
 
             progressDialog.setMessage("Registrazione in corso...");
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
 
-            progressDialog.show();*/
+            progressDialog.show();
 
             final User user = User.Builder.create(email, password).build();
 
@@ -127,7 +129,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                             snackbar.show();
 
-                            //progressDialog.hide();
+                            progressDialog.dismiss();
 
                             next(user);
 
@@ -136,12 +138,12 @@ public class RegistrationActivity extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
 
-                            //progressDialog.hide();
+                            progressDialog.hide();
 
                             Snackbar snackbar = Snackbar
                                     .make(view, error.toString(), Snackbar.LENGTH_LONG);
 
-                            snackbar.show();
+                            snackbar.dismiss();
 
                         }
                     });
@@ -164,6 +166,8 @@ public class RegistrationActivity extends AppCompatActivity {
     private void next(User user){
 
         UserManager.get(this).save(user);
+        StepManager.get(this).setStep(StepManager.INCOMPLETE);
+
         Intent intent = new Intent(this, MainActivity.class);
 
         intent.putExtra(User.Keys.USER, user);

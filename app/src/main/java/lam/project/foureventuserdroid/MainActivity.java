@@ -54,6 +54,8 @@ import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private User mCurrentUser;
+
     private GoogleApiClient mGoogleApiClient;
 
     final static String DIALOG_ERROR_TAG = "DIALOG_ERROR_TAG";
@@ -73,6 +75,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         //se il profilo è completo
         if (StepManager.get(this).getStep() == StepManager.COMPLETE) {
@@ -98,14 +102,14 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.anchor_point, new EventsFragment())
                     .commit();
 
-            User user = UserManager.get(getApplicationContext()).getUser();
+            mCurrentUser = UserManager.get(getApplicationContext()).getUser();
 
             this.headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
 
             TextView name = (TextView) headerView.findViewById(R.id.name);
             TextView location = (TextView) headerView.findViewById(R.id.location);
-            name.setText(user.name);
-            location.setText(user.location);
+            name.setText(mCurrentUser.name);
+            location.setText(mCurrentUser.location);
 
 
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -186,6 +190,15 @@ public class MainActivity extends AppCompatActivity
         final int itemId = menuItem.getItemId();
         final Fragment nextFragment;
 
+        if(itemId == R.id.nav_logout) {
+
+            UserManager.get().remove();
+            startActivity(new Intent(this,SplashActivity.class));
+            finish();
+
+            return;
+        }
+
         switch (itemId) {
 
             case R.id.nav_events:
@@ -221,11 +234,6 @@ public class MainActivity extends AppCompatActivity
             //Da qui in poi non si hanno modifiche
 
             case R.id.nav_vote:
-
-                nextFragment = new EventsFragment();
-                break;
-
-            case R.id.nav_logout:
 
                 nextFragment = new EventsFragment();
                 break;

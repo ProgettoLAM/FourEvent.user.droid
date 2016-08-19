@@ -88,4 +88,10 @@ public final class UserManager {
         }
 
     }
+
+    public boolean remove() {
+
+        mChacedUser = null;
+        return mSharedPreferences.edit().remove(User.Keys.USER).commit();
+    }
 }
