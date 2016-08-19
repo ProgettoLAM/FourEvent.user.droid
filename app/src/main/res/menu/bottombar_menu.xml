@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottomBarItemOne"
+        android:icon="@drawable/ic_email"
+        android:title="Eventi" />
+
+    <item
+        android:id="@+id/bottomBarItemTwo"
+        android:icon="@drawable/ic_edit"
+        android:title="Popolari" />
+
+    <item
+        android:id="@+id/bottomBarItemThree"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:title="Vicini" />
+
+</menu>

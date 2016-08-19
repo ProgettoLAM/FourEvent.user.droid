@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -65,6 +66,7 @@ public class AllEventsFragment extends Fragment {
         sadEmoticon = (ImageView) rootView.findViewById(R.id.sad_emoticon);
         notEvents = (TextView) rootView.findViewById(R.id.not_events);
 
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Eventi");
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
