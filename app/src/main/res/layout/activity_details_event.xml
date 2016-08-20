@@ -8,21 +8,24 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/layout_main"
+        android:layout_below="@id/map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:orientation="vertical"
-        android:layout_below="@+id/map"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,7 +56,7 @@
 
                 <TextView
                     android:id="@+id/detail_date"
-                    android:text="SAB 20 Agosto ALLE 16:00"
+                    android:text="Da SAB 16/08 a MAR 19/08 "
                     android:layout_marginLeft="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -125,29 +128,33 @@
 
         </LinearLayout>
 
-        <!--
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_height="wrap_content"
                 android:layout_weight=".3"
                 android:layout_width="0dp"
-                android:orientation="vertical"
-                android:layout_marginTop="20dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="Posti liberi"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorPrimary"
                     android:gravity="center"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/lightText"
                     android:text="10/20"
                     android:gravity="center"/>
             </LinearLayout>
@@ -156,19 +163,23 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".3"
                 android:layout_width="0dp"
-                android:orientation="vertical"
-                android:layout_marginTop="20dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textSize="15sp"
                     android:text="Prezzo biglietto"
+                    android:textColor="@color/colorPrimary"
                     android:gravity="center"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/lightText"
                     android:text="15€"
                     android:gravity="center"/>
             </LinearLayout>
@@ -177,26 +188,30 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".3"
                 android:layout_width="0dp"
-                android:orientation="vertical"
-                android:layout_marginTop="20dp">
+                android:orientation="vertical">
 
                 <TextView
+                    android:layout_marginTop="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Orario"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorPrimary"
                     android:gravity="center"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/lightText"
                     android:text="10:30"
                     android:gravity="center"/>
             </LinearLayout>
 
-        </LinearLayout>-->
+        </LinearLayout>
 
-        <!--<RelativeLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="20dp">
@@ -217,10 +232,52 @@
                 android:id="@+id/profile_owner_name"
                 android:layout_marginLeft="10dp"/>
 
+            </RelativeLayout>
 
-        </RelativeLayout>-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#dcdcdc"
+            android:layout_marginBottom="16dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/comments_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/content_comments_list" />
+
+         <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:orientation="horizontal">
+
+                <EditText
+                android:id="@+id/comment"
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:hint="Inserisci un commento"
+                android:inputType="text"
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:textColorHint="@color/lightText"
+                android:background="@drawable/bottom_border_comment" />
+
+                <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_send"
+                android:padding="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@color/colorPrimary" />
+            </LinearLayout>
 
     </LinearLayout>
+
+    </ScrollView>
 
     <include layout="@layout/fab_layout" />
 

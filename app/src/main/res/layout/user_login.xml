@@ -8,7 +8,7 @@
         android:id="@+id/logoReg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/icon_registration"
+        android:src="@mipmap/ic_launcher"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"/>
 
@@ -92,28 +92,5 @@
         android:textSize="16sp"
         android:layout_centerHorizontal="true"/>
 
-    <TextView
-        android:id="@+id/txt_member"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sei un nuovo utente?"
-        android:layout_below="@id/btn_login"
-        android:layout_marginTop="10dp"
-        android:textSize="14sp"
-        android:textColor="#eee"
-        android:layout_marginLeft="90dp"/>
-
-    <TextView
-        android:id="@+id/txt_registrati"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Registrati"
-        android:onClick="goToRegistration"
-        android:textColor="#fff"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_alignBaseline="@id/txt_member"
-        android:layout_toRightOf="@+id/txt_member"
-        android:layout_marginLeft="10dp" />
 
 </RelativeLayout>
