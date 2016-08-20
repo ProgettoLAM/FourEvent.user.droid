@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginLeft="16dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/vale_profile"
+        app:border_color="#FF000000"/>
+
+    <TextView
+        android:id="@+id/name_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:layout_toEndOf="@id/profile_image"
+        android:layout_toRightOf="@id/profile_image"
+        android:text="Valentina Tosto"
+        android:textColor="@color/darkerText"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/text_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@id/profile_image"
+        android:layout_below="@id/name_comment"
+        android:text="Bellissimo evento, spero si ripeta!"
+        android:textColor="@color/lightText"
+        android:textSize="14sp"/>
+
+
+
+</RelativeLayout>

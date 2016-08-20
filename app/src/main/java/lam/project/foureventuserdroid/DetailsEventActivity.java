@@ -10,16 +10,21 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,6 +33,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.vision.text.Line;
 
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.model.User;
@@ -58,6 +64,9 @@ public class DetailsEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_event);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+
         /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_details);
         setSupportActionBar(toolbar);
@@ -72,14 +81,14 @@ public class DetailsEventActivity extends AppCompatActivity {
         fab_detail = (FloatingActionButton) findViewById(R.id.fab_detail);
         fab1 = (FloatingActionButton) findViewById(R.id.fab_1);
         fab2 = (FloatingActionButton) findViewById(R.id.fab_2);
-        fab3 = (FloatingActionButton) findViewById(R.id.fab_3);
+        //fab3 = (FloatingActionButton) findViewById(R.id.fab_3);
 
         show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
         hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
         show_fab_2 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab2_show);
         hide_fab_2 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab2_hide);
-        show_fab_3 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab3_show);
-        hide_fab_3 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab3_hide);
+        /*show_fab_3 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab3_show);
+        hide_fab_3 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab3_hide);*/
 
         fab_detail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +128,43 @@ public class DetailsEventActivity extends AppCompatActivity {
             }
         });
 
-        fab3.setOnClickListener(new View.OnClickListener() {
+        final ScrollView scrollView = (ScrollView) findViewById(R.id.layout_main);
+
+        //TODO gestire meglio visualizzazione fab
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if(event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_DOWN)
+                    fab_detail.show();
+                else
+                    fab_detail.hide();
+
+                return false;
+            }
+        });
+
+        /*final ScrollView scrollView = (ScrollView) findViewById(R.id.layout_main);
+
+        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+
+            @Override
+            public void onScrollChanged() {
+                int scrollY = scrollView.getScrollY();
+
+                if (scrollY) {
+                    if (fab_detail.isShown()) {
+                        fab_detail.hide();
+                    }
+                } else if (scrollY ) {
+                    if (!fab_detail.isShown()) {
+                        fab_detail.show();
+                    }
+                }
+            }
+        });*/
+
+        /*fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
@@ -143,7 +188,7 @@ public class DetailsEventActivity extends AppCompatActivity {
 
                 builder.show();
             }
-        });
+        });*/
 
         setInfo(currentEvent);
     }
@@ -214,13 +259,13 @@ public class DetailsEventActivity extends AppCompatActivity {
         fab2.startAnimation(show_fab_2);
         fab2.setClickable(true);
 
-        //Floating Action Button 3
+        /*Floating Action Button 3
         FrameLayout.LayoutParams layoutParams3 = (FrameLayout.LayoutParams) fab3.getLayoutParams();
         layoutParams3.rightMargin += (int) (fab3.getWidth() * 0.25);
         layoutParams3.bottomMargin += (int) (fab3.getHeight() * 1.7);
         fab3.setLayoutParams(layoutParams3);
         fab3.startAnimation(show_fab_3);
-        fab3.setClickable(true);
+        fab3.setClickable(true);*/
     }
 
 
@@ -242,13 +287,13 @@ public class DetailsEventActivity extends AppCompatActivity {
         fab2.startAnimation(hide_fab_2);
         fab2.setClickable(false);
 
-        //Floating Action Button 3
+        /*Floating Action Button 3
         FrameLayout.LayoutParams layoutParams3 = (FrameLayout.LayoutParams) fab3.getLayoutParams();
         layoutParams3.rightMargin -= (int) (fab3.getWidth() * 0.25);
         layoutParams3.bottomMargin -= (int) (fab3.getHeight() * 1.7);
         fab3.setLayoutParams(layoutParams3);
         fab3.startAnimation(hide_fab_3);
-        fab3.setClickable(false);
+        fab3.setClickable(false);*/
     }
 
 
