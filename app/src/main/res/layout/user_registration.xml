@@ -2,15 +2,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_registrazione">
+    android:background="@drawable/bg_registrazione"
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/layout_reg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
 
     <ImageView
         android:id="@+id/logoReg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_launcher"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"/>
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/title_reg"
@@ -18,10 +25,12 @@
         android:layout_height="wrap_content"
         android:text="Registrati"
         android:textColor="#fff"
-        android:textSize="28sp"
+        android:textSize="24sp"
         android:layout_marginTop="15dp"
         android:layout_below="@+id/logoReg"
         android:layout_centerHorizontal="true" />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/email_reg"
@@ -33,7 +42,7 @@
         android:inputType="textWebEmailAddress"
         android:textSize="16sp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/title_reg"
+        android:layout_below="@id/layout_reg"
         android:layout_marginTop="15dp"
         android:background="@drawable/bottom_border"
         android:drawableLeft="@drawable/ic_email"
@@ -45,7 +54,7 @@
         android:layout_height="40dp"
         android:src="@drawable/ic_warning"
         android:layout_toRightOf="@id/email_reg"
-        android:layout_below="@id/title_reg"
+        android:layout_below="@id/layout_reg"
         android:layout_marginTop="12dp"
         android:layout_marginLeft="10dp"
         android:visibility="invisible"

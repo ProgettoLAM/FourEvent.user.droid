@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -124,11 +125,6 @@ public class RegistrationActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(JSONObject response) {
 
-                            Snackbar snackbar = Snackbar
-                                    .make(view, response.toString(), Snackbar.LENGTH_LONG);
-
-                            snackbar.show();
-
                             progressDialog.dismiss();
 
                             next(user);
@@ -138,12 +134,16 @@ public class RegistrationActivity extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
 
-                            progressDialog.hide();
-
-                            Snackbar snackbar = Snackbar
+                            Snackbar snackbarError = Snackbar
                                     .make(view, error.toString(), Snackbar.LENGTH_LONG);
 
-                            snackbar.dismiss();
+                            View snackbarView = snackbarError.getView();
+
+                            snackbarView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.lightRed));
+
+                            snackbarError.show();
+
+                            progressDialog.dismiss();
 
                         }
                     });

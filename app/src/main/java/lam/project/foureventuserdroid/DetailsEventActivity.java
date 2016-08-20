@@ -233,7 +233,7 @@ public class DetailsEventActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.detail_date)).setText(event.mStartDate);
         ((TextView) findViewById(R.id.detail_distance)).setText(event.mAddress);
         ((TextView) findViewById(R.id.detail_desc)).setText(event.mDescription);
-        ((TextView) findViewById(R.id.detail_tickets)).setText(participations);
+        ((TextView) findViewById(R.id.detail_tickets)).setText(participations + "partecipanti");
 
         final View.OnClickListener listener = new View.OnClickListener(){
 

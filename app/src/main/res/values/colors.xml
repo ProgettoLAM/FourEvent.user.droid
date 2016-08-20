@@ -11,6 +11,7 @@
     <color name="white">#fff</color>
 
     <color name="red">#E53935</color>
+    <color name="lightRed">#ef5350</color>
     <color name="lightText">#999999</color>
     <color name="darkerText">#363F45</color>
 </resources>

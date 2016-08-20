@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -111,11 +112,6 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(JSONObject response) {
 
-                                Snackbar snackbar = Snackbar
-                                        .make(view, response.toString(), Snackbar.LENGTH_LONG);
-
-                                snackbar.show();
-
                                 try {
 
                                     String email = response.getString("_id");
@@ -135,8 +131,14 @@ public class LoginActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
 
 
-                        Snackbar.make(view, "Email / password sbagliata",
-                                Snackbar.LENGTH_LONG).show();
+                        Snackbar snackbarError = Snackbar.make(view, "Email / password sbagliata",
+                                Snackbar.LENGTH_LONG);
+
+                        View snackbarView = snackbarError.getView();
+
+                        snackbarView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.lightRed));
+
+                        snackbarError.show();
 
                         progressDialog.dismiss();
                     }
