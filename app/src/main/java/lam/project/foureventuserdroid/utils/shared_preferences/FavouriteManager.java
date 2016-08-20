@@ -2,7 +2,6 @@ package lam.project.foureventuserdroid.utils.shared_preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import lam.project.foureventuserdroid.R;
-import lam.project.foureventuserdroid.model.Category;
 import lam.project.foureventuserdroid.model.Event;
 
 /**
@@ -95,51 +93,51 @@ public final class FavouriteManager {
         return mEventCache;
     }
 
-    public boolean removeEvent(@NonNull final Event newEvent){
+    public Event saveOrRemoveEvent(final Event event) {
 
-        List<Event> currentEvent = getFavouriteEvents();
+        getFavouriteEvents();
 
-        if(currentEvent == null){
+        int itemId = -1;
 
-            currentEvent = new LinkedList<>();
-        }
+        for(int i=0; i<mEventCache.size(); i++) {
 
-        int duplicateIndex = -1;
+            if(mEventCache.get(i).mTitle.equals(event.mTitle)) {
 
-        for(int i=0; i<currentEvent.size(); i++){
-
-            final Event item = currentEvent.get(i);
-            if(item.mTitle.equals(newEvent.mTitle)){
-
-                duplicateIndex = i;
+                itemId = i;
                 break;
             }
         }
 
-        if(duplicateIndex > -1){
+        if(itemId > -1) {
 
-            mEventCache.remove(duplicateIndex);
-            mDirty = false;
+            event.mIsPreferred = false;
+            mEventCache.remove(itemId);
 
+        } else {
+
+            event.mIsPreferred = true;
+            mEventCache.add(event);
         }
-        return false;
+
+        save();
+        return event;
     }
 
-    public boolean save(@NonNull final Event event) {
+    public boolean save() {
 
-        if(mEventCache == null) {
-            mEventCache = new LinkedList<>();
-        }
+        if (mEventCache != null){
 
-            try {
+            try{
                 final JSONArray array = new JSONArray();
 
-                JSONObject item = event.toJson();
-                array.put(item);
+                for(Event event : mEventCache){
 
-                mEventCache.add(event);
+                    JSONObject item = event.toJson();
+                    array.put(item);
+                }
 
                 final String arrayAsString = array.toString();
+                mDirty = true;
                 return mSharedPreferences.edit().putString(Event.Keys.EVENT,
                         arrayAsString).commit();
 
@@ -147,6 +145,14 @@ public final class FavouriteManager {
                 e.printStackTrace();
                 return false;
             }
+        }
 
+        return false;
+    }
+
+    public boolean removeAll() {
+
+        mEventCache = null;
+        return mSharedPreferences.edit().remove(Event.Keys.EVENT).commit();
     }
 }

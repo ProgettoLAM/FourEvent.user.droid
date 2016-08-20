@@ -1,7 +1,6 @@
 package lam.project.foureventuserdroid.fragment.eventFragment;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +54,8 @@ public class AllEventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        FavouriteManager.get(getContext());
 
         mModel = new ArrayList<>();
         setModel();
@@ -109,18 +109,48 @@ public class AllEventsFragment extends Fragment {
         return rootView;
     }
 
+    private void setPreferred() {
+
+        List<Event> favouriteEvents = FavouriteManager.get().getFavouriteEvents();
+
+        for (Event event : mModel) {
+
+            for (Event favouriteEvent : favouriteEvents) {
+
+                if(favouriteEvent.equals(event)) {
+
+                    event.mIsPreferred = true;
+                }
+            }
+        }
+    }
+
     private void setModel(){
 
         EventListRequest request = new EventListRequest(getString(R.string.url_service),
                 new Response.Listener<List<Event>>() {
                     @Override
                     public void onResponse(List<Event> response) {
-                        mRecyclerView.setVisibility(View.VISIBLE);
 
                         mModel.clear();
                         mModel.addAll(response);
+
+                        List<Event> favouriteEvents = FavouriteManager.get().getFavouriteEvents();
+
+                        for (Event event : mModel) {
+
+                            for (Event favouriteEvent : favouriteEvents) {
+
+                                if (favouriteEvent.mTitle.equals(event.mTitle)) {
+
+                                    event.mIsPreferred = true;
+                                }
+                            }
+                        }
+
                         mAdapter.notifyDataSetChanged();
 
+                        mRecyclerView.setVisibility(View.VISIBLE);
                         sadEmoticon.setVisibility(View.INVISIBLE);
                         notEvents.setVisibility(View.INVISIBLE);
                     }
@@ -140,7 +170,6 @@ public class AllEventsFragment extends Fragment {
         });
 
         VolleyRequest.get(getContext()).add(request);
-
     }
 
     public final class AllEventsViewHolder extends RecyclerView.ViewHolder{
@@ -185,49 +214,20 @@ public class AllEventsFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    Event event = mModel.get(getAdapterPosition());
+                    Event selectedEvent = mModel.get(getAdapterPosition());
 
-                    Context context = v.getContext();
+                    selectedEvent = FavouriteManager.get(getContext()).saveOrRemoveEvent(selectedEvent);
 
-                    ImageView icon = (ImageView) v;
-                    Object tag = icon.getTag();
-                    int ic_star = R.drawable.ic_star_empty;
+                    if(selectedEvent.mIsPreferred) {
 
-                    if( tag != null && ((Integer)tag).intValue() == ic_star) {
-                        ic_star = R.drawable.ic_star;
+                        v.setBackgroundResource(R.drawable.ic_star);
 
-                        //Salvataggio evento nei preferiti, se cliccata la stella
-                        FavouriteManager.get(context).save(event);
-                        List<Event> events = FavouriteManager.get(context).getFavouriteEvents();
-                        for(Event evt : events) {
-                            Log.d("evento aggiunto", evt.mTitle);
-                        }
+                    } else {
+
+                        v.setBackgroundResource(R.drawable.ic_star_empty);
                     }
-                    else {
-                        FavouriteManager.get(context).removeEvent(event);
-                        List<Event> events = FavouriteManager.get(context).getFavouriteEvents();
-                        for(Event evt : events) {
-                            Log.d("eventi rimasti", evt.mTitle);
-                        }
-                    }
-                    icon.setTag(ic_star);
-                    icon.setBackgroundResource(ic_star);
                 }
             });
-
-            //TODO far visualizzare all'apertura della app solo le stelle degli eventi salvati
-            favouriteEvents = FavouriteManager.get(itemView.getContext()).getFavouriteEvents();
-            if (!favouriteEvents.isEmpty()) {
-                for (Event evt : favouriteEvents) {
-                    for (Event evt2 : mModel) {
-                        if(evt.mTitle.equals(evt2.mTitle)) {
-                            mFavouriteList.setTag(R.drawable.ic_star);
-                            mFavouriteList.setBackgroundResource(R.drawable.ic_star);
-                        }
-                    }
-                }
-            }
-
         }
 
         public void bind(Event event){
@@ -243,6 +243,15 @@ public class AllEventsFragment extends Fragment {
             }
             else
                 mPriceList.setText(event.mPrice+ "€");
+
+            if(event.mIsPreferred) {
+
+                mFavouriteList.setBackgroundResource(R.drawable.ic_star);
+
+            } else {
+
+                mFavouriteList.setBackgroundResource(R.drawable.ic_star_empty);
+            }
         }
     }
 
