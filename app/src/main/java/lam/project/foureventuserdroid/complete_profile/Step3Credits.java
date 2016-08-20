@@ -19,6 +19,7 @@ import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
+import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.CategoryManager;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
@@ -48,20 +49,13 @@ public class Step3Credits extends AbstractStep {
 
         mCreatedUserWithCategories = getStepDataFor(2).getParcelable(User.Keys.USER);
 
-        String url = getResources().getString(R.string.backend_uri_put_user) + "/" + mCreatedUserWithCategories.email;
+        if(mCreatedUserWithCategories != null) {
 
-        Uri uri = Uri.parse(getResources().getString(R.string.backend_uri_put_user))
-                .buildUpon()
-                .appendEncodedPath(mCreatedUserWithCategories.email)
-                .build();
+            try {
 
-        try {
-
-            JSONObject obj = mCreatedUserWithCategories.toJson();
-
-            String path = uri.toString();
-
-            CustomRequest request = new CustomRequest(Request.Method.POST, path, obj,
+                CustomRequest request = new CustomRequest(Request.Method.POST,
+                    FourEventUri.getUserUri(mCreatedUserWithCategories.email),
+                    mCreatedUserWithCategories.toJson(),
 
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -76,18 +70,20 @@ public class Step3Credits extends AbstractStep {
 
                         }
                     }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
 
-                    System.out.println(error.toString());
-                }
-            });
+                            System.out.println(error.toString());
+                        }
+                    }
+                );
 
-            VolleyRequest.get(getContext()).add(request);
+                VolleyRequest.get(getContext()).add(request);
 
-        } catch (JSONException e) {
+            } catch (JSONException e) {
 
-            e.printStackTrace();
+                e.printStackTrace();
+            }
         }
     }
 
