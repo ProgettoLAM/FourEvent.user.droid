@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import lam.project.foureventuserdroid.complete_profile.StepManager;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
@@ -88,14 +89,14 @@ public class LoginActivity extends AppCompatActivity {
     public void login(final View view) {
         if(controlUser()) {
 
-            /*final ProgressDialog progressDialog = new ProgressDialog(this);
+            final ProgressDialog progressDialog = new ProgressDialog(this);
 
             progressDialog.setMessage("Login in corso...");
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
 
-            progressDialog.show();*/
+            progressDialog.show();
 
                 email = emailField.getText().toString();
                 password = passwordField.getText().toString();
@@ -116,23 +117,28 @@ public class LoginActivity extends AppCompatActivity {
                                 snackbar.show();
 
                                 try {
-                                    next(User.fromJson(user));
+
+                                    String email = response.getString("_id");
+
+                                    response.remove("_id");
+                                    response.put(User.Keys.EMAIL,email);
+
+                                    next(User.fromJson(response));
                                 }
                                 catch (JSONException ex ) {}
 
-                                //progressDialog.hide();
+                                progressDialog.dismiss();
+
                             }
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        //progressDialog.hide();
 
-                        Snackbar snackbar = Snackbar
-                                .make(view, "Email / password sbagliata", Snackbar.LENGTH_LONG);
+                        Snackbar.make(view, "Email / password sbagliata",
+                                Snackbar.LENGTH_LONG).show();
 
-                        snackbar.show();
-
+                        progressDialog.dismiss();
                     }
                 });
 
@@ -147,6 +153,9 @@ public class LoginActivity extends AppCompatActivity {
     private void next(User user){
 
         UserManager.get(this).save(user);
+
+        //non visualizzo lo stepper
+        StepManager.get(this).setStep(StepManager.COMPLETE);
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

@@ -4,12 +4,23 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import lam.project.foureventuserdroid.complete_profile.StepManager;
+import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.connection.CustomRequest;
+import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 public class SplashActivity extends AppCompatActivity {
@@ -41,9 +52,8 @@ public class SplashActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
 
                 long elapsedTime = SystemClock.uptimeMillis() - mStartTime;
-                if(elapsedTime >= MIN_WAIT_INTERVAL && !mIsDone){
+                if(elapsedTime >= MIN_WAIT_INTERVAL){
 
-                    mIsDone = true;
                     goAhead();
                 }
 
@@ -54,15 +64,19 @@ public class SplashActivity extends AppCompatActivity {
 
     private void goAhead() {
 
-        boolean exist = UserManager.get(this).getUser() != null;
-
         Intent intent;
+        User user = UserManager.get(this).getUser();
 
-        if(exist)
-            //TODO controllare che esista anche online!!
-            intent = new Intent(this,MainActivity.class);
-        else
+        //se l'utente online non c'è
+        if(user == null ){
+
+            StepManager.get(this).setStep(StepManager.INCOMPLETE);
             intent = new Intent(this,RegistrationActivity.class);
+
+        } else {
+
+            intent = new Intent(this,MainActivity.class);
+        }
 
         startActivity(intent);
         finish();

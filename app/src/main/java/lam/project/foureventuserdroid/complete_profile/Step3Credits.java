@@ -121,6 +121,8 @@ public class Step3Credits extends AbstractStep {
             e.printStackTrace();
         }
 
+        getActivity().finish();
+
         return i > 3;
     }
 
