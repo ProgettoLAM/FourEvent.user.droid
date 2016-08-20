@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, RegistrationActivity.class);
         startActivity(intent);
-        finish();
+
     }
 
     public boolean controlUser() {
