@@ -8,19 +8,12 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-    <include
-        layout="@layout/app_bar_main"
-        android:layout_width="match_parent"
-        android:layout_height="81dp"
-        android:id="@+id/include" />
 
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
-
-    <include layout="@layout/fab_layout" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -110,7 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <Button
+                <!--<Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/detail_buy"
@@ -118,7 +111,7 @@
                     style="?android:attr/borderlessButtonStyle"
                     android:background="@drawable/flat_button"
                     android:textColor="@color/flat_button_color"
-                    android:elevation="0dp"/>
+                    android:elevation="0dp"/>-->
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -130,19 +123,8 @@
 
             </LinearLayout>
 
-
-
-
         </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            app:backgroundTint="?attr/colorPrimary"
-            app:fabSize="normal"
-            app:elevation="2dp"
-            app:srcCompat="@drawable/ic_star_empty"/>
         <!--
         <LinearLayout
             android:layout_width="match_parent"
@@ -239,6 +221,25 @@
         </RelativeLayout>-->
 
     </LinearLayout>
+
+    <include layout="@layout/fab_layout" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:backgroundTint="@color/colorAccent"
+        app:fabSize="normal"
+        android:tint="@color/colorPrimary"
+        app:elevation="2dp"
+        app:srcCompat="@drawable/ic_more"
+        android:scaleType="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="14dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="11dp" />
 
 
 </RelativeLayout>
