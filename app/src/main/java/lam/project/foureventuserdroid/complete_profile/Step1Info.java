@@ -3,7 +3,6 @@ package lam.project.foureventuserdroid.complete_profile;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ import java.util.Calendar;
 
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
-import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 /**
@@ -32,23 +30,13 @@ import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 public class Step1Info extends AbstractStep{
 
     private int i = 1;
-    private LinearLayout birth_date;
-    private static TextView dateInfo;
+    public static TextView dateInfo;
 
-    private EditText nameField;
-    private EditText surnameField;
-    private EditText locationField;
+    private EditText txtName;
+    private EditText txtSurname;
+    private EditText txtLocation;
     private RadioGroup radioGroup;
-    private RadioButton genderField;
 
-    public String name;
-    public String surname;
-    public String completename;
-    public String location;
-    public String gender;
-    private String birthDate;
-
-    private User user;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,22 +47,24 @@ public class Step1Info extends AbstractStep{
 
     @Override
     public String name() {
-        return null;
+        return "Completa profilo utente";
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.step1_info, container, false);
+        return initView(inflater.inflate(R.layout.step1_info, container, false));
+    }
 
-        birth_date = (LinearLayout) v.findViewById(R.id.birth_date);
-        dateInfo = (TextView) v.findViewById(R.id.date_info);
+    private View initView(final View rootView) {
 
-        nameField = (EditText) v.findViewById(R.id.name_info);
-        surnameField = (EditText) v.findViewById(R.id.surname_info);
-        locationField = (EditText) v.findViewById(R.id.location_info);
-        radioGroup = (RadioGroup) v.findViewById(R.id.radio_info);
-        locationField = (EditText) v.findViewById(R.id.location_info);
+        LinearLayout birth_date = (LinearLayout) rootView.findViewById(R.id.birth_date);
+        dateInfo = (TextView) rootView.findViewById(R.id.date_info);
+        txtName = (EditText) rootView.findViewById(R.id.name_info);
+        txtSurname = (EditText) rootView.findViewById(R.id.surname_info);
+        txtLocation = (EditText) rootView.findViewById(R.id.location_info);
+        radioGroup = (RadioGroup) rootView.findViewById(R.id.radio_info);
+        txtLocation = (EditText) rootView.findViewById(R.id.location_info);
 
 
         birth_date.setOnClickListener(new View.OnClickListener() {
@@ -86,68 +76,61 @@ public class Step1Info extends AbstractStep{
                 newFragment.show(getFragmentManager(), "DatePicker");
             }
         });
-        return v;
+
+        return rootView;
     }
-
-
 
     @Override
     public boolean nextIf() {
 
 
-        if(!nameField.getText().toString().matches("") &&
-                !surnameField.getText().toString().matches("")){
+        boolean isNotEmptyName = !txtName.getText().toString().matches("") &&
+                !txtSurname.getText().toString().matches("");
 
-            name = nameField.getText().toString();
-            surname = surnameField.getText().toString();
-            completename = nameField.getText().toString()+ " "+ surnameField.getText().toString();
-            location = locationField.getText().toString();
-            birthDate = dateInfo.getText().toString();
+        if(isNotEmptyName){
 
-            user = UserManager.get().getUser();
+            //setto il nome dell'utente
+            User mCurrentUser = UserManager.get().getUser();
+            mCurrentUser.addName(txtName.getText().toString()+ " "
+                    + txtSurname.getText().toString());
 
+            //controllo che esista la location
+            String location = txtLocation.getText().toString();
+
+            if(!location.matches("")) {
+
+                mCurrentUser.addLocation(location);
+            }
+
+            //controllo che esista il giorno di nascita
+            String birthDate = dateInfo.getText().toString();
+            if(!birthDate.matches("")) {
+
+                mCurrentUser.addBirthDate(birthDate);
+            }
+
+            //controllo che esista il sesso
             int selectedId = radioGroup.getCheckedRadioButtonId();
 
-            if(name.trim().length() == 0 && surname.trim().length() == 0 && selectedId == -1 &&
-                    location.trim().length() == 0 && birthDate.equals("Data di nascita")) {
-                return true;
+            if(selectedId != -1) {
+                RadioButton genderField = (RadioButton) getActivity().findViewById(selectedId);
+                mCurrentUser.addGender(genderField.getText().toString());
             }
 
-            else if(selectedId != -1) {
-                genderField = (RadioButton) getActivity().findViewById(selectedId);
-                gender = genderField.getText().toString();
-                user.addName(completename).addLocation(location).addGender(gender).addBirthDate(birthDate);
-            }
-            else
-                user.addName(completename).addLocation(location).addBirthDate(birthDate);
+            getStepDataFor(1).putParcelable(User.Keys.USER, mCurrentUser);
 
-            getStepDataFor(1).putParcelable(User.Keys.USER,user);
-
-        } else {
-
-            Snackbar.make(getView(),"Nome e Cognome obbligatori", Snackbar.LENGTH_SHORT).show();
         }
 
-        return true;
+        return isNotEmptyName;
     }
 
     @Override
     public String error() {
-        for(int i = 0; i < getArguments().size(); i++) {
-            switch (getArguments().getInt("position", i)) {
-                case 1:
-                    return "Compila i dati";
-                case 2:
-                    return "Scegli almeno una categoria";
-                case 3:
-                    return "Scopri cosa sono i microcrediti";
 
-            }
-        }
-        return null;
+        return "Inserisci nome e cognome";
     }
 
-    //Classe relativa alla visualizzazione del dialog del calendario per la selezione della data di nascita
+    //Classe relativa alla visualizzazione del dialog del calendario per la selezione della mData di nascita
     public static class SelectDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         @Override

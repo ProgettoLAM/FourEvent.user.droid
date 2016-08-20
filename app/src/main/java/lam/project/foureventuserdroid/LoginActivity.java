@@ -41,6 +41,8 @@ public class LoginActivity extends AppCompatActivity {
     private ImageView ic_warning_email;
     private ImageView ic_warning_password;
 
+    private final static String TAG = ".LoginActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,13 @@ public class LoginActivity extends AppCompatActivity {
 
         ic_warning_email = (ImageView) findViewById(R.id.ic_alert_email);
         ic_warning_password = (ImageView) findViewById(R.id.ic_alert_pass);
+
+    }
+
+    public void goToRegistration(final View view) {
+
+        Intent intent = new Intent(this, RegistrationActivity.class);
+        startActivity(intent);
 
     }
 

@@ -94,20 +94,20 @@ public class CategoryManager {
         return mFavouriteCache;
     }
 
-    public boolean AddOrRemoveFavourite(@NonNull final Category newCategory){
+    public boolean AddOrRemoveFavouriteInCache(@NonNull final Category newCategory){
 
-        List<Category> currentFavourite = getFavouriteCategories();
+        getFavouriteCategories();
 
-        if(currentFavourite == null){
+        if(mFavouriteCache == null){
 
-            currentFavourite = new LinkedList<>();
+            mFavouriteCache = new LinkedList<>();
         }
 
         int duplicateIndex = -1;
 
-        for(int i=0; i<currentFavourite.size(); i++){
+        for(int i=0; i<mFavouriteCache.size(); i++){
 
-            final Category item = currentFavourite.get(i);
+            final Category item = mFavouriteCache.get(i);
             if(item.id == newCategory.id){
 
                 duplicateIndex = i;
@@ -117,14 +117,15 @@ public class CategoryManager {
 
         if(duplicateIndex > -1){
 
-            mFavouriteCache.remove(duplicateIndex);
+
             mDirty = false;
 
-            return save();
-        }else{
-            currentFavourite.add(newCategory);
 
-            return save();
+            return mFavouriteCache.remove(duplicateIndex) != null;
+
+        }else{
+
+            return mFavouriteCache.add(newCategory);
         }
     }
 
@@ -152,5 +153,11 @@ public class CategoryManager {
         }
 
         return false;
+    }
+
+    public boolean removeAll(){
+
+        mFavouriteCache = null;
+        return mSharedPreferences.edit().remove(Category.Keys.CATEGORY).commit();
     }
 }
