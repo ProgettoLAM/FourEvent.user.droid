@@ -48,6 +48,7 @@ import lam.project.foureventuserdroid.fragment.ProfileFragment;
 import lam.project.foureventuserdroid.fragment.SettingsFragment;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
 import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.shared_preferences.CategoryManager;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 
@@ -193,6 +194,8 @@ public class MainActivity extends AppCompatActivity
         if(itemId == R.id.nav_logout) {
 
             UserManager.get().remove();
+            CategoryManager.get(this).removeAll();
+
             startActivity(new Intent(this,SplashActivity.class));
             finish();
 

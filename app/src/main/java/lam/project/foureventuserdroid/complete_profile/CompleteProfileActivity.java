@@ -4,25 +4,17 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.github.fcannizzaro.materialstepper.AbstractStep;
-import com.github.fcannizzaro.materialstepper.style.TabStepper;
-
+import com.github.fcannizzaro.materialstepper.style.DotStepper;
 import lam.project.foureventuserdroid.utils.shared_preferences.CategoryManager;
 
-public class CompleteProfileActivity extends TabStepper {
-
-    //private static final String TAG = CompleteProfileActivity.class.getSimpleName();
+public class CompleteProfileActivity extends DotStepper {
 
     private int i = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        setErrorTimeout(1500);
-        setLinear(false);
         setTitle("Completa il tuo profilo");
-        setAlternativeTab(false);
-        setDisabledTouch();
-        //setPreviousVisible();
 
         CategoryManager.get(this);
 

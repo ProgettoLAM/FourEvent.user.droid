@@ -1,9 +1,8 @@
 package lam.project.foureventuserdroid.complete_profile;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
+import lam.project.foureventuserdroid.utils.shared_preferences.CategoryManager;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 /**
@@ -29,14 +29,12 @@ import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 public class Step3Credits extends AbstractStep {
 
-    private int i = 3;
+    User mCreatedUserWithCategories;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.step3_credits, container, false);
-
-        return v;
+        return inflater.inflate(R.layout.step3_credits, container, false);
     }
 
 
@@ -46,18 +44,51 @@ public class Step3Credits extends AbstractStep {
     }
 
     @Override
-    public boolean isOptional() {
-        return true;
-    }
-
-
-    @Override
-    public void onStepVisible() {
-    }
-
-    @Override
     public void onNext() {
-        System.out.println("onNext");
+
+        mCreatedUserWithCategories = getStepDataFor(2).getParcelable(User.Keys.USER);
+
+        String url = getResources().getString(R.string.backend_uri_put_user) + "/" + mCreatedUserWithCategories.email;
+
+        Uri uri = Uri.parse(getResources().getString(R.string.backend_uri_put_user))
+                .buildUpon()
+                .appendEncodedPath(mCreatedUserWithCategories.email)
+                .build();
+
+        try {
+
+            JSONObject obj = mCreatedUserWithCategories.toJson();
+
+            String path = uri.toString();
+
+            CustomRequest request = new CustomRequest(Request.Method.POST, path, obj,
+
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            StepManager.get(getContext()).setStep(StepManager.COMPLETE);
+                            UserManager.get().save(mCreatedUserWithCategories);
+                            CategoryManager.get().save();
+
+                            Intent intent = new Intent(getContext(), MainActivity.class);
+                            startActivity(intent);
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    System.out.println(error.toString());
+                }
+            });
+
+            VolleyRequest.get(getContext()).add(request);
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -73,62 +104,12 @@ public class Step3Credits extends AbstractStep {
     @Override
     public boolean nextIf() {
 
-        //TODO gestire caso in cui non arriva niente dallo step 2
-        final User user = getStepDataFor(2).getParcelable(User.Keys.USER);
-
-        try {
-
-            String url = getResources().getString(R.string.backend_uri_put_user) + "/" + user.email;
-
-            JSONObject obj = user.toJson();
-
-            CustomRequest request = new CustomRequest(Request.Method.POST, url, obj,
-
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        Snackbar snackbar = Snackbar
-                                .make(getView(), response.toString(), Snackbar.LENGTH_LONG);
-
-                        snackbar.show();
-
-                        StepManager.get(getContext()).setStep(StepManager.COMPLETE);
-
-                        UserManager.get().save(user);
-
-                        Intent intent = new Intent(getContext(), MainActivity.class);
-                        startActivity(intent);
-                        getActivity().finish();
-
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        Snackbar snackbar = Snackbar
-                                .make(getView(), error.toString(), Snackbar.LENGTH_LONG);
-
-                        snackbar.show();
-
-                    }
-                });
-
-            VolleyRequest.get(getContext()).add(request);
-
-        } catch (JSONException e) {
-
-            e.printStackTrace();
-        }
-
-        getActivity().finish();
-
-        return i > 3;
+       return true;
     }
 
     @Override
     public String error() {
 
-        return null;
+        return "Completa tutti i campi obbligatori";
     }
 }
