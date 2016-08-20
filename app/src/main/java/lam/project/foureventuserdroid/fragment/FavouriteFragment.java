@@ -129,38 +129,28 @@ public class FavouriteFragment extends Fragment {
             mFavouriteList.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Event event = mModel.get(getAdapterPosition());
-                    Context context = v.getContext();
 
-                    ImageView icon = (ImageView) v;
-                    Object tag = icon.getTag();
-                    int ic_star = R.drawable.ic_star_empty;
+                    Event selectedEvent = mModel.get(getAdapterPosition());
 
-                    if( tag != null && ((Integer)tag).intValue() == ic_star) {
-                        ic_star = R.drawable.ic_star;
+                    selectedEvent = FavouriteManager.get(getContext()).saveOrRemoveEvent(selectedEvent);
 
-                        //Salvataggio evento nei preferiti, se cliccata la stella
-                        FavouriteManager.get(context).save(event);
-                        List<Event> events = FavouriteManager.get(context).getFavouriteEvents();
-                        for(Event evt : events) {
-                            Log.d("evento aggiunto", evt.mTitle);
-                        }
-                    }
-                    else {
-                        FavouriteManager.get(context).removeEvent(event);
-                        List<Event> events = FavouriteManager.get(context).getFavouriteEvents();
-                        for(Event evt : events) {
-                            Log.d("eventi rimasti", evt.mTitle);
-                        }
-                    }
-                    icon.setTag(ic_star);
-                    icon.setBackgroundResource(ic_star);
+                    mModel.remove(selectedEvent);
+
+                    updateRecycler();
                 }
             });
+        }
 
-            mFavouriteList.setTag(R.drawable.ic_star);
-            mFavouriteList.setBackgroundResource(R.drawable.ic_star);
+        private void updateRecycler() {
 
+            mAdapter.notifyDataSetChanged();
+
+            if(mModel.size() == 0) {
+
+                sadEmoticon.setVisibility(View.VISIBLE);
+                notEvents.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.INVISIBLE);
+            }
         }
 
         public void bind(Event event){
@@ -176,6 +166,8 @@ public class FavouriteFragment extends Fragment {
             }
             else
                 mPriceList.setText(event.mPrice+ "€");
+
+            mFavouriteList.setBackgroundResource(R.drawable.ic_star);
         }
     }
 
