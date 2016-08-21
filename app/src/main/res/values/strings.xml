@@ -16,9 +16,7 @@
     <string name="action_participations">Partecipazioni</string>
 
     <string name="action_profile">Profilo</string>
-    <string name="action_wallett">Portafoglio</string>
-    <string name="action_settings">Impostazioni</string>
-
+    <string name="action_wallet">Portafoglio</string>
 
     <string name="action_vote">Vota la nostra app!</string>
     <string name="action_logout">Esci</string>

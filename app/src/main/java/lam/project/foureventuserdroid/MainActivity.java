@@ -30,7 +30,6 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.identity.intents.Address;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -45,7 +44,6 @@ import lam.project.foureventuserdroid.fragment.EventsFragment;
 import lam.project.foureventuserdroid.fragment.FavouriteFragment;
 import lam.project.foureventuserdroid.fragment.ParticipationFragment;
 import lam.project.foureventuserdroid.fragment.ProfileFragment;
-import lam.project.foureventuserdroid.fragment.SettingsFragment;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.shared_preferences.CategoryManager;
@@ -72,7 +70,6 @@ public class MainActivity extends AppCompatActivity
     private boolean mResolvingError;
 
     private Location mCurrentLocation;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,14 +223,9 @@ public class MainActivity extends AppCompatActivity
                 nextFragment = new ProfileFragment();
                 break;
 
-            case R.id.nav_wallett:
+            case R.id.nav_wallet:
 
                 nextFragment = new WalletFragment();
-                break;
-
-            case R.id.nav_settings:
-
-                nextFragment = new SettingsFragment();
                 break;
 
             //Da qui in poi non si hanno modifiche

@@ -35,5 +35,6 @@ dependencies {
     compile 'com.github.fcannizzaro:material-stepper:1.2.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
+    compile 'com.github.vipulasri:timelineview:1.0.3'
     testCompile 'junit:junit:4.12'
 }
