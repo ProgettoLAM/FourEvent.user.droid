@@ -5,13 +5,16 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
     <fragment
         android:id="@+id/anchor_map"
-        android:name="com.google.android.gms.maps.MapFragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        map:cameraZoom="13"
+        android:layout_height="250dp"
+        app:elevation="4dp"/>
 
     <ScrollView
         android:id="@+id/layout_main"
@@ -249,8 +252,6 @@
 
     </ScrollView>
 
-    <include layout="@layout/fab_layout" />
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_detail"
         android:layout_width="wrap_content"
@@ -267,6 +268,11 @@
         android:layout_marginRight="14dp"
         android:layout_marginEnd="14dp"
         android:layout_marginBottom="11dp" />
+
+    <include layout="@layout/fab_layout"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

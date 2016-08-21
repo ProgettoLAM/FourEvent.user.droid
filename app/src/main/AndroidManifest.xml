@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
     <!-- Localizzazione tramite Wifi e reti mobili -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- Localizzazione tramite GPS -->
@@ -23,6 +24,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -66,10 +68,10 @@
         <!-- API Key Google -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAaYPBf80ATxB4V1qYwMTiXOWmPpY-Ce9Q" />
+            android:value="AIzaSyDMqxeg86gZ4cd7sxRZ8Mz07cpqva3zGMQ" />
 
-        <meta-data android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+        <!--meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />-->
 
     </application>
 
