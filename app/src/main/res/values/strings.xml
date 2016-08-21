@@ -6,6 +6,8 @@
     <string name="title_details">Dettagli</string>
     <string name="title_ticket">Acquista il biglietto</string>
 
+    <string name="events_not_found">Eventi non trovati</string>
+
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

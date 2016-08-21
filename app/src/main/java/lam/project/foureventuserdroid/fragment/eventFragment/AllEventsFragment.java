@@ -2,8 +2,6 @@ package lam.project.foureventuserdroid.fragment.eventFragment;
 
 
 import android.animation.ObjectAnimator;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,13 +19,16 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import lam.project.foureventuserdroid.DetailsEventActivity;
 import lam.project.foureventuserdroid.R;
+import lam.project.foureventuserdroid.fragment.eventFragment.recyclerView.AllEventsAdapter;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.utils.connection.EventListRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
@@ -44,15 +45,10 @@ public class AllEventsFragment extends Fragment {
     AllEventsAdapter mAdapter;
 
     public static List<Event> mModel;
-    public static List<Event> favouriteEvents;
 
     ImageView mSadImageEmoticon;
     TextView mEventNotFound;
     ProgressBar mProgressBar;
-
-
-    ImageView imgEvent;
-
 
     FloatingActionButton fab;
 
@@ -75,11 +71,11 @@ public class AllEventsFragment extends Fragment {
 
     private View initViews(View rootView) {
 
-        mSadImageEmoticon = (ImageView) rootView.findViewById(R.id.sad_emoticon);
-        mEventNotFound = (TextView) rootView.findViewById(R.id.not_events);
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.all_events_progress_bar);
-        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.all_events_recycler_view);
+        mSadImageEmoticon = (ImageView) rootView.findViewById(R.id.events_sad_emoticon);
+        mEventNotFound = (TextView) rootView.findViewById(R.id.events_not_found);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.events_progress_bar);
+        fab = (FloatingActionButton) rootView.findViewById(R.id.events_fab);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.events_recycler_view);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +86,8 @@ public class AllEventsFragment extends Fragment {
         });
 
 
-        mAdapter = new AllEventsAdapter(mModel);
+        mAdapter = new AllEventsAdapter(getActivity(),mModel);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -120,7 +117,7 @@ public class AllEventsFragment extends Fragment {
             }
         });
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.events_swipe_refresh_layout);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -211,133 +208,25 @@ public class AllEventsFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        String errorText = error.networkResponse.toString();
+                        String responseBody = null;
 
-                        Snackbar.make(getView(), "Error: " + errorText, Snackbar.LENGTH_SHORT)
-                                .setAction("action", null)
-                                .show();
+                        try {
 
-                        showAndHideViews();
+                            responseBody = new String( error.networkResponse.data, "utf-8" );
+                            JSONObject jsonObject = new JSONObject( responseBody );
 
+                            String errorText = (String) jsonObject.get("message");
+
+                            mEventNotFound.setText(errorText);
+
+                            showAndHideViews();
+
+                        } catch (UnsupportedEncodingException | JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
         });
 
         VolleyRequest.get(getContext()).add(request);
     }
-
-    public final class AllEventsViewHolder extends RecyclerView.ViewHolder{
-
-        private TextView mTitleList;
-        private TextView mAddressList;
-        private TextView mDateList;
-        private TextView mTagList;
-
-        private ImageView mFavouriteList;
-        private TextView mPriceList;
-
-
-        private AllEventsViewHolder(final View itemView) {
-
-            super(itemView);
-
-            mTitleList = (TextView) itemView.findViewById(R.id.title_list);
-            mAddressList = (TextView) itemView.findViewById(R.id.address_list);
-            mDateList = (TextView) itemView.findViewById(R.id.date_list);
-            mTagList = (TextView) itemView.findViewById(R.id.tag_list);
-
-            mFavouriteList = (ImageView) itemView.findViewById(R.id.favourite_list);
-            mPriceList = (TextView) itemView.findViewById(R.id.price_list);
-
-            imgEvent = (ImageView) itemView.findViewById(R.id.img_event);
-
-            Picasso.with(itemView.getContext()).load("http://annina.cs.unibo.it:8080/api/event/img/img00.jpg").resize(1200,600).into(imgEvent);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Intent intent = new Intent(itemView.getContext(),DetailsEventActivity.class);
-
-                    intent.putExtra(Event.Keys.EVENT,mModel.get(getAdapterPosition()));
-                    startActivity(intent);
-                }
-            });
-
-            mFavouriteList.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Event selectedEvent = mModel.get(getAdapterPosition());
-
-                    selectedEvent = FavouriteManager.get(getContext()).saveOrRemoveEvent(selectedEvent);
-
-                    if(selectedEvent.mIsPreferred) {
-
-                        v.setBackgroundResource(R.drawable.ic_star);
-
-                    } else {
-
-                        v.setBackgroundResource(R.drawable.ic_star_empty);
-                    }
-                }
-            });
-        }
-
-        public void bind(Event event){
-
-            mTitleList.setText(event.mTitle);
-            mAddressList.setText(event.mAddress);
-            mDateList.setText(event.mStartDate);
-            mTagList.setText(event.mTag);
-
-            if(event.mPrice.equals("FREE")){
-                mPriceList.setText(event.mPrice);
-                mPriceList.setTextColor(Color.parseColor("#4CAF50"));
-            }
-            else
-                mPriceList.setText(event.mPrice+ "€");
-
-            if(event.mIsPreferred) {
-
-                mFavouriteList.setBackgroundResource(R.drawable.ic_star);
-
-            } else {
-
-                mFavouriteList.setBackgroundResource(R.drawable.ic_star_empty);
-            }
-        }
-    }
-
-    public final class AllEventsAdapter extends RecyclerView.Adapter<AllEventsViewHolder>{
-
-        private final List<Event> mModel;
-
-        AllEventsAdapter(final List<Event> model){
-
-            this.mModel = model;
-        }
-
-        @Override
-        public AllEventsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            final View layout = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.content_events_list,parent,false);
-
-            return new AllEventsViewHolder(layout);
-
-        }
-
-        @Override
-        public void onBindViewHolder(AllEventsViewHolder holder, int position) {
-
-            holder.bind(mModel.get(position));
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return mModel.size();
-        }
-    }
-
 }

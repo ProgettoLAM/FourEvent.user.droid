@@ -3,11 +3,10 @@ package lam.project.foureventuserdroid.fragment.eventFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import lam.project.foureventuserdroid.R;
 
@@ -15,8 +14,7 @@ import lam.project.foureventuserdroid.R;
  * A simple {@link Fragment} subclass.
  */
 public class NearEventsFragment extends Fragment {
-
-
+    
     public NearEventsFragment() {
         // Required empty public constructor
     }
@@ -26,10 +24,22 @@ public class NearEventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_near_events,container,false);
+        return initView(inflater.inflate(R.layout.fragment_all_events, container, false));
+    }
 
-        rootView.findViewById(R.id.near_events_recycler_view)
-                .setVisibility(View.INVISIBLE);
+
+    private View initView(View rootView) {
+
+
+        ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.events_progress_bar);
+
+        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.clearAnimation();
+
+        rootView.findViewById(R.id.events_recycler_view).setVisibility(View.INVISIBLE);
+
+        rootView.findViewById(R.id.events_sad_emoticon).setVisibility(View.VISIBLE);
+        rootView.findViewById(R.id.events_not_found).setVisibility(View.VISIBLE);
 
         return rootView;
     }

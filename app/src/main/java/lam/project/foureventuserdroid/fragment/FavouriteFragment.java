@@ -1,7 +1,6 @@
 package lam.project.foureventuserdroid.fragment;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,8 +52,8 @@ public class FavouriteFragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Preferiti");
 
-        sadEmoticon = (ImageView) rootView.findViewById(R.id.sad_emoticon);
-        notEvents = (TextView) rootView.findViewById(R.id.not_events);
+        sadEmoticon = (ImageView) rootView.findViewById(R.id.events_sad_emoticon);
+        notEvents = (TextView) rootView.findViewById(R.id.events_not_found);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.favourite_recycler_view);
 

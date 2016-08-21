@@ -164,6 +164,7 @@ public class DetailsEventActivity extends AppCompatActivity {
         setInfo(currentEvent);
     }
 
+    /*
     private void initMap() {
         if (googleMap == null) {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -175,11 +176,12 @@ public class DetailsEventActivity extends AppCompatActivity {
         MarkerOptions marker = new MarkerOptions().position(position);
         googleMap.addMarker(marker);
     }
+    */
 
     @Override
     protected void onResume() {
         super.onResume();
-        initMap();
+        //initMap();
     }
 
     private void setInfo(Event event){
