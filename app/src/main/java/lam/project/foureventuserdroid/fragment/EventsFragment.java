@@ -20,31 +20,23 @@ import lam.project.foureventuserdroid.utils.tabs.ViewPagerAdapter;
  */
 public class EventsFragment extends Fragment {
 
-    View rootView;
-    SlidingTabLayout tabLayout;
-    ViewPager pager;
-    FragmentManager fragmentManager;
-    ViewPagerAdapter adapter;
-
-    int Numboftabs = 3;
-
+    private static final int NUMBER_OF_TABS = 3;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.fragment_events,container,false);
+        View rootView = inflater.inflate(R.layout.fragment_events, container, false);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Eventi");
 
 
         final String[] mTabNames = getResources().getStringArray(R.array.tab_names);
 
-        tabLayout = (SlidingTabLayout) rootView.findViewById(R.id.tabs);
-        pager = (ViewPager) rootView.findViewById(R.id.pager);
-        fragmentManager = getActivity().getSupportFragmentManager();
+        SlidingTabLayout tabLayout = (SlidingTabLayout) rootView.findViewById(R.id.tabs);
+        ViewPager pager = (ViewPager) rootView.findViewById(R.id.pager);
 
-        adapter = new ViewPagerAdapter(getChildFragmentManager(), mTabNames, Numboftabs);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager(), mTabNames, NUMBER_OF_TABS);
 
         pager.setAdapter(adapter);
 

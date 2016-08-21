@@ -11,7 +11,7 @@
         tools:listitem="@layout/content_events_list" />
 
     <ImageView
-        android:id="@+id/sad_emoticon2"
+        android:id="@+id/sad_emoticon"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_sad_emoticon"
@@ -21,7 +21,7 @@
         />
 
     <TextView
-        android:id="@+id/not_events2"
+        android:id="@+id/not_events"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Non sono presenti eventi"
