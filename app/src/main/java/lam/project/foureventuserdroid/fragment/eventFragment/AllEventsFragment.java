@@ -1,18 +1,22 @@
 package lam.project.foureventuserdroid.fragment.eventFragment;
 
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -35,15 +39,20 @@ import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
  */
 public class AllEventsFragment extends Fragment {
 
+    SwipeRefreshLayout mSwipeRefreshLayout;
     RecyclerView mRecyclerView;
     AllEventsAdapter mAdapter;
 
     public static List<Event> mModel;
     public static List<Event> favouriteEvents;
 
-    ImageView sadEmoticon;
-    TextView notEvents;
+    ImageView mSadImageEmoticon;
+    TextView mEventNotFound;
+    ProgressBar mProgressBar;
+
+
     ImageView imgEvent;
+
 
     FloatingActionButton fab;
 
@@ -55,18 +64,23 @@ public class AllEventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        FavouriteManager.get(getContext());
-
         mModel = new ArrayList<>();
+
         setModel();
 
-        final View rootView = inflater.inflate(R.layout.fragment_all_events, container, false);
+        FavouriteManager.get(getContext());
 
-        sadEmoticon = (ImageView) rootView.findViewById(R.id.sad_emoticon);
-        notEvents = (TextView) rootView.findViewById(R.id.not_events);
+        return initViews(inflater.inflate(R.layout.fragment_all_events, container, false));
+    }
 
+    private View initViews(View rootView) {
 
+        mSadImageEmoticon = (ImageView) rootView.findViewById(R.id.sad_emoticon);
+        mEventNotFound = (TextView) rootView.findViewById(R.id.not_events);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.all_events_progress_bar);
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.all_events_recycler_view);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,7 +89,7 @@ public class AllEventsFragment extends Fragment {
             }
         });
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.all_events_recycler_view);
+
         mAdapter = new AllEventsAdapter(mModel);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
@@ -106,23 +120,57 @@ public class AllEventsFragment extends Fragment {
             }
         });
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                setModel();
+            }
+        });
+
+        ObjectAnimator animation = ObjectAnimator.ofInt (mProgressBar, "progress", 0, 500);
+        animation.setDuration (1000);
+        animation.setInterpolator (new DecelerateInterpolator());
+        animation.start ();
+
+
+        //mostro progress bar e nascondo tutto il resto
+        mProgressBar.setVisibility(View.VISIBLE);
+
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mSadImageEmoticon.setVisibility(View.INVISIBLE);
+        mEventNotFound.setVisibility(View.INVISIBLE);
+
         return rootView;
     }
 
-    private void setPreferred() {
+    public final void showAndHideViews() {
 
-        List<Event> favouriteEvents = FavouriteManager.get().getFavouriteEvents();
+        //nascondo sempre la progress bar
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mProgressBar.clearAnimation();
 
-        for (Event event : mModel) {
+        if(mModel != null && mModel.size() > 0) {
 
-            for (Event favouriteEvent : favouriteEvents) {
+            //mostro la recyclerview
+            mRecyclerView.setVisibility(View.VISIBLE);
 
-                if(favouriteEvent.equals(event)) {
+            //nascondo icone e testo
+            mSadImageEmoticon.setVisibility(View.INVISIBLE);
+            mEventNotFound.setVisibility(View.INVISIBLE);
 
-                    event.mIsPreferred = true;
-                }
-            }
+        } else {
+
+            //nascondo la recyclerview
+            mRecyclerView.setVisibility(View.INVISIBLE);
+
+            //mostro icone e testo
+            mSadImageEmoticon.setVisibility(View.VISIBLE);
+            mEventNotFound.setVisibility(View.VISIBLE);
         }
+
     }
 
     private void setModel(){
@@ -150,21 +198,26 @@ public class AllEventsFragment extends Fragment {
 
                         mAdapter.notifyDataSetChanged();
 
-                        mRecyclerView.setVisibility(View.VISIBLE);
-                        sadEmoticon.setVisibility(View.INVISIBLE);
-                        notEvents.setVisibility(View.INVISIBLE);
+                        if(mSwipeRefreshLayout.isRefreshing()) {
+
+                            mSwipeRefreshLayout.setRefreshing(false);
+                        }
+
+                        showAndHideViews();
+
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Snackbar.make(getView(), "Error: " + error.getLocalizedMessage(), Snackbar.LENGTH_SHORT)
+
+                        String errorText = error.networkResponse.toString();
+
+                        Snackbar.make(getView(), "Error: " + errorText, Snackbar.LENGTH_SHORT)
                                 .setAction("action", null)
                                 .show();
 
-                        sadEmoticon.setVisibility(View.VISIBLE);
-                        notEvents.setVisibility(View.VISIBLE);
-                        mRecyclerView.setVisibility(View.INVISIBLE);
+                        showAndHideViews();
 
                     }
         });
