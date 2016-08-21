@@ -8,14 +8,14 @@
     android:background="@color/white">
 
     <fragment
-        android:id="@+id/map"
+        android:id="@+id/anchor_map"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
     <ScrollView
         android:id="@+id/layout_main"
-        android:layout_below="@id/map"
+        android:layout_below="@id/anchor_map"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

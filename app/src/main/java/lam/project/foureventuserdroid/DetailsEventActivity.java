@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -35,6 +36,8 @@ import lam.project.foureventuserdroid.model.Event;
 
 
 public class DetailsEventActivity extends AppCompatActivity {
+
+    private SupportMapFragment mMapFragment;
 
     private GoogleMap googleMap;
     private LatLng position;
@@ -58,6 +61,14 @@ public class DetailsEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_event);
+
+
+        /*
+        mMapFragment = SupportMapFragment.newInstance();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.anchor_map,mMapFragment)
+                .commit();
+        */
 
         //Per disabilitare autofocus all'apertura della Activity
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
