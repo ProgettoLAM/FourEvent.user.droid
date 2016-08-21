@@ -4,61 +4,184 @@
     android:id="@+id/activity_ticket_participation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="lam.project.foureventuserdroid.TicketActivity">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/app_bar_main"
+    <ImageView
+        android:id="@+id/header_ticket"
         android:layout_width="match_parent"
-        android:layout_height="81dp" />
+        android:layout_height="160dp"
+        android:src="@drawable/img_porchetta"
+        android:scaleType="center"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
         android:orientation="vertical"
-        android:layout_below="@id/toolbar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:paddingTop="8dp"
+        android:layout_below="@id/header_ticket">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/symbol_euro"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_euro"/>
+
+            <TextView
+                android:id="@+id/price_ticket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15.00"
+                android:textSize="28sp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="4dp"
+                android:layout_alignLeft="@id/symbol_euro" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/price_ticket"
+                android:gravity="end">
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="1dp"
+                    android:layout_height="100dp"
+                    android:background="#eee"
+                    android:layout_marginRight="16dp"
+                    />
+
+                <Button
+                    android:id="@+id/button_buy"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:text="Acquista"
+                    android:textSize="14dp"
+                    android:layout_toRightOf="@id/divider" />
+
+                <Button
+                    android:id="@+id/button_profile"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:text="Planner"
+                    android:textSize="14dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_below="@id/button_buy"
+                    android:layout_toRightOf="@id/divider"/>
+
+            </RelativeLayout>
+
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#eee"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/text_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SALDO"
+                android:textSize="20dp"
+                android:textColor="@color/colorPrimaryDark"
+                />
+
+            <ImageView
+                android:id="@id/symbol_euro"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_euro"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/text_balance"/>
+
+            <TextView
+                android:id="@+id/balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="52.64"
+                android:textSize="28sp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="12dp"
+                android:layout_alignLeft="@id/symbol_euro"
+                android:layout_below="@id/text_balance"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/balance"
+                android:gravity="end">
+
+                <TextView
+                    android:id="@+id/recharge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginLeft="16dp"
+                    android:text="Ricarica"
+                    android:textSize="20dp" />
+
+                <View
+                    android:id="@id/divider"
+                    android:layout_width="130dp"
+                    android:layout_height="1dp"
+                    android:background="@color/white"
+                    android:layout_below="@id/recharge"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    />
+
+                <TextView
+                    android:id="@+id/wallet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Portafoglio"
+                    android:textSize="20dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_below="@id/recharge"/>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="8dp"
-            android:paddingTop="4dp">
+            android:padding="16dp">
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/nfc_tag"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/detail_title"
-            android:text="Arduino BABY"
+            android:text="NFC Tag"
+            android:layout_gravity="center"
             android:textSize="24sp"
-            android:textColor="@color/colorPrimary"
-            android:fontFamily="sans-serif" />
+            android:textColor="@color/colorPrimary" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_calendar"/>
-
-                <TextView
-                    android:id="@+id/detail_date"
-                    android:text="SAB 20 Agosto ALLE 16:00"
-                    android:layout_marginLeft="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:gravity="center_vertical"
-                    tools:ignore="RtlHardcoded" />
-
-            </LinearLayout>
+          <Button
+              android:layout_width="match_parent"
+              android:layout_height="40dp"
+              android:text="Sincronizza"
+              android:layout_marginTop="16dp"
+              android:textColor="@color/darkerText"
+              android:background="@color/colorAccent"
+              />
         </LinearLayout>
     </LinearLayout>
 
