@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lam.project.foureventuserdroid.R;
-import lam.project.foureventuserdroid.fragment.eventFragment.recyclerView.AllEventsAdapter;
+import lam.project.foureventuserdroid.fragment.eventFragment.recyclerView.EventAdapter;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.utils.connection.EventListRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
@@ -42,7 +42,7 @@ public class AllEventsFragment extends Fragment {
 
     SwipeRefreshLayout mSwipeRefreshLayout;
     RecyclerView mRecyclerView;
-    AllEventsAdapter mAdapter;
+    EventAdapter mAdapter;
 
     public static List<Event> mModel;
 
@@ -86,7 +86,7 @@ public class AllEventsFragment extends Fragment {
         });
 
 
-        mAdapter = new AllEventsAdapter(getActivity(),mModel);
+        mAdapter = new EventAdapter(getActivity(),mModel);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 

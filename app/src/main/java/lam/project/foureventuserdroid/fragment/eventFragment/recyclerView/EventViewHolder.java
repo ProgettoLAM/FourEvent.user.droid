@@ -22,7 +22,7 @@ import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
  * Created by spino on 21/08/16.
  */
 
-public final class AllEventsViewHolder extends RecyclerView.ViewHolder {
+public final class EventViewHolder extends RecyclerView.ViewHolder {
 
     private List<Event> mModel;
     private Activity mSenderActivity;
@@ -36,7 +36,7 @@ public final class AllEventsViewHolder extends RecyclerView.ViewHolder {
     private TextView mPriceList;
 
 
-    AllEventsViewHolder(final Activity activity, final List<Event> model, final View itemView) {
+    EventViewHolder(final Activity activity, final List<Event> model, final View itemView) {
 
         super(itemView);
 

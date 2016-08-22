@@ -42,17 +42,17 @@ import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
  */
 public class ProfileFragment extends Fragment {
 
-    String oldPassword;
-    String newPassword;
-    Snackbar snackbar;
+    private final String NAME = "Profilo";
+
+    private String oldPassword;
+    private String newPassword;
+    private Snackbar snackbar;
 
     public ProfileFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Profilo");
 
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
@@ -177,4 +177,8 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    private void setTitle() {
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);
+    }
 }

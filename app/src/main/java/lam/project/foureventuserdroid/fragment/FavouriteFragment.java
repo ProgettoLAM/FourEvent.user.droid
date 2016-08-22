@@ -1,8 +1,6 @@
 package lam.project.foureventuserdroid.fragment;
 
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -14,13 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import lam.project.foureventuserdroid.DetailsEventActivity;
 import lam.project.foureventuserdroid.R;
+import lam.project.foureventuserdroid.fragment.eventFragment.recyclerView.EventAdapter;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 
@@ -30,15 +26,16 @@ import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
  */
 public class FavouriteFragment extends Fragment {
 
-    RecyclerView mRecyclerView;
-    FavouriteAdapter mAdapter;
+    private static final String NAME = "Preferiti";
 
-    ImageView sadEmoticon;
-    TextView notEvents;
-    ImageView imgEvent;
+    private RecyclerView mRecyclerView;
+    private EventAdapter mAdapter;
 
-    public static List<Event> mModel;
-    List<Event> favouriteEvents;
+    private ImageView mSadEmoticon;
+    private TextView mEventsNotFound;
+
+    private List<Event> mModel;
+    private List<Event> mFavourite;
 
     public FavouriteFragment() {}
 
@@ -46,159 +43,64 @@ public class FavouriteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mModel = new ArrayList<>();
 
         View rootView = inflater.inflate(R.layout.fragment_favourite, container, false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Preferiti");
-
-        sadEmoticon = (ImageView) rootView.findViewById(R.id.events_sad_emoticon);
-        notEvents = (TextView) rootView.findViewById(R.id.events_not_found);
-
+        mSadEmoticon = (ImageView) rootView.findViewById(R.id.events_sad_emoticon);
+        mEventsNotFound = (TextView) rootView.findViewById(R.id.events_not_found);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.favourite_recycler_view);
 
-        favouriteEvents = FavouriteManager.get(rootView.getContext()).getFavouriteEvents();
+        initRecycler();
 
-        if(favouriteEvents.size() > 0) {
-            mRecyclerView.setVisibility(View.VISIBLE);
+        return rootView;
+    }
 
-            mModel.addAll(favouriteEvents);
+    private void initRecycler () {
 
-            sadEmoticon.setVisibility(View.INVISIBLE);
-            notEvents.setVisibility(View.INVISIBLE);
+        mModel = new ArrayList<>();
 
-        }
-        else {
-            sadEmoticon.setVisibility(View.VISIBLE);
-            notEvents.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.INVISIBLE);
-        }
-
-        mAdapter = new FavouriteAdapter(mModel);
-
+        mAdapter = new EventAdapter(getActivity(), mModel);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.scrollToPosition(0);
 
         mRecyclerView.setLayoutManager(layoutManager);
-
         mRecyclerView.setAdapter(mAdapter);
 
-        return rootView;
+        updateRecycler();
+
     }
 
-    public final class FavouriteViewHolder extends RecyclerView.ViewHolder{
+    private void updateRecycler () {
 
-        private TextView mTitleList;
-        private TextView mAddressList;
-        private TextView mDateList;
-        private TextView mTagList;
+        setModel();
 
-        private ImageView mFavouriteList;
-        private TextView mPriceList;
+        if(mFavourite.size() > 0) {
+            mRecyclerView.setVisibility(View.VISIBLE);
 
-        private FavouriteViewHolder(View itemView) {
+            mSadEmoticon.setVisibility(View.INVISIBLE);
+            mEventsNotFound.setVisibility(View.INVISIBLE);
 
-            super(itemView);
-
-            mTitleList = (TextView) itemView.findViewById(R.id.title_list);
-            mAddressList = (TextView) itemView.findViewById(R.id.address_list);
-            mDateList = (TextView) itemView.findViewById(R.id.date_list);
-            mTagList = (TextView) itemView.findViewById(R.id.tag_list);
-
-            mFavouriteList = (ImageView) itemView.findViewById(R.id.favourite_list);
-            mPriceList = (TextView) itemView.findViewById(R.id.price_list);
-
-            imgEvent = (ImageView) itemView.findViewById(R.id.img_event);
-
-            Picasso.with(itemView.getContext()).load("http://annina.cs.unibo.it:8080/api/event/img/img00.jpg").resize(1200,600).into(imgEvent);
-
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), DetailsEventActivity.class);
-                    intent.putExtra(Event.Keys.EVENT,mModel.get(getAdapterPosition()));
-                    startActivity(intent);
-                }
-            });
-
-            mFavouriteList.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Event selectedEvent = mModel.get(getAdapterPosition());
-
-                    selectedEvent = FavouriteManager.get(getContext()).saveOrRemoveEvent(selectedEvent);
-
-                    mModel.remove(selectedEvent);
-
-                    updateRecycler();
-                }
-            });
-        }
-
-        private void updateRecycler() {
+            mModel.clear();
+            mModel.addAll(mFavourite);
 
             mAdapter.notifyDataSetChanged();
-
-            if(mModel.size() == 0) {
-
-                sadEmoticon.setVisibility(View.VISIBLE);
-                notEvents.setVisibility(View.VISIBLE);
-                mRecyclerView.setVisibility(View.INVISIBLE);
-            }
         }
-
-        public void bind(Event event){
-
-            mTitleList.setText(event.mTitle);
-            mAddressList.setText(event.mAddress);
-            mDateList.setText(event.mStartDate);
-            mTagList.setText(event.mTag);
-
-            if(event.mPrice.equals("FREE")){
-                mPriceList.setText(event.mPrice);
-                mPriceList.setTextColor(Color.parseColor("#4CAF50"));
-            }
-            else
-                mPriceList.setText(event.mPrice+ "€");
-
-            mFavouriteList.setBackgroundResource(R.drawable.ic_star);
+        else {
+            mSadEmoticon.setVisibility(View.VISIBLE);
+            mEventsNotFound.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
         }
     }
 
-    public final class FavouriteAdapter extends RecyclerView.Adapter<FavouriteViewHolder>{
+    private void setModel () {
 
-        private final List<Event> mModel;
-
-        FavouriteAdapter(final List<Event> model){
-
-            this.mModel = model;
-        }
-
-        @Override
-        public FavouriteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            final View layout = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.content_events_list,parent,false);
-
-            return new FavouriteViewHolder(layout);
-
-        }
-
-        @Override
-        public void onBindViewHolder(FavouriteViewHolder holder, int position) {
-
-            holder.bind(mModel.get(position));
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return mModel.size();
-        }
+        mFavourite = FavouriteManager.get(getContext()).getFavouriteEvents();
     }
 
+    private void setTitle() {
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);
+    }
 }
