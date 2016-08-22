@@ -1,5 +1,6 @@
 package lam.project.foureventuserdroid.model;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,10 +29,12 @@ public class User implements Parcelable{
 
     public String gender;
 
+    public float balance;
+
     public List<Category> categories;
 
     private User(final String email, final String password, final String name,
-                 final String birthDate, final String location, final String gender){
+                 final String birthDate, final String location, final String gender, final float balance){
 
         this.email = email;
         this.password = password;
@@ -38,6 +42,7 @@ public class User implements Parcelable{
         this.birthDate = birthDate;
         this.location = location;
         this.gender = gender;
+        this.balance = balance;
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -51,6 +56,11 @@ public class User implements Parcelable{
             return new User[size];
         }
     };
+
+    public void updateBalance(float amount) {
+
+        this.balance += amount;
+    }
 
     public User addName(String name) {
         this.name = name;
@@ -83,8 +93,11 @@ public class User implements Parcelable{
     }
 
     protected User(Parcel in) {
+
         email = in.readString();
         password = in.readString();
+        balance = in.readFloat();
+
         boolean present = in.readByte() == Keys.PRESENT;
         if(present) {
             name = in.readString();
@@ -92,29 +105,35 @@ public class User implements Parcelable{
         else
             name = null;
 
+        present = in.readByte() == Keys.PRESENT;
         if(present) {
             birthDate = in.readString();
         }
         else
             birthDate = null;
 
+        present = in.readByte() == Keys.PRESENT;
         if(present) {
            location = in.readString();
         }
         else
             location = null;
 
+        present = in.readByte() == Keys.PRESENT;
         if(present) {
             gender = in.readString();
         }
         else
             gender = null;
 
+        present = in.readByte() == Keys.PRESENT;
         if(present) {
             in.readTypedList(categories,Category.CREATOR);
         }
         else
             categories = null;
+
+
     }
 
 
@@ -161,6 +180,8 @@ public class User implements Parcelable{
             user.addCategories(categories);
         }
 
+
+
         return user;
     }
 
@@ -170,6 +191,7 @@ public class User implements Parcelable{
 
         jsonObject.put(Keys.EMAIL, email);
         jsonObject.put(Keys.PASSWORD, password);
+        jsonObject.put(Keys.BALANCE,balance);
 
         if (name != null) {
 
@@ -190,6 +212,7 @@ public class User implements Parcelable{
 
             jsonObject.put(Keys.GENDER, gender);
         }
+
 
         if(categories != null) {
 
@@ -215,6 +238,7 @@ public class User implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(email);
         dest.writeString(password);
+        dest.writeFloat(balance);
 
         if (name != null) {
             dest.writeByte(Keys.PRESENT);
@@ -271,6 +295,8 @@ public class User implements Parcelable{
 
         public static final String CATEGORIES = "categories";
 
+        public static final String BALANCE = "balance";
+
         public static final Byte PRESENT = 1;
 
         public static final Byte NOT_PRESENT = 0;
@@ -289,6 +315,8 @@ public class User implements Parcelable{
         private String mLocation;
 
         private String mGender;
+
+        private float mBalance;
 
         //TODO completare la classe, aggiungendo i parametri, completare i metodi e usare la classe
         //TODO parcelable, utilizzare il metodo opzionale anche per trasformazione JSON
@@ -329,7 +357,7 @@ public class User implements Parcelable{
         }
 
         public User build(){
-            return new User(mEmail,mPassword,mName,mBirthDate,mLocation,mGender);
+            return new User(mEmail,mPassword,mName,mBirthDate,mLocation,mGender,mBalance);
         }
     }
 }

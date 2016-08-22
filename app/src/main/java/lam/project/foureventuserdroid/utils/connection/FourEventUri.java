@@ -33,6 +33,13 @@ public class FourEventUri {
             return this;
         }
 
+        public Builder appendEncodedPath(String newSegment) {
+
+            mRequestedUriBuilder.appendEncodedPath(newSegment);
+
+            return this;
+        }
+
         public String getUri () {
 
             return mRequestedUriBuilder.build().toString();
@@ -44,5 +51,6 @@ public class FourEventUri {
         private static final String BASE = "http://annina.cs.unibo.it:8080/api/";
         public static final String USER = "user";
         public static final String EVENT = "event";
+        public static final String RECORD = "record";
     }
 }

@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             navigationView.setNavigationItemSelectedListener(this);
 
-            //V
             //Setto la pagina principale come quella di ricerca degli eventi
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.anchor_point, new EventsFragment())
@@ -219,7 +218,13 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.nav_wallet:
 
+                Bundle bundle = new Bundle();
+                bundle.putFloat(User.Keys.BALANCE,mCurrentUser.balance);
+                bundle.putString(User.Keys.EMAIL,mCurrentUser.email);
+
                 mNextFragment = new WalletFragment();
+                mNextFragment.setArguments(bundle);
+
                 break;
 
             //Da qui in poi non si hanno modifiche

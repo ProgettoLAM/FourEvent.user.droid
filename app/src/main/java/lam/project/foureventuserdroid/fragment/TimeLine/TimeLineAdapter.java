@@ -1,17 +1,15 @@
 package lam.project.foureventuserdroid.fragment.TimeLine;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.vipul.hp_hp.timelineview.TimelineView;
 
 import java.util.List;
 
 import lam.project.foureventuserdroid.R;
-import lam.project.foureventuserdroid.fragment.WalletFragment;
+import lam.project.foureventuserdroid.model.Record;
 
 /**
  * Created by spino on 22/08/16.
@@ -19,9 +17,9 @@ import lam.project.foureventuserdroid.fragment.WalletFragment;
 
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
-    private List<WalletFragment.TimeLineModel> mFeedList;
+    private List<Record> mFeedList;
 
-    public TimeLineAdapter(List<WalletFragment.TimeLineModel> feedList) {
+    public TimeLineAdapter(List<Record> feedList) {
         mFeedList = feedList;
     }
 
@@ -41,9 +39,11 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     @Override
     public void onBindViewHolder(TimeLineViewHolder holder, int position) {
 
-        WalletFragment.TimeLineModel timeLineModel = mFeedList.get(position);
+        Record record = mFeedList.get(position);
 
-        holder.name.setText("name：" + timeLineModel.getName() + "    age：" + timeLineModel.getAge());
+        holder.mType.setText(record.mType);
+        holder.mDate.setText(record.mDate);
+        holder.mAmount.setText(Float.toString(record.mAmount) + " €");
 
     }
 

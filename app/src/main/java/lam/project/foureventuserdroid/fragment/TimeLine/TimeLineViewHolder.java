@@ -13,11 +13,18 @@ import lam.project.foureventuserdroid.R;
  */
 
 public class TimeLineViewHolder extends RecyclerView.ViewHolder {
-    public TextView name;
+    
+    TextView mType;
+    TextView mDate;
+    TextView mAmount;
 
     TimeLineViewHolder(View itemView, int viewType) {
         super(itemView);
-        name = (TextView) itemView.findViewById(R.id.tx_name);
+
+        mType = (TextView) itemView.findViewById(R.id.record_title);
+        mDate = (TextView) itemView.findViewById(R.id.record_date);
+        mAmount = (TextView) itemView.findViewById(R.id.record_amount);
+
         TimelineView mTimelineView = (TimelineView) itemView.findViewById(R.id.time_marker);
         mTimelineView.initLine(viewType);
     }
