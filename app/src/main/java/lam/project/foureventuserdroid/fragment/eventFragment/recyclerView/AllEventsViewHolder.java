@@ -15,6 +15,7 @@ import java.util.List;
 import lam.project.foureventuserdroid.DetailsEventActivity;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.Event;
+import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 
 /**
@@ -52,7 +53,13 @@ public final class AllEventsViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imgEvent = (ImageView) itemView.findViewById(R.id.img_event);
 
-        Picasso.with(itemView.getContext()).load("http://annina.cs.unibo.it:8080/api/event/img/img00.jpg").resize(1200,600).into(imgEvent);
+        //TODO completare
+        String uri = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
+                .appendPath("img")
+                .appendPath("img00.jpg")
+                .getUri();
+
+        Picasso.with(itemView.getContext()).load(uri).resize(1200,600).into(imgEvent);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

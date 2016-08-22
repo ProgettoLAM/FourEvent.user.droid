@@ -49,12 +49,16 @@ public class Step3Credits extends AbstractStep {
 
         mCreatedUserWithCategories = getStepDataFor(2).getParcelable(User.Keys.USER);
 
+        String uri = FourEventUri.Builder.create(FourEventUri.Keys.USER)
+                .appendPath(mCreatedUserWithCategories.email)
+                .getUri();
+
         if(mCreatedUserWithCategories != null) {
 
             try {
 
                 CustomRequest request = new CustomRequest(Request.Method.POST,
-                    FourEventUri.getUserUri(mCreatedUserWithCategories.email),
+                        uri,
                     mCreatedUserWithCategories.toJson(),
 
                     new Response.Listener<JSONObject>() {

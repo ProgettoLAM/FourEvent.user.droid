@@ -8,13 +8,41 @@ import android.net.Uri;
 
 public class FourEventUri {
 
-    private static final String BASE = "http://annina.cs.unibo.it:8080/api/";
-    private static final String USER = "user";
 
-    public static String getUserUri(String path) {
+    private String[] paths;
 
-        return Uri.parse(BASE).buildUpon()
-                .appendPath(USER)
-                .appendPath(path).build().toString();
+    public static class Builder {
+
+        private Uri.Builder mRequestedUriBuilder;
+
+        private Builder(String key) {
+
+            mRequestedUriBuilder = Uri.parse(Keys.BASE).buildUpon()
+                .appendPath(key);
+        }
+
+        public static Builder create(String key) {
+
+            return new Builder(key);
+        }
+
+        public Builder appendPath(String newSegment) {
+
+            mRequestedUriBuilder.appendPath(newSegment);
+
+            return this;
+        }
+
+        public String getUri () {
+
+            return mRequestedUriBuilder.build().toString();
+        }
+    }
+
+    public static class Keys {
+
+        private static final String BASE = "http://annina.cs.unibo.it:8080/api/";
+        public static final String USER = "user";
+        public static final String EVENT = "event";
     }
 }
