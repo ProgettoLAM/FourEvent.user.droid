@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private User mCurrentUser;
+    private Fragment mLastFragment;
+    private Fragment mNextFragment;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -79,6 +81,8 @@ public class MainActivity extends AppCompatActivity
 
         //se il profilo è completo
         if (StepManager.get(this).getStep() == StepManager.COMPLETE) {
+
+            mNextFragment = new EventsFragment();
 
             setContentView(R.layout.activity_main);
 
@@ -165,17 +169,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
         showFragment(item);
@@ -187,7 +180,6 @@ public class MainActivity extends AppCompatActivity
     private void showFragment(final MenuItem menuItem) {
 
         final int itemId = menuItem.getItemId();
-        final Fragment nextFragment;
 
         if(itemId == R.id.nav_logout) {
 
@@ -201,38 +193,40 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
+        mLastFragment = mNextFragment;
+
         switch (itemId) {
 
             case R.id.nav_events:
 
-                nextFragment = new EventsFragment();
+                mNextFragment = new EventsFragment();
                 break;
 
             case R.id.nav_favourites:
 
-                nextFragment = new FavouriteFragment();
+                mNextFragment = new FavouriteFragment();
                 break;
 
             case R.id.nav_partecipations:
 
-                nextFragment = new ParticipationFragment();
+                mNextFragment = new ParticipationFragment();
                 break;
 
             case R.id.nav_profile:
 
-                nextFragment = new ProfileFragment();
+                mNextFragment = new ProfileFragment();
                 break;
 
             case R.id.nav_wallet:
 
-                nextFragment = new WalletFragment();
+                mNextFragment = new WalletFragment();
                 break;
 
             //Da qui in poi non si hanno modifiche
 
             case R.id.nav_vote:
 
-                nextFragment = new EventsFragment();
+                mNextFragment = new EventsFragment();
                 break;
 
             default:
@@ -240,8 +234,32 @@ public class MainActivity extends AppCompatActivity
         }
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.anchor_point, nextFragment)
+                .replace(R.id.anchor_point, mNextFragment)
                 .commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+
+            if(mLastFragment != null) {
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.anchor_point, mLastFragment)
+                        .commit();
+
+                mLastFragment = null;
+
+            } else {
+
+                super.onBackPressed();
+            }
+        }
     }
 
     @Override
