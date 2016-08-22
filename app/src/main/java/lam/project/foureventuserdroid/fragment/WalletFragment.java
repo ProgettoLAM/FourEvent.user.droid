@@ -20,11 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lam.project.foureventuserdroid.R;
+import lam.project.foureventuserdroid.fragment.TimeLine.TimeLineAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class WalletFragment extends Fragment {
+
+    private static final String NAME = "Portafoglio";
 
     private FloatingActionButton fab;
 
@@ -46,7 +49,7 @@ public class WalletFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_wallet, container, false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Portafoglio");
+        setTitle();
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab_wallet);
 
@@ -66,13 +69,17 @@ public class WalletFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        initView();
+        setModel();
 
         return rootView;
 
     }
 
-    private void initView() {
+    private void setTitle () {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);
+    }
+
+    private void setModel() {
 
         for(int i = 0;i <20;i++) {
             TimeLineModel model = new TimeLineModel();
@@ -83,61 +90,6 @@ public class WalletFragment extends Fragment {
 
         mTimeLineAdapter = new TimeLineAdapter(mDataList);
         mRecyclerView.setAdapter(mTimeLineAdapter);
-    }
-
-
-    public class TimeLineViewHolder extends RecyclerView.ViewHolder {
-        public TextView name;
-        public  TimelineView mTimelineView;
-
-        public TimeLineViewHolder(View itemView, int viewType) {
-            super(itemView);
-            name = (TextView) itemView.findViewById(R.id.tx_name);
-            mTimelineView = (TimelineView) itemView.findViewById(R.id.time_marker);
-            mTimelineView.initLine(viewType);
-        }
-    }
-
-    public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
-
-        private List<TimeLineModel> mFeedList;
-        private Context mContext;
-
-        public TimeLineAdapter(List<TimeLineModel> feedList) {
-            mFeedList = feedList;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return TimelineView.getTimeLineViewType(position,getItemCount());
-        }
-
-        @Override
-        public TimeLineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            mContext = parent.getContext();
-
-            View view;
-
-            view = View.inflate(parent.getContext(), R.layout.item_timeline, null);
-
-            return new TimeLineViewHolder(view, viewType);
-        }
-
-        @Override
-        public void onBindViewHolder(TimeLineViewHolder holder, int position) {
-
-            TimeLineModel timeLineModel = mFeedList.get(position);
-
-            holder.name.setText("name：" + timeLineModel.getName() + "    age：" + timeLineModel.getAge());
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return (mFeedList!=null? mFeedList.size():0);
-        }
-
     }
 
     public class TimeLineModel implements Serializable {

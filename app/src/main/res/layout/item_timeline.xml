@@ -16,17 +16,42 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_margin="30dp"
         android:layout_gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/tx_name"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Random"
-            android:layout_marginLeft="20dp"
-            android:layout_gravity="center_vertical"/>
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/record_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ricarica crediti"
+                android:textColor="@color/darkerText"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/record_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/record_title"
+                android:text="Mon Aug 22 2016 14:19:01"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/record_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/record_title"
+                android:text="12 €"
+                android:textColor="#4BAE4F"
+                android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 
