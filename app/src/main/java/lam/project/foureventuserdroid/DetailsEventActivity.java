@@ -3,6 +3,8 @@ package lam.project.foureventuserdroid;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -42,27 +44,19 @@ import lam.project.foureventuserdroid.model.Event;
 public class DetailsEventActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mGoogleMap;
-    private LatLng mLocationEvent;
 
-    private LatLng mPosition;
-    FloatingActionButton fab_detail;
-    FloatingActionButton fab1;
-    FloatingActionButton fab2;
-    Animation show_fab_1;
-    Animation show_fab_2;
-    Animation hide_fab_1;
-    Animation hide_fab_2;
-
-    private RecyclerView mRecyclerView;
-    private Adapter mAdapter;
+    private FloatingActionButton fab_detail;
+    private FloatingActionButton fab1;
+    private FloatingActionButton fab2;
+    private Animation show_fab_1;
+    private Animation show_fab_2;
+    private Animation hide_fab_1;
+    private Animation hide_fab_2;
 
     private Event mCurrentEvent;
 
-
     //Status del fab -> close
     private boolean FAB_Status = false;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +67,6 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         mCurrentEvent = getIntent().getParcelableExtra(Event.Keys.EVENT);
-        mPosition = new LatLng(mCurrentEvent.mLatitude, mCurrentEvent.mLongitude);
 
         fab_detail = (FloatingActionButton) findViewById(R.id.fab_detail);
         fab1 = (FloatingActionButton) findViewById(R.id.fab_1);
@@ -86,19 +79,20 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
 
         fab_detail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!FAB_Status) {
-                    //Display FAB menu
-                    expandFAB();
-                    FAB_Status = true;
-                } else {
-                    //Close FAB menu
-                    hideFAB();
-                    FAB_Status = false;
+                @Override
+                public void onClick(View v) {
+
+                    if (!FAB_Status) {
+                        //Display FAB menu
+                        expandFAB();
+                        FAB_Status = true;
+                    } else {
+                        //Close FAB menu
+                        hideFAB();
+                        FAB_Status = false;
+                    }
                 }
-            }
-        });
+            });
 
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +106,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 
@@ -125,21 +119,33 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
             }
         });
 
+        /*
         final ScrollView scrollView = (ScrollView) findViewById(R.id.layout_main);
 
-        //TODO gestire meglio visualizzazione fab
-        scrollView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-                if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_DOWN)
-                    fab_detail.show();
-                else
-                    fab_detail.hide();
+            scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
-                return false;
-            }
-        });
+                    if (scrollX > 0) {
+
+                        if(fab_detail.isShown()) {
+
+                            fab_detail.hide();
+                        }
+
+                    } else if (scrollY > 0) {
+
+                        if(!fab_detail.isShown()) {
+
+                            fab_detail.show();
+                        }
+                    }
+                }
+            });
+        }
+        */
 
         setInfo(mCurrentEvent);
 
@@ -155,6 +161,75 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         showMap();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        mGoogleMap = googleMap;
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        mGoogleMap.setMyLocationEnabled(true);
+
+        showMap();
+    }
+
+
+    private void expandFAB() {
+
+        //Floating Action Button 1
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
+        layoutParams.rightMargin += (int) (fab1.getWidth() * 1.7);
+        layoutParams.bottomMargin += (int) (fab1.getHeight() * 0.25);
+        fab1.setLayoutParams(layoutParams);
+        fab1.startAnimation(show_fab_1);
+        fab1.setClickable(true);
+
+        //Floating Action Button 2
+        FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) fab2.getLayoutParams();
+        layoutParams2.rightMargin += (int) (fab2.getWidth() * 1.5);
+        layoutParams2.bottomMargin += (int) (fab2.getHeight() * 1.5);
+        fab2.setLayoutParams(layoutParams2);
+        fab2.startAnimation(show_fab_2);
+        fab2.setClickable(true);
+
+    }
+
+    private void hideFAB() {
+
+        //Floating Action Button 1
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
+        layoutParams.rightMargin -= (int) (fab1.getWidth() * 1.7);
+        layoutParams.bottomMargin -= (int) (fab1.getHeight() * 0.25);
+        fab1.setLayoutParams(layoutParams);
+        fab1.startAnimation(hide_fab_1);
+        fab1.setClickable(false);
+
+        //Floating Action Button 2
+        FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) fab2.getLayoutParams();
+        layoutParams2.rightMargin -= (int) (fab2.getWidth() * 1.5);
+        layoutParams2.bottomMargin -= (int) (fab2.getHeight() * 1.5);
+        fab2.setLayoutParams(layoutParams2);
+        fab2.startAnimation(hide_fab_2);
+        fab2.setClickable(false);
+    }
+
     private void showMap() {
 
         if(mGoogleMap == null || mCurrentEvent == null) {
@@ -162,7 +237,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
             return;
         }
 
-        mLocationEvent = new LatLng(mCurrentEvent.mLatitude,
+        LatLng mLocationEvent = new LatLng(mCurrentEvent.mLatitude,
                 mCurrentEvent.mLongitude);
 
         mGoogleMap.addMarker(new MarkerOptions()
@@ -208,135 +283,4 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
             }
         };
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void expandFAB() {
-
-        //Floating Action Button 1
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
-        layoutParams.rightMargin += (int) (fab1.getWidth() * 1.7);
-        layoutParams.bottomMargin += (int) (fab1.getHeight() * 0.25);
-        fab1.setLayoutParams(layoutParams);
-        fab1.startAnimation(show_fab_1);
-        fab1.setClickable(true);
-
-        //Floating Action Button 2
-        FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) fab2.getLayoutParams();
-        layoutParams2.rightMargin += (int) (fab2.getWidth() * 1.5);
-        layoutParams2.bottomMargin += (int) (fab2.getHeight() * 1.5);
-        fab2.setLayoutParams(layoutParams2);
-        fab2.startAnimation(show_fab_2);
-        fab2.setClickable(true);
-
-    }
-
-
-    private void hideFAB() {
-
-        //Floating Action Button 1
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
-        layoutParams.rightMargin -= (int) (fab1.getWidth() * 1.7);
-        layoutParams.bottomMargin -= (int) (fab1.getHeight() * 0.25);
-        fab1.setLayoutParams(layoutParams);
-        fab1.startAnimation(hide_fab_1);
-        fab1.setClickable(false);
-
-        //Floating Action Button 2
-        FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) fab2.getLayoutParams();
-        layoutParams2.rightMargin -= (int) (fab2.getWidth() * 1.5);
-        layoutParams2.bottomMargin -= (int) (fab2.getHeight() * 1.5);
-        fab2.setLayoutParams(layoutParams2);
-        fab2.startAnimation(hide_fab_2);
-        fab2.setClickable(false);
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-
-        mGoogleMap = googleMap;
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-
-        mGoogleMap.setMyLocationEnabled(true);
-
-        showMap();
-    }
-
-    public final class CommentsViewHolder extends RecyclerView.ViewHolder{
-
-        private TextView mNameComment;
-        private TextView mTextComment;
-
-        private CircleImageView mImageComment;
-
-        private CommentsViewHolder(final View itemView) {
-
-            super(itemView);
-
-            mNameComment = (TextView) itemView.findViewById(R.id.name_comment);
-            mTextComment = (TextView) itemView.findViewById(R.id.text_comment);
-            mImageComment = (CircleImageView) itemView.findViewById(R.id.profile_image);
-
-            Picasso.with(itemView.getContext()).load("http://annina.cs.unibo.it:8080/api/event/img/img00.jpg").resize(1200,600).into(mImageComment);
-
-        }
-
-        public void bind(Event event){
-
-            mNameComment.setText(event.mTitle);
-            //mImageComment.setImageResource(event.mAddress);
-            mTextComment.setText(event.mStartDate);
-
-        }
-    }
-
-    public final class CommentAdapter extends RecyclerView.Adapter<CommentsViewHolder>{
-
-        private final List<Event> mModel;
-
-        CommentAdapter(final List<Event> model){
-
-            this.mModel = model;
-        }
-
-        @Override
-        public CommentsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            final View layout = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.content_events_list,parent,false);
-
-            return new CommentsViewHolder(layout);
-
-        }
-
-        @Override
-        public void onBindViewHolder(CommentsViewHolder holder, int position) {
-
-            holder.bind(mModel.get(position));
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return mModel.size();
-        }
-    }
-
-
 }

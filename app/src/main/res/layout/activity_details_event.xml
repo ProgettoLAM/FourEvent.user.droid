@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -26,229 +26,189 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
-            android:paddingBottom="20dp"
+            android:paddingBottom="70dp"
             android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="4dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/detail_title"
-                android:text="Arduino BABY"
-                android:textSize="24sp"
-                android:textColor="@color/colorPrimary"
-                android:fontFamily="sans-serif" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/detail_title"
+                    android:text="Arduino BABY"
+                    android:textSize="24sp"
+                    android:textColor="@color/colorPrimary"
+                    android:fontFamily="sans-serif" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_calendar"/>
+
+                    <TextView
+                        android:id="@+id/detail_date"
+                        android:text="Da SAB 16/08 a MAR 19/08 "
+                        android:layout_marginLeft="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:gravity="center_vertical" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_location"/>
+
+                    <TextView
+                        android:id="@+id/detail_distance"
+                        android:text="1.6 KM"
+                        android:layout_marginLeft="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:gravity="center_vertical"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:text=""
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:id="@+id/detail_desc"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:background="#eee"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_calendar"/>
-
-                <TextView
-                    android:id="@+id/detail_date"
-                    android:text="Da SAB 16/08 a MAR 19/08 "
-                    android:layout_marginLeft="8dp"
-                    android:layout_width="wrap_content"
+                <LinearLayout
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:gravity="center_vertical"
-                    tools:ignore="RtlHardcoded" />
+                    android:layout_weight=".3"
+                    android:layout_width="0dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Posti liberi"
+                        android:textSize="15sp"
+                        android:textColor="@color/colorPrimary"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/detail_tickets"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/lightText"
+                        android:text="10/20"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:layout_width="0dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:text="Prezzo biglietto"
+                        android:textColor="@color/colorPrimary"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/detail_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/lightText"
+                        android:text="15€"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:layout_width="0dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Orario"
+                        android:textSize="15sp"
+                        android:textColor="@color/colorPrimary"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/detail_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/lightText"
+                        android:text="10:30"
+                        android:gravity="center"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:padding="20dp">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/vale_profile"
+                    app:border_color="#FF000000"/>
+
+                <TextView
+                    android:text="Valentina Tosto"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_location"/>
-
-                <TextView
-                    android:id="@+id/detail_distance"
-                    android:text="1.6 KM"
-                    android:layout_marginLeft="8dp"
-                    android:layout_width="match_parent"
+                    android:layout_centerVertical="true"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:gravity="center_vertical"/>
-
-            </LinearLayout>
-
-            <TextView
-                android:text=""
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:id="@+id/detail_desc"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"/>
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:background="#eee"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_weight=".3"
-                android:layout_width="0dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Posti liberi"
-                    android:textSize="15sp"
-                    android:textColor="@color/colorPrimary"
-                    android:gravity="center"/>
-
-                <TextView
-                    android:id="@+id/detail_tickets"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/lightText"
-                    android:text="10/20"
-                    android:gravity="center"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_weight=".3"
-                android:layout_width="0dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:text="Prezzo biglietto"
-                    android:textColor="@color/colorPrimary"
-                    android:gravity="center"/>
-
-                <TextView
-                    android:id="@+id/detail_price"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/lightText"
-                    android:text="15€"
-                    android:gravity="center"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_weight=".3"
-                android:layout_width="0dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Orario"
-                    android:textSize="15sp"
-                    android:textColor="@color/colorPrimary"
-                    android:gravity="center"/>
-
-                <TextView
-                    android:id="@+id/detail_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/lightText"
-                    android:text="10:30"
-                    android:gravity="center"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/vale_profile"
-                app:border_color="#FF000000"/>
-
-            <TextView
-                android:text="Valentina Tosto"
-                android:layout_width="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/profile_image"
-                android:id="@+id/profile_owner_name"
-                android:layout_marginLeft="10dp"/>
+                    android:layout_toRightOf="@id/profile_image"
+                    android:id="@+id/profile_owner_name"
+                    android:layout_marginLeft="10dp"/>
 
             </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#dcdcdc"
-            android:layout_marginBottom="16dp"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/comments_rv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/content_comments_list" />
-
-         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:orientation="horizontal">
-
-                <EditText
-                android:id="@+id/comment"
-                android:layout_width="275dp"
-                android:layout_height="wrap_content"
-                android:hint="Inserisci un commento"
-                android:inputType="text"
-                android:textColor="#000"
-                android:textSize="16sp"
-                android:layout_marginTop="16dp"
-                android:textColorHint="@color/lightText"
-                android:background="@drawable/bottom_border_comment" />
-
-                <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_send"
-                android:padding="8dp"
-                android:layout_marginLeft="8dp"
-                android:background="@color/colorPrimary" />
-            </LinearLayout>
-
-    </LinearLayout>
+        </LinearLayout>
 
     </ScrollView>
 
@@ -269,10 +229,7 @@
         android:layout_marginEnd="14dp"
         android:layout_marginBottom="11dp" />
 
-    <include layout="@layout/fab_layout"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
+    <include layout="@layout/fab_layout"/>
 
 </RelativeLayout>
+
