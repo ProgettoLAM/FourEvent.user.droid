@@ -15,6 +15,16 @@
             android:layout_height="100dp"
             android:background="@color/colorPrimary">
 
+            <TextView
+                android:id="@+id/user_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="52.64"
+                android:textSize="32sp"
+                android:textColor="@color/material_stepper_inactive_circle_text"
+                android:layout_marginTop="20dp" />
+
             <ImageView
                 android:id="@id/symbol_euro"
                 android:layout_width="18dp"
@@ -22,16 +32,8 @@
                 android:src="@drawable/ic_euro"
                 android:tint="@color/white"
                 android:layout_marginTop="15dp"
-                android:layout_toRightOf="@id/balance"/>
-
-            <TextView
-                android:id="@+id/user_balance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="52.64"
-                android:textSize="32sp"
-                android:textColor="@color/material_stepper_inactive_circle_text"
-                android:layout_marginTop="20dp" />
+                android:layout_centerHorizontal="true"
+                android:layout_toLeftOf="@id/user_balance"/>
 
 
         </RelativeLayout>

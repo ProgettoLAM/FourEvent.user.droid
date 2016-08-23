@@ -250,7 +250,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
     private void setInfo(Event event) {
 
-        String participations = event.mCurrentTicket + "/" + event.mMaxTicket;
+        String participations = event.mParticipation + "/" + event.mMaxTicket;
         String startTime = event.mStartDate.split(" - ")[1];
         String endTime = event.mEndDate.split(" - ")[1];
         String time = startTime + " - " + endTime;
