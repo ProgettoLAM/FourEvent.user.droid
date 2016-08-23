@@ -219,8 +219,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_wallet:
 
                 Bundle bundle = new Bundle();
-                bundle.putFloat(User.Keys.BALANCE,mCurrentUser.balance);
-                bundle.putString(User.Keys.EMAIL,mCurrentUser.email);
+                bundle.putParcelable(User.Keys.USER,mCurrentUser);
 
                 mNextFragment = new WalletFragment();
                 mNextFragment.setArguments(bundle);

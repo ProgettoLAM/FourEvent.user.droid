@@ -1,6 +1,7 @@
 package lam.project.foureventuserdroid.fragment;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,9 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.vipul.hp_hp.timelineview.TimelineView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,17 +30,18 @@ import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.fragment.TimeLine.TimeLineAdapter;
 import lam.project.foureventuserdroid.model.Record;
 import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.connection.RecordListRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
+import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class WalletFragment extends Fragment {
 
-    private float mBalance;
-    private String mEmail;
+    private User mCurrentUser;
 
     private static final String NAME = "Portafoglio";
 
@@ -46,6 +52,8 @@ public class WalletFragment extends Fragment {
     private TimeLineAdapter mTimeLineAdapter;
 
     private List<Record> mDataList = new ArrayList<>();
+
+    private TextView mTxtBalance;
 
 
     public WalletFragment() {
@@ -59,12 +67,13 @@ public class WalletFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_wallet, container, false);
 
-        this.mBalance = getArguments().getFloat(User.Keys.BALANCE);
-        this.mEmail = getArguments().getString(User.Keys.EMAIL);
+        this.mCurrentUser = getArguments().getParcelable(User.Keys.USER);
 
         setTitle();
 
-        ((TextView) rootView.findViewById(R.id.user_balance)).setText(Float.toString(mBalance));
+        mTxtBalance = (TextView) rootView.findViewById(R.id.user_balance);
+
+        mTxtBalance.setText(Float.toString(mCurrentUser.balance));
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab_wallet);
 
@@ -72,6 +81,13 @@ public class WalletFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                //TODO insert record
+                try {
+                    recharge();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -100,7 +116,7 @@ public class WalletFragment extends Fragment {
     private void setModel() {
 
         String uri = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
-                .appendEncodedPath(mEmail).getUri();
+                .appendEncodedPath(mCurrentUser.email).getUri();
 
         RecordListRequest recordListRequest = new RecordListRequest(uri, null, new Response.Listener<List<Record>>() {
             @Override
@@ -120,5 +136,83 @@ public class WalletFragment extends Fragment {
         });
 
         VolleyRequest.get(getContext()).add(recordListRequest);
+    }
+
+    private void recharge() throws JSONException {
+
+        float amount = 25;
+
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+
+        progressDialog.setMessage("Ricarica in corso...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+
+
+        String uri = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
+                .appendEncodedPath(mCurrentUser.email).getUri();
+
+        CustomRequest createRecordRequest = new CustomRequest(Request.Method.PUT,
+                uri, createBody(amount, WalletKeys.RECHARGE, null),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+
+                            //ritorna l'oggetto che viene parsato e aggiunto
+                            Record insertedRecord = Record.fromJson(response);
+
+                            mDataList.add(insertedRecord);
+                            mTimeLineAdapter.notifyDataSetChanged();
+
+                            //update balance
+                            mCurrentUser.updateBalance(insertedRecord.mAmount);
+                            mTxtBalance.setText(Float.toString(mCurrentUser.balance));
+                            
+                            UserManager.get().save(mCurrentUser);
+
+                        } catch (JSONException e) {
+
+                            e.printStackTrace();
+                        }
+
+                        progressDialog.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        progressDialog.dismiss();
+                    }
+                });
+
+        VolleyRequest.get().add(createRecordRequest);
+    }
+
+    private JSONObject createBody(float amount, String type, String event) throws JSONException {
+
+        JSONObject requestody = new JSONObject();
+
+        requestody.put(WalletKeys.AMOUNT,amount);
+        requestody.put(WalletKeys.TYPE,type);
+
+        if(event != null) {
+
+            requestody.put(WalletKeys.EVENT,event);
+        }
+
+        return requestody;
+    }
+
+    private static class WalletKeys {
+
+        public static final String TYPE = "type";
+        public static final String AMOUNT = "amount";
+        public static final String EVENT = "event";
+
+        public static final String RECHARGE = "Ricarica conto";
     }
 }

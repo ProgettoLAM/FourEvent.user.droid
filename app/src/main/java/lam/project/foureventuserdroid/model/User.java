@@ -163,6 +163,13 @@ public class User implements Parcelable{
             builder.withGender(jsonObject.getString(Keys.GENDER));
         }
 
+        final float balance = BigDecimal.valueOf(jsonObject.getDouble(Keys.BALANCE)).floatValue();
+
+        if(balance > 0) {
+
+            builder.withBalance(balance);
+        }
+
         User user = builder.build();
 
         if(jsonObject.has(Keys.CATEGORIES)){
@@ -179,6 +186,7 @@ public class User implements Parcelable{
 
             user.addCategories(categories);
         }
+
 
 
 
@@ -353,6 +361,12 @@ public class User implements Parcelable{
         public Builder withGender(final String gender){
 
             this.mGender = gender;
+            return this;
+        }
+
+        public Builder withBalance(final float balance) {
+
+            this.mBalance = balance;
             return this;
         }
 

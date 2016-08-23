@@ -22,7 +22,7 @@
                 android:src="@drawable/ic_euro"
                 android:tint="@color/white"
                 android:layout_marginTop="15dp"
-                android:layout_toLeftOf="@id/balance"/>
+                android:layout_toRightOf="@id/balance"/>
 
             <TextView
                 android:id="@+id/user_balance"
@@ -31,8 +31,7 @@
                 android:text="52.64"
                 android:textSize="32sp"
                 android:textColor="@color/material_stepper_inactive_circle_text"
-                android:layout_marginTop="20dp"
-                android:layout_centerHorizontal="true" />
+                android:layout_marginTop="20dp" />
 
 
         </RelativeLayout>
@@ -59,11 +58,12 @@
             android:layout_below="@id/fab_wallet">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ultimi acquisti"
+                android:text="Ultime transazioni"
                 android:textColor="@color/colorPrimary"
-                android:textSize="18sp"/>
+                android:gravity="center_horizontal"
+                android:textSize="24sp" />
 
             <include layout="@layout/content_timeline" />
         </LinearLayout>
