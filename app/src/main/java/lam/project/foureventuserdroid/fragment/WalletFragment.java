@@ -3,15 +3,22 @@ package lam.project.foureventuserdroid.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -41,6 +48,8 @@ import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
  */
 public class WalletFragment extends Fragment {
 
+    private static AlertDialog dialog;
+
     private User mCurrentUser;
 
     private static final String NAME = "Portafoglio";
@@ -54,6 +63,8 @@ public class WalletFragment extends Fragment {
     private List<Record> mDataList = new ArrayList<>();
 
     private TextView mTxtBalance;
+
+    private AlertDialog.Builder builder;
 
 
     public WalletFragment() {
@@ -73,21 +84,53 @@ public class WalletFragment extends Fragment {
 
         mTxtBalance = (TextView) rootView.findViewById(R.id.user_balance);
 
-        mTxtBalance.setText(Float.toString(mCurrentUser.balance));
+        //mTxtBalance.setText(Float.toString(mCurrentUser.balance));
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab_wallet);
+
+        final Button.OnClickListener rechargeButtonListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String value = ((Button) v).getText().toString();
+                Float amount = Float.parseFloat(value);
+                try {
+                    recharge(amount);
+
+                }
+                catch (JSONException ex) {
+                    Log.d("Error", ex+"");
+                }
+            }
+        };
+
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 //TODO insert record
-                try {
-                    recharge();
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Ricarica il portafoglio");
+
+                View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_recharge, (ViewGroup) getView(), false);
+
+                ((Button)viewInflated.findViewById(R.id.button_1_recharge)).setOnClickListener(rechargeButtonListener);
+                ((Button)viewInflated.findViewById(R.id.button_2_recharge)).setOnClickListener(rechargeButtonListener);
+                ((Button)viewInflated.findViewById(R.id.button_3_recharge)).setOnClickListener(rechargeButtonListener);
+
+                builder.setView(viewInflated);
+
+                builder.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog = builder.show();
             }
         });
 
@@ -112,6 +155,7 @@ public class WalletFragment extends Fragment {
     private void setTitle () {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);
     }
+
 
     private void setModel() {
 
@@ -138,9 +182,7 @@ public class WalletFragment extends Fragment {
         VolleyRequest.get(getContext()).add(recordListRequest);
     }
 
-    private void recharge() throws JSONException {
-
-        float amount = 25;
+    private void recharge(Float amount) throws JSONException {
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
 
@@ -154,7 +196,7 @@ public class WalletFragment extends Fragment {
                 .appendEncodedPath(mCurrentUser.email).getUri();
 
         CustomRequest createRecordRequest = new CustomRequest(Request.Method.PUT,
-                uri, createBody(amount, WalletKeys.RECHARGE, null),
+            uri, createBody(amount, WalletKeys.RECHARGE, null),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -172,6 +214,8 @@ public class WalletFragment extends Fragment {
                             mTxtBalance.setText(Float.toString(mCurrentUser.balance));
                             
                             UserManager.get().save(mCurrentUser);
+
+                            dialog.dismiss();
 
                         } catch (JSONException e) {
 
