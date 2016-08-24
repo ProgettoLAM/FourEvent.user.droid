@@ -7,13 +7,14 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import lam.project.foureventuserdroid.utils.DateConverter;
+
 /**
  * Created by spino on 22/08/16.
  */
 
 public class Record {
 
-    private static final String FORMATTER = "dd/MM - hh:mm";
 
     public final String mDate;
 
@@ -37,7 +38,7 @@ public class Record {
 
     public static Record fromJson(JSONObject jsonObject) throws JSONException {
 
-        String date = getDate(jsonObject.getLong(Keys.DATE));
+        String date = DateConverter.fromMillis(jsonObject.getLong(Keys.DATE));
         float amount = BigDecimal.valueOf(jsonObject.getDouble(Keys.AMOUNT)).floatValue();
         String type = jsonObject.getString(Keys.TYPE);
         String user = jsonObject.getString(Keys.USER);
@@ -68,16 +69,6 @@ public class Record {
 
         return jsonObject;
     }
-
-    private static String getDate(long millis) {
-
-        SimpleDateFormat formatter = new SimpleDateFormat(FORMATTER);
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(millis);
-        return formatter.format(calendar.getTime());
-    }
-
     public static class Builder {
 
         private String date;
