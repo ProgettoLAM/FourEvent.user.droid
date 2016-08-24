@@ -46,6 +46,8 @@ public class FavouriteFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_favourite, container, false);
 
+        setTitle();
+
         mSadEmoticon = (ImageView) rootView.findViewById(R.id.events_sad_emoticon);
         mEventsNotFound = (TextView) rootView.findViewById(R.id.events_not_found);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.favourite_recycler_view);

@@ -29,6 +29,8 @@ public class EventsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_events, container, false);
 
+        setTitle();
+
         final String[] mTabNames = getResources().getStringArray(R.array.tab_names);
 
         SlidingTabLayout tabLayout = (SlidingTabLayout) rootView.findViewById(R.id.tabs);

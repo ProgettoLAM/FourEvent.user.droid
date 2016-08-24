@@ -54,6 +54,8 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        setTitle();
+
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         final User user = UserManager.get().getUser();
