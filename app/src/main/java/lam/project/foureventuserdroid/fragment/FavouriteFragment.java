@@ -99,6 +99,11 @@ public class FavouriteFragment extends Fragment {
     private void setModel () {
 
         mFavourite = FavouriteManager.get(getContext()).getFavouriteEvents();
+
+        for(Event ev : mFavourite) {
+
+            ev.mIsPreferred = true;
+        }
     }
 
     private void setTitle() {
