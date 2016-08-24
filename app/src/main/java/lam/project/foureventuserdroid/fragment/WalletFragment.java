@@ -1,12 +1,10 @@
 package lam.project.foureventuserdroid.fragment;
 
 
+import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -18,20 +16,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.vipul.hp_hp.timelineview.TimelineView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.fragment.TimeLine.TimeLineAdapter;
@@ -66,6 +63,8 @@ public class WalletFragment extends Fragment {
 
     private AlertDialog.Builder builder;
 
+    private View mRootView;
+    private float minVal = 0.0f;
 
     public WalletFragment() {
         // Required empty public constructor
@@ -76,17 +75,14 @@ public class WalletFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_wallet, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_wallet, container, false);
 
         this.mCurrentUser = getArguments().getParcelable(User.Keys.USER);
 
         setTitle();
+        animateBalance(minVal);
 
-        mTxtBalance = (TextView) rootView.findViewById(R.id.user_balance);
-
-        //mTxtBalance.setText(Float.toString(mCurrentUser.balance));
-
-        fab = (FloatingActionButton) rootView.findViewById(R.id.fab_wallet);
+        fab = (FloatingActionButton) mRootView.findViewById(R.id.fab_wallet);
 
         final Button.OnClickListener rechargeButtonListener = new View.OnClickListener() {
             @Override
@@ -134,7 +130,7 @@ public class WalletFragment extends Fragment {
             }
         });
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -148,8 +144,34 @@ public class WalletFragment extends Fragment {
 
         setModel();
 
-        return rootView;
+        return mRootView;
 
+    }
+
+    private void animateBalance(float minValue) {
+
+        mTxtBalance = (TextView) mRootView.findViewById(R.id.user_balance);
+
+        if(mCurrentUser.balance > 0) {
+
+            ValueAnimator animator = new ValueAnimator();
+            animator.setFloatValues(minValue, this.mCurrentUser.balance);
+            animator.setDuration(500);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+                public void onAnimationUpdate(ValueAnimator animation) {
+
+                    float val = Float.parseFloat(""+animation.getAnimatedValue());
+
+                    mTxtBalance.setText(String.format(Locale.ITALY,"%.1f", new BigDecimal(val)));
+                }
+            });
+            animator.start();
+
+        } else {
+
+            mTxtBalance.setText(Float.toString(mCurrentUser.balance));
+        }
     }
 
     private void setTitle () {
@@ -184,6 +206,8 @@ public class WalletFragment extends Fragment {
 
     private void recharge(Float amount) throws JSONException {
 
+        final float balance = mCurrentUser.balance;
+
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
 
         progressDialog.setMessage("Ricarica in corso...");
@@ -211,7 +235,8 @@ public class WalletFragment extends Fragment {
 
                             //update balance
                             mCurrentUser.updateBalance(insertedRecord.mAmount);
-                            mTxtBalance.setText(Float.toString(mCurrentUser.balance));
+
+                            animateBalance(balance);
                             
                             UserManager.get().save(mCurrentUser);
 

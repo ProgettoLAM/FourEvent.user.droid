@@ -1,9 +1,11 @@
 package lam.project.foureventuserdroid.utils;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -13,13 +15,15 @@ import java.util.concurrent.TimeUnit;
 
 public class DateConverter {
 
-    private static final String FORMATTER = "dd/MM - hh:mm";
+    private static final String FORMATTER = "dd/MM - HH:mm";
+    private static final String DIVIDER = " - ";
 
     public static String fromMillis(long millis) {
 
-        SimpleDateFormat formatter = new SimpleDateFormat(FORMATTER, Locale.ITALY);
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
-        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat formatter = new SimpleDateFormat(FORMATTER,Locale.ITALY);
+
+        Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTimeInMillis(millis);
         return formatter.format(calendar.getTime());
     }
@@ -35,11 +39,11 @@ public class DateConverter {
 
         String time = "";
 
-        time += start.split(" - ")[1];
+        time += start.split(DIVIDER)[1];
 
         if(end != null) {
 
-            time += " - " + end.split(" - ")[1];
+            time += " - " + end.split(DIVIDER)[1];
         }
 
         return time;
@@ -47,13 +51,15 @@ public class DateConverter {
 
     public static String getDate(String start,String end){
 
+        String startDate = start.split(DIVIDER)[0];
+        String endDate = (end == null) ? null : end.split(DIVIDER)[0];
         String time = "";
 
-        time += start.split(" - ")[0];
+        time += startDate;
 
-        if(end != null) {
+        if(end != null && !startDate.equals(endDate)) {
 
-            time += " - " + end.split(" - ")[0];
+            time += DIVIDER + startDate;
         }
 
         return time;
