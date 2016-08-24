@@ -35,10 +35,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import lam.project.foureventuserdroid.model.Event;
+import lam.project.foureventuserdroid.utils.DateConverter;
 
 
 public class DetailsEventActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -251,24 +253,17 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
     private void setInfo(Event event) {
 
         String participations = event.mParticipation + "/" + event.mMaxTicket;
-        String startTime = event.mStartDate.split(" - ")[1];
-        String endTime = event.mEndDate.split(" - ")[1];
-        String time = startTime + " - " + endTime;
-        String startDate = event.mStartDate.split(" - ")[0];
-        String endDate = event.mEndDate.split(" - ")[0];
-        String date;
+        String price = event.mPrice + "€";
 
-        if (startDate.equals(endDate)) {
-            date = startDate;
-        } else {
-            date = startDate + " - " + endDate;
-        }
+        String time = DateConverter.getTime(event.mStartDate,event.mEndDate);
+        String date = DateConverter.getDate(event.mStartDate,event.mEndDate);
+
         ((TextView) findViewById(R.id.detail_title)).setText(event.mTitle);
         ((TextView) findViewById(R.id.detail_date)).setText(date);
         ((TextView) findViewById(R.id.detail_distance)).setText(event.mAddress);
         ((TextView) findViewById(R.id.detail_desc)).setText(event.mDescription);
         ((TextView) findViewById(R.id.detail_tickets)).setText(participations);
-        ((TextView) findViewById(R.id.detail_price)).setText(event.mPrice + " €");
+        ((TextView) findViewById(R.id.detail_price)).setText(price);
         ((TextView) findViewById(R.id.detail_time)).setText(time);
 
 

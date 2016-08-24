@@ -67,7 +67,9 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
 
                 Intent intent = new Intent(itemView.getContext(),DetailsEventActivity.class);
 
-                intent.putExtra(Event.Keys.EVENT,mModel.get(getAdapterPosition()));
+                Event event = mModel.get(getAdapterPosition());
+
+                intent.putExtra(Event.Keys.EVENT,event);
                 mSenderActivity.startActivity(intent);
             }
         });

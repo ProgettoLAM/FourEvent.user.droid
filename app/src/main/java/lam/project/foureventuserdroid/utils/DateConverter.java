@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by spino on 24/08/16.
@@ -28,5 +29,33 @@ public class DateConverter {
         Date parsedDate = new SimpleDateFormat(FORMATTER,Locale.ITALY).parse(date);
 
         return Long.toString(parsedDate.getTime());
+    }
+
+    public static String getTime(String start,String end){
+
+        String time = "";
+
+        time += start.split(" - ")[1];
+
+        if(end != null) {
+
+            time += " - " + end.split(" - ")[1];
+        }
+
+        return time;
+    }
+
+    public static String getDate(String start,String end){
+
+        String time = "";
+
+        time += start.split(" - ")[0];
+
+        if(end != null) {
+
+            time += " - " + end.split(" - ")[0];
+        }
+
+        return time;
     }
 }

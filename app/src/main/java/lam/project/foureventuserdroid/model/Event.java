@@ -120,17 +120,17 @@ public class Event implements Parcelable{
         present = in.readByte() == Keys.PRESENT;
         if(present) {
 
-            mParticipation = in.readInt();
+            mEndDate = in.readString();
         }else{
-            mParticipation = 0;
+            mEndDate = null;
         }
 
         present = in.readByte() == Keys.PRESENT;
         if(present) {
 
-            mEndDate = in.readString();
+            mParticipation = in.readInt();
         }else{
-            mEndDate = null;
+            mParticipation = 0;
         }
 
         present = in.readByte() == Keys.PRESENT;
@@ -164,6 +164,11 @@ public class Event implements Parcelable{
             builder.withEndDate(DateConverter.fromMillis(jsonObject.getLong(Keys.END_DATE)));
         }
 
+        if(jsonObject.has(Keys.ID)) {
+
+            builder.withId(jsonObject.getString(Keys.ID));
+        }
+
 
         if(jsonObject.has(Keys.PARTICIPATION)) {
             builder.withParticipation(jsonObject.getInt(Keys.PARTICIPATION));
@@ -179,6 +184,11 @@ public class Event implements Parcelable{
     public JSONObject toJson() throws JSONException{
 
         final JSONObject jsonObject = new JSONObject();
+
+        if(mId != null) {
+
+            jsonObject.put(Keys.ID,mId);
+        }
 
         jsonObject.put(Keys.TITLE, mTitle);
         jsonObject.put(Keys.DESCRIPTION, mDescription);
@@ -221,7 +231,7 @@ public class Event implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 
-        if(mId == null) {
+        if(mId != null) {
             dest.writeByte(Keys.PRESENT);
             dest.writeString(mId);
 
@@ -262,6 +272,7 @@ public class Event implements Parcelable{
 
     public static class Keys{
 
+        public static final String ID = "_id";
         public static final String TITLE = "title";
         public static final String DESCRIPTION = "description";
         public static final String START_DATE = "start_date";
