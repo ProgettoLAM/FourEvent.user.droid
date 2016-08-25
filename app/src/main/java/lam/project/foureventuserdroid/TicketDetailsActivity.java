@@ -35,85 +35,38 @@ import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 
 public class TicketDetailsActivity extends AppCompatActivity {
 
-    private List<Record> mRecords = new ArrayList<>();
-    private TextView mTickets;
-    private Button mSyncNfc;
-
-    private ProgressDialog mProgressDialog;
-    private boolean isSearching;
-
-    NfcAdapter mNfcAdapter;
-    Context context;
-
-    public static final String MIME_TEXT_PLAIN = "text/plain";
     public static final String TAG = "NfcDemo";
 
-    PendingIntent pendingIntent;
+    private TextView mTextView;
+    private NfcAdapter mNfcAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_ticket);
 
-        context = this;
+        mTextView = (TextView) findViewById(R.id.ticket_list);
 
-        mTickets = (TextView) findViewById(R.id.ticket_list);
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        mSyncNfc = (Button)findViewById(R.id.ticket_sync);
-        mSyncNfc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (mNfcAdapter == null) {
+            // Stop here, we definitely need NFC
+            Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
 
-                if (!mNfcAdapter.isEnabled()) {
+        }
 
-                    Toast.makeText(getApplicationContext(), "Per proseguire attivare la comunicazione NFC", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
+        if (!mNfcAdapter.isEnabled()) {
+            mTextView.setText("NFC is disabled.");
+        } else {
+            mTextView.setText("NFC is good.");
+        }
 
-                } else {
-
-                    mProgressDialog = ProgressDialog.show(context,"Ricerca braccialetto",
-                            "Ricerca del braccialetto FourEvent in corso ...",true,true);
-
-                    isSearching = true;
-                }
-            }
-        });
-
-
-        setmRecords();
-
-        //handleIntent(getIntent());
+        handleIntent(getIntent());
     }
 
-    private void setmRecords() {
-
-        String url = FourEventUri.Builder.create(FourEventUri.Keys.TICKET)
-                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
-
-        RecordListRequest getAllRecords = new RecordListRequest(url, null,
-                new Response.Listener<List<Record>>() {
-                    @Override
-                    public void onResponse(List<Record> response) {
-
-                        mRecords.clear();
-                        mRecords.addAll(response);
-                        updateList();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        System.out.println(error.toString());
-                    }
-                }
-        );
-
-        VolleyRequest.get(this).add(getAllRecords);
-    }
-
-    private void updateList() {
-
-        mTickets.setText(mRecords.get(0).mId);
+    private void handleIntent(Intent intent) {
+        // TODO: handle Intent
     }
 }
