@@ -16,6 +16,7 @@ import lam.project.foureventuserdroid.utils.DateConverter;
 
 public class Record {
 
+    public final String mId;
 
     public final String mDate;
 
@@ -27,9 +28,10 @@ public class Record {
 
     public final String mEvent;
 
-    public Record(final String date, final float amount, final String type, final String user,
-        final String event) {
+    public Record(final String id, final String date, final float amount, final String type,
+                  final String user, final String event) {
 
+        this.mId = id;
         this.mDate = date;
         this.mAmount = amount;
         this.mType = type;
@@ -55,6 +57,11 @@ public class Record {
             builder.withDate(jsonObject.getLong(Keys.DATE));
         }
 
+        if (jsonObject.has(Keys.ID)) {
+
+            builder.withId(jsonObject.getString(Keys.ID));
+        }
+
         return builder.build();
     }
 
@@ -76,26 +83,17 @@ public class Record {
             jsonObject.put(Keys.DATE,DateConverter.toMillis(mDate));
         }
 
-        return jsonObject;
-    }
+        if(mId != null) {
 
-    public static JSONObject createRecord(float amount, String type, String event) throws JSONException {
-
-        JSONObject requestody = new JSONObject();
-
-        requestody.put(Record.Keys.AMOUNT,amount);
-        requestody.put(Record.Keys.TYPE,type);
-
-        if(event != null) {
-
-            requestody.put(Record.Keys.EVENT,event);
+            jsonObject.put(Keys.ID,mId);
         }
 
-        return requestody;
+        return jsonObject;
     }
 
     public static class Builder {
 
+        private String id;
         private String date;
         private float amount;
         private String type;
@@ -120,20 +118,27 @@ public class Record {
             return this;
         }
 
-        Builder withEvent(String event) {
+        public Builder withEvent(String event) {
 
             this.event = event;
             return this;
         }
 
+        Builder withId(String id) {
+
+            this.id = id;
+            return this;
+        }
+
         public Record build() {
 
-            return new Record(date,amount,type,user,event);
+            return new Record(id,date,amount,type,user,event);
         }
     }
 
     public static class Keys {
 
+        public static String ID = "_id";
         static String DATE = "date";
         public static String AMOUNT = "amount";
         public static String TYPE = "type";

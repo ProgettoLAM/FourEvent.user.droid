@@ -32,6 +32,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.model.Record;
 import lam.project.foureventuserdroid.utils.DateConverter;
@@ -127,8 +129,10 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
                             try {
 
-                                JSONObject record = Record.createRecord((-Float.parseFloat(mCurrentEvent.mPrice)),
-                                        Record.Keys.BUY, mCurrentEvent.mId);
+                                JSONObject record = Record.Builder
+                                        .create(-Float.parseFloat(mCurrentEvent.mPrice), Record.Keys.BUY,MainActivity.mCurrentUser.email)
+                                        .withEvent(mCurrentEvent.mId)
+                                        .build().toJson();
 
                                 CustomRequest createRecordRequest = new CustomRequest(Request.Method.PUT,
                                         url, record,
@@ -175,6 +179,8 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                                 VolleyRequest.get(v.getContext()).add(createRecordRequest);
 
                             } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (ParseException e) {
                                 e.printStackTrace();
                             }
                         }

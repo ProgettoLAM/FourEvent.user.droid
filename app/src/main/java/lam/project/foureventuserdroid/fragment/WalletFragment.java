@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -267,45 +268,54 @@ public class WalletFragment extends Fragment {
         String uri = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
                 .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
 
-        CustomRequest createRecordRequest = new CustomRequest(Request.Method.PUT,
-            uri, Record.createRecord(amount, Record.Keys.RECHARGE, null),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
+        try {
 
-                        try {
+            JSONObject record = Record.Builder.create(amount,Record.Keys.RECHARGE,MainActivity.mCurrentUser.email)
+                    .build().toJson();
 
-                            //ritorna l'oggetto che viene parsato e aggiunto
-                            Record insertedRecord = Record.fromJson(response);
+            CustomRequest createRecordRequest = new CustomRequest(Request.Method.PUT,
+                    uri, record,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
 
-                            mDataList.add(insertedRecord);
-                            mTimeLineAdapter.notifyDataSetChanged();
+                            try {
 
-                            //update balance
-                            MainActivity.mCurrentUser.updateBalance(insertedRecord.mAmount);
+                                //ritorna l'oggetto che viene parsato e aggiunto
+                                Record insertedRecord = Record.fromJson(response);
 
-                            animateBalance(balance);
-                            
-                            UserManager.get().save(MainActivity.mCurrentUser);
+                                mDataList.add(insertedRecord);
+                                mTimeLineAdapter.notifyDataSetChanged();
 
-                            dialog.dismiss();
+                                //update balance
+                                MainActivity.mCurrentUser.updateBalance(insertedRecord.mAmount);
 
-                        } catch (JSONException e) {
+                                animateBalance(balance);
 
-                            e.printStackTrace();
+                                UserManager.get().save(MainActivity.mCurrentUser);
+
+                                dialog.dismiss();
+
+                            } catch (JSONException e) {
+
+                                e.printStackTrace();
+                            }
+
+                            progressDialog.dismiss();
                         }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
 
-                        progressDialog.dismiss();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                            progressDialog.dismiss();
+                        }
+                    });
 
-                        progressDialog.dismiss();
-                    }
-                });
+            VolleyRequest.get().add(createRecordRequest);
 
-        VolleyRequest.get().add(createRecordRequest);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }
