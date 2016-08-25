@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -38,26 +39,29 @@ public class Record {
 
     public static Record fromJson(JSONObject jsonObject) throws JSONException {
 
-        String date = DateConverter.fromMillis(jsonObject.getLong(Keys.DATE));
         float amount = BigDecimal.valueOf(jsonObject.getDouble(Keys.AMOUNT)).floatValue();
         String type = jsonObject.getString(Keys.TYPE);
         String user = jsonObject.getString(Keys.USER);
 
-        Builder builder = Builder.create(date,amount,type,user);
+        Builder builder = Builder.create(amount,type,user);
 
         if(jsonObject.has(Keys.EVENT)) {
 
             builder.withEvent(jsonObject.getString(Keys.EVENT));
         }
 
+        if(jsonObject.has(Keys.DATE)) {
+
+            builder.withDate(jsonObject.getLong(Keys.DATE));
+        }
+
         return builder.build();
     }
 
-    public JSONObject toJson () throws JSONException {
+    public JSONObject toJson () throws JSONException, ParseException {
 
         JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put(Keys.DATE,mDate);
         jsonObject.put(Keys.AMOUNT,mAmount);
         jsonObject.put(Keys.TYPE,mType);
         jsonObject.put(Keys.USER,mUser);
@@ -67,8 +71,29 @@ public class Record {
             jsonObject.put(Keys.EVENT,mEvent);
         }
 
+        if(mDate != null) {
+
+            jsonObject.put(Keys.DATE,DateConverter.toMillis(mDate));
+        }
+
         return jsonObject;
     }
+
+    public static JSONObject createRecord(float amount, String type, String event) throws JSONException {
+
+        JSONObject requestody = new JSONObject();
+
+        requestody.put(Record.Keys.AMOUNT,amount);
+        requestody.put(Record.Keys.TYPE,type);
+
+        if(event != null) {
+
+            requestody.put(Record.Keys.EVENT,event);
+        }
+
+        return requestody;
+    }
+
     public static class Builder {
 
         private String date;
@@ -77,17 +102,22 @@ public class Record {
         private String user;
         private String event;
 
-        private Builder(String date, float amount, String type, String user) {
+        private Builder(float amount, String type, String user) {
 
-            this.date = date;
             this.amount = amount;
             this.type = type;
             this.user = user;
         }
 
-        public static Builder create(String date, float amount, String type, String user) {
+        public static Builder create(float amount, String type, String user) {
 
-            return new Builder(date,amount,type,user);
+            return new Builder(amount,type,user);
+        }
+
+        Builder withDate(long date) {
+
+            this.date = DateConverter.fromMillis(date);
+            return this;
         }
 
         Builder withEvent(String event) {
@@ -105,9 +135,12 @@ public class Record {
     public static class Keys {
 
         static String DATE = "date";
-        static String AMOUNT = "amount";
-        static String TYPE = "type";
-        static String USER = "user";
-        static String EVENT = "event";
+        public static String AMOUNT = "amount";
+        public static String TYPE = "type";
+        public static String USER = "user";
+        public static String EVENT = "event";
+
+        public static final String RECHARGE = "Ricarica conto";
+        public static final String BUY = "Acquisto biglietto";
     }
 }

@@ -54,8 +54,7 @@ import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private User mCurrentUser;
-    private Fragment mLastFragment;
+    public static User mCurrentUser;
     private Fragment mNextFragment;
 
     private GoogleApiClient mGoogleApiClient;
@@ -186,13 +185,11 @@ public class MainActivity extends AppCompatActivity
             CategoryManager.get(this).removeAll();
             FavouriteManager.get(this).removeAll();
 
-            startActivity(new Intent(this,SplashActivity.class));
+            startActivity(new Intent(this, SplashActivity.class));
             finish();
 
             return;
         }
-
-        mLastFragment = mNextFragment;
 
         switch (itemId) {
 
@@ -251,18 +248,7 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
 
-            if(mLastFragment != null) {
-
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.anchor_point, mLastFragment)
-                        .commit();
-
-                mLastFragment = null;
-
-            } else {
-
-                super.onBackPressed();
-            }
+            super.onBackPressed();
         }
     }
 

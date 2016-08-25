@@ -31,7 +31,7 @@ public class PopularEventsFragment extends Fragment {
     private View initView(View rootView) {
 
 
-        ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.events_progress_bar);
+        ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 
         progressBar.setVisibility(View.INVISIBLE);
         progressBar.clearAnimation();

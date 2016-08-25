@@ -1,53 +1,50 @@
 package lam.project.foureventuserdroid;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Adapter;
 import android.widget.FrameLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdate;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
-import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import lam.project.foureventuserdroid.model.Event;
+import lam.project.foureventuserdroid.model.Record;
 import lam.project.foureventuserdroid.utils.DateConverter;
+import lam.project.foureventuserdroid.utils.connection.CustomRequest;
+import lam.project.foureventuserdroid.utils.connection.FourEventUri;
+import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
+import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 
 public class DetailsEventActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mGoogleMap;
 
-    private FloatingActionButton fab_detail;
     private FloatingActionButton fab1;
     private FloatingActionButton fab2;
     private Animation show_fab_1;
@@ -70,7 +67,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
         mCurrentEvent = getIntent().getParcelableExtra(Event.Keys.EVENT);
 
-        fab_detail = (FloatingActionButton) findViewById(R.id.fab_detail);
+        FloatingActionButton fab_detail = (FloatingActionButton) findViewById(R.id.fab_detail);
         fab1 = (FloatingActionButton) findViewById(R.id.fab_1);
         fab2 = (FloatingActionButton) findViewById(R.id.fab_2);
 
@@ -98,10 +95,105 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
 
-                Intent intent = new Intent(v.getContext(), TicketActivity.class);
-                startActivity(intent);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+                String message;
+
+                //se il costo del biglietto è inferiore al bilancio del portafoglio dell'utente
+                if(Float.parseFloat(mCurrentEvent.mPrice) <= MainActivity.mCurrentUser.balance) {
+
+                    message = "Il biglietto ha un costo di " + mCurrentEvent.mPrice + " €." +
+                            "\n\nHai un totale di "+MainActivity.mCurrentUser.balance+" crediti.\n\nVuoi acquistarlo?";
+
+                    builder.setTitle("Acquisto biglietto");
+                    builder.setMessage(message);
+
+                    builder.setNegativeButton("Cancella", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builder.setPositiveButton("Acquista", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(final DialogInterface dialog, int which) {
+
+                            String url = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
+                                    .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
+
+                            try {
+
+                                JSONObject record = Record.createRecord((-Float.parseFloat(mCurrentEvent.mPrice)),
+                                        Record.Keys.BUY, mCurrentEvent.mId);
+
+                                CustomRequest createRecordRequest = new CustomRequest(Request.Method.PUT,
+                                        url, record,
+                                        new Response.Listener<JSONObject>() {
+
+                                            @Override
+                                            public void onResponse(JSONObject response) {
+
+                                                try {
+
+                                                    Record insertedRecord = Record.fromJson(response);
+
+                                                    //update balance
+                                                    MainActivity.mCurrentUser.updateBalance(insertedRecord.mAmount);
+
+                                                    UserManager.get().save(MainActivity.mCurrentUser);
+
+                                                    dialog.dismiss();
+
+                                                    Snackbar.make(v,
+                                                            "Biglietto acquistato con successo!", Snackbar.LENGTH_SHORT)
+                                                            .show();
+
+                                                    hideFAB();
+
+                                                } catch (JSONException e) {
+
+                                                    e.printStackTrace();
+                                                    dialog.dismiss();
+                                                }
+
+
+                                            }
+                                        }, new Response.ErrorListener() {
+
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+
+                                        error.printStackTrace();
+                                    }
+                                }
+                                );
+
+                                VolleyRequest.get(v.getContext()).add(createRecordRequest);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } else {
+
+                    builder.setTitle("Credito insufficiente");
+                    builder.setMessage("Non hai abbastanza credito per aquistare questo biglietto!");
+
+                    builder.setNegativeButton("Cancella", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                }
+
+
+                builder.show();
             }
         });
 
@@ -120,34 +212,6 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
             }
         });
-
-        /*
-        final ScrollView scrollView = (ScrollView) findViewById(R.id.layout_main);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-                @Override
-                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
-                    if (scrollX > 0) {
-
-                        if(fab_detail.isShown()) {
-
-                            fab_detail.hide();
-                        }
-
-                    } else if (scrollY > 0) {
-
-                        if(!fab_detail.isShown()) {
-
-                            fab_detail.show();
-                        }
-                    }
-                }
-            });
-        }
-        */
 
         setInfo(mCurrentEvent);
 

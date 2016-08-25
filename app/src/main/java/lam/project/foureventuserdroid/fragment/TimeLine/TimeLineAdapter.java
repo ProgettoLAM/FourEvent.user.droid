@@ -1,5 +1,6 @@
 package lam.project.foureventuserdroid.fragment.TimeLine;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +44,23 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
         holder.mType.setText(record.mType);
         holder.mDate.setText(record.mDate);
-        holder.mAmount.setText(Float.toString(record.mAmount) + " €");
 
+        String amount = "";
+
+        if(record.mType.equals(Record.Keys.RECHARGE)) {
+
+            amount += "+"+record.mAmount;
+            holder.mAmount.setTextColor(Color.parseColor("#4BAE4F"));
+
+        } else {
+
+            amount += record.mAmount;
+            holder.mAmount.setTextColor(Color.parseColor("#F34235"));
+        }
+
+        amount += " €";
+
+        holder.mAmount.setText(amount);
     }
 
     @Override

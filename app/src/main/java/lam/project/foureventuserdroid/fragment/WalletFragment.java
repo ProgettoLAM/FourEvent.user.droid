@@ -1,6 +1,7 @@
 package lam.project.foureventuserdroid.fragment;
 
 
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -15,7 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -30,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.fragment.TimeLine.TimeLineAdapter;
 import lam.project.foureventuserdroid.model.Record;
@@ -47,15 +51,10 @@ public class WalletFragment extends Fragment {
 
     private static AlertDialog dialog;
 
-    private User mCurrentUser;
-
     private static final String NAME = "Portafoglio";
 
-    private FloatingActionButton fab;
-
-    private RecyclerView mRecyclerView;
-
     private TimeLineAdapter mTimeLineAdapter;
+    private ProgressBar mProgressBar;
 
     private List<Record> mDataList = new ArrayList<>();
 
@@ -64,7 +63,8 @@ public class WalletFragment extends Fragment {
     private AlertDialog.Builder builder;
 
     private View mRootView;
-    private float minVal = 0.0f;
+
+    private final static float MIN_VAL = 0.0f;
 
     public WalletFragment() {
         // Required empty public constructor
@@ -77,12 +77,13 @@ public class WalletFragment extends Fragment {
         // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.fragment_wallet, container, false);
 
-        this.mCurrentUser = getArguments().getParcelable(User.Keys.USER);
+        mProgressBar = (ProgressBar) mRootView.findViewById(R.id.progress_bar);
+        mTxtBalance = (TextView) mRootView.findViewById(R.id.user_balance);
 
         setTitle();
-        animateBalance(minVal);
+        updateBalance();
 
-        fab = (FloatingActionButton) mRootView.findViewById(R.id.fab_wallet);
+        FloatingActionButton fab = (FloatingActionButton) mRootView.findViewById(R.id.fab_wallet);
 
         final Button.OnClickListener rechargeButtonListener = new View.OnClickListener() {
             @Override
@@ -130,7 +131,7 @@ public class WalletFragment extends Fragment {
             }
         });
 
-        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recyclerView);
+        RecyclerView mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -148,14 +149,62 @@ public class WalletFragment extends Fragment {
 
     }
 
+    private void updateBalance() {
+
+        ObjectAnimator animation = ObjectAnimator.ofInt (mProgressBar, "progress", 0, 500);
+        animation.setDuration (1000);
+        animation.setInterpolator (new DecelerateInterpolator());
+        animation.start ();
+
+        //mostro progress bar e nascondo tutto il resto
+        mProgressBar.setVisibility(View.VISIBLE);
+
+        mTxtBalance.setVisibility(View.INVISIBLE);
+        mRootView.findViewById(R.id.symbol_euro).setVisibility(View.INVISIBLE);
+
+        String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
+                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
+
+        CustomRequest getBalanceRequest = new CustomRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+
+                            MainActivity.mCurrentUser.balance = BigDecimal.valueOf(response.getDouble(User.Keys.BALANCE)).floatValue();
+
+                            mProgressBar.setVisibility(View.INVISIBLE);
+
+                            mTxtBalance.setVisibility(View.VISIBLE);
+                            mRootView.findViewById(R.id.symbol_euro).setVisibility(View.VISIBLE);
+
+                            animateBalance(MIN_VAL);
+
+                        } catch (JSONException e) {
+
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        error.printStackTrace();
+                    }
+                });
+
+        VolleyRequest.get(getContext()).add(getBalanceRequest);
+    }
+
     private void animateBalance(float minValue) {
 
-        mTxtBalance = (TextView) mRootView.findViewById(R.id.user_balance);
-
-        if(mCurrentUser.balance > 0) {
+        if(MainActivity.mCurrentUser.balance > 0) {
 
             ValueAnimator animator = new ValueAnimator();
-            animator.setFloatValues(minValue, this.mCurrentUser.balance);
+            animator.setFloatValues(minValue, MainActivity.mCurrentUser.balance);
             animator.setDuration(500);
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
@@ -170,7 +219,7 @@ public class WalletFragment extends Fragment {
 
         } else {
 
-            mTxtBalance.setText(Float.toString(mCurrentUser.balance));
+            mTxtBalance.setText(Float.toString(MainActivity.mCurrentUser.balance));
         }
     }
 
@@ -178,11 +227,10 @@ public class WalletFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);
     }
 
-
     private void setModel() {
 
         String uri = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
-                .appendEncodedPath(mCurrentUser.email).getUri();
+                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
 
         RecordListRequest recordListRequest = new RecordListRequest(uri, null, new Response.Listener<List<Record>>() {
             @Override
@@ -206,7 +254,7 @@ public class WalletFragment extends Fragment {
 
     private void recharge(Float amount) throws JSONException {
 
-        final float balance = mCurrentUser.balance;
+        final float balance = MainActivity.mCurrentUser.balance;
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
 
@@ -217,10 +265,10 @@ public class WalletFragment extends Fragment {
 
 
         String uri = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
-                .appendEncodedPath(mCurrentUser.email).getUri();
+                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
 
         CustomRequest createRecordRequest = new CustomRequest(Request.Method.PUT,
-            uri, createBody(amount, WalletKeys.RECHARGE, null),
+            uri, Record.createRecord(amount, Record.Keys.RECHARGE, null),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -234,11 +282,11 @@ public class WalletFragment extends Fragment {
                             mTimeLineAdapter.notifyDataSetChanged();
 
                             //update balance
-                            mCurrentUser.updateBalance(insertedRecord.mAmount);
+                            MainActivity.mCurrentUser.updateBalance(insertedRecord.mAmount);
 
                             animateBalance(balance);
                             
-                            UserManager.get().save(mCurrentUser);
+                            UserManager.get().save(MainActivity.mCurrentUser);
 
                             dialog.dismiss();
 
@@ -259,29 +307,5 @@ public class WalletFragment extends Fragment {
                 });
 
         VolleyRequest.get().add(createRecordRequest);
-    }
-
-    private JSONObject createBody(float amount, String type, String event) throws JSONException {
-
-        JSONObject requestody = new JSONObject();
-
-        requestody.put(WalletKeys.AMOUNT,amount);
-        requestody.put(WalletKeys.TYPE,type);
-
-        if(event != null) {
-
-            requestody.put(WalletKeys.EVENT,event);
-        }
-
-        return requestody;
-    }
-
-    private static class WalletKeys {
-
-        public static final String TYPE = "type";
-        public static final String AMOUNT = "amount";
-        public static final String EVENT = "event";
-
-        public static final String RECHARGE = "Ricarica conto";
     }
 }

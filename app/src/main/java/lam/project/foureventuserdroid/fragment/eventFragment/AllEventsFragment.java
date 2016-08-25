@@ -73,7 +73,7 @@ public class AllEventsFragment extends Fragment {
 
         mSadImageEmoticon = (ImageView) rootView.findViewById(R.id.events_sad_emoticon);
         mEventNotFound = (TextView) rootView.findViewById(R.id.events_not_found);
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.events_progress_bar);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
         fab = (FloatingActionButton) rootView.findViewById(R.id.events_fab);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.events_recycler_view);
 
