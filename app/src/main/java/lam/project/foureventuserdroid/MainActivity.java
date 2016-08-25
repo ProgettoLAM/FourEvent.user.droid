@@ -42,7 +42,7 @@ import lam.project.foureventuserdroid.complete_profile.StepManager;
 import lam.project.foureventuserdroid.complete_profile.CompleteProfileActivity;
 import lam.project.foureventuserdroid.fragment.EventsFragment;
 import lam.project.foureventuserdroid.fragment.FavouriteFragment;
-import lam.project.foureventuserdroid.fragment.ParticipationFragment;
+import lam.project.foureventuserdroid.fragment.TicketsFragment;
 import lam.project.foureventuserdroid.fragment.ProfileFragment;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
 import lam.project.foureventuserdroid.model.User;
@@ -203,9 +203,9 @@ public class MainActivity extends AppCompatActivity
                 mNextFragment = new FavouriteFragment();
                 break;
 
-            case R.id.nav_partecipations:
+            case R.id.nav_tickets:
 
-                mNextFragment = new ParticipationFragment();
+                mNextFragment = new TicketsFragment();
                 break;
 
             case R.id.nav_profile:

@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lam.project.foureventuserdroid.R;
-import lam.project.foureventuserdroid.fragment.eventFragment.recyclerView.EventAdapter;
+import lam.project.foureventuserdroid.fragment.recyclerView.EventAdapter;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.utils.connection.EventListRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;

@@ -15,7 +15,7 @@
     <!-- Stringhe navigation drawer -->
     <string name="action_events">Eventi</string>
     <string name="action_favourites">Preferiti</string>
-    <string name="action_participations">Partecipazioni</string>
+    <string name="action_tickets">Biglietti</string>
 
     <string name="action_profile">Profilo</string>
     <string name="action_wallet">Portafoglio</string>

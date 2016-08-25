@@ -13,11 +13,11 @@ import lam.project.foureventuserdroid.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ParticipationFragment extends Fragment {
+public class TicketsFragment extends Fragment {
 
-    private final String NAME = "partecipazioni";
+    private final String NAME = "Biglietti";
 
-    public ParticipationFragment() {
+    public TicketsFragment() {
         // Required empty public constructor
     }
 

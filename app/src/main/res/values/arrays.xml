@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="tab_names">
-        <item>Tutti</item>
-        <item>Popolari</item>
         <item>Vicini a te</item>
+        <item>Popolari</item>
+        <item>Categorie</item>
     </array>
 </resources>

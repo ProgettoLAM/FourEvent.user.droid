@@ -1,4 +1,4 @@
-package lam.project.foureventuserdroid.fragment.eventFragment.recyclerView;
+package lam.project.foureventuserdroid.fragment.recyclerView;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
