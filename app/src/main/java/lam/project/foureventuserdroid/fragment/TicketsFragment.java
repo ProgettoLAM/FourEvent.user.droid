@@ -1,13 +1,24 @@
 package lam.project.foureventuserdroid.fragment;
 
 
+import android.app.PendingIntent;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -17,7 +28,7 @@ import java.util.List;
 
 import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
-import lam.project.foureventuserdroid.model.Event;
+import lam.project.foureventuserdroid.TicketDetailsActivity;
 import lam.project.foureventuserdroid.model.Record;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.connection.RecordListRequest;
@@ -28,10 +39,9 @@ import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
  */
 public class TicketsFragment extends Fragment {
 
-    private final static String NAME = "Biglietti";
-
     private List<Record> mRecords = new ArrayList<>();
     private TextView mTickets;
+
 
     public TicketsFragment() {
         // Required empty public constructor
@@ -42,51 +52,7 @@ public class TicketsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_participation, container, false);
-        mTickets = (TextView) rootView.findViewById(R.id.ticket_list);
-
-        setTitle();
-        setmRecords();
-
-        // Inflate the layout for this fragment
-        return rootView;
+        startActivity(new Intent(getContext(), TicketDetailsActivity.class));
+        return inflater.inflate(R.layout.fragment_participation, container, false);
     }
-
-    private void setmRecords() {
-
-        String url = FourEventUri.Builder.create(FourEventUri.Keys.TICKET)
-                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
-
-        RecordListRequest getAllRecords = new RecordListRequest(url, null,
-                new Response.Listener<List<Record>>() {
-                    @Override
-                    public void onResponse(List<Record> response) {
-
-                        mRecords.clear();
-                        mRecords.addAll(response);
-                        updateList();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        System.out.println(error.toString());
-                    }
-                }
-        );
-
-        VolleyRequest.get(getContext()).add(getAllRecords);
-    }
-
-    private void updateList() {
-
-        mTickets.setText(mRecords.get(0).mId);
-    }
-
-    private void setTitle() {
-
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);
-    }
-
 }
