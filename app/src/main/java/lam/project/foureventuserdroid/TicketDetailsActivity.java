@@ -52,9 +52,16 @@ public class TicketDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                mIsSearching = true;
+                if(!mNfcAdapter.isEnabled()) {
 
-                mProgressDialog = ProgressDialog.show(v.getContext(),"Ricerca braccialetto","Ricerca braccialetto FourEvent in corso...",true,true);
+                    Toast.makeText(v.getContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
+
+                } else if(mNfcAdapter.isEnabled()) {
+
+                    mIsSearching = true;
+                    mProgressDialog = ProgressDialog.show(v.getContext(),"Ricerca braccialetto","Ricerca braccialetto FourEvent in corso...",true,true);
+                }
             }
         });
 
