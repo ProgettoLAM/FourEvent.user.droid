@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -47,37 +48,178 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
     private GoogleMap mGoogleMap;
 
-    private FloatingActionButton fab1;
-    private FloatingActionButton fab2;
-    private Animation show_fab_1;
-    private Animation show_fab_2;
-    private Animation hide_fab_1;
-    private Animation hide_fab_2;
-
     private Event mCurrentEvent;
 
+    private boolean isFabOpen;
+
     //Status del fab -> close
-    private boolean FAB_Status = false;
+    private FloatingActionButton fab;
+    private FloatingActionButton fab1;
+    private FloatingActionButton fab2;
+
+    private Animation fab_open,fab_close,rotate_forward,rotate_backward;
+
+    private View.OnClickListener fabClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            int id = v.getId();
+            switch (id){
+                case R.id.fab:
+
+                    animateFAB();
+                    break;
+                case R.id.fab1:
+
+                    Log.d("Raj", "Fab 1");
+                    break;
+                case R.id.fab2:
+
+                    Log.d("Raj", "Fab 2");
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_event);
 
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+
+        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
+        rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_forward);
+        rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_backward);
+
+        fab.setOnClickListener(fabClickListener);
+        fab1.setOnClickListener(fabClickListener);
+        fab2.setOnClickListener(fabClickListener);
+
         //Per disabilitare autofocus all'apertura della Activity
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         mCurrentEvent = getIntent().getParcelableExtra(Event.Keys.EVENT);
 
-        FloatingActionButton fab_detail = (FloatingActionButton) findViewById(R.id.fab_detail);
-        fab1 = (FloatingActionButton) findViewById(R.id.fab_1);
-        fab2 = (FloatingActionButton) findViewById(R.id.fab_2);
+        setInfo(mCurrentEvent);
 
-        show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
-        hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
-        show_fab_2 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab2_show);
-        hide_fab_2 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab2_hide);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.anchor_map);
 
+        mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showMap();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        mGoogleMap = googleMap;
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        mGoogleMap.setMyLocationEnabled(true);
+
+        showMap();
+    }
+
+    private void showMap() {
+
+        if(mGoogleMap == null || mCurrentEvent == null) {
+
+            return;
+        }
+
+        LatLng mLocationEvent = new LatLng(mCurrentEvent.mLatitude,
+                mCurrentEvent.mLongitude);
+
+        mGoogleMap.addMarker(new MarkerOptions()
+                .position(mLocationEvent)
+                .title(mCurrentEvent.mTitle))
+                .setIcon(BitmapDescriptorFactory.defaultMarker());
+
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mLocationEvent));
+    }
+
+    private void setInfo(Event event) {
+
+        String participations = event.mParticipation + "/" + event.mMaxTicket;
+        String price = event.mPrice + "€";
+
+        String time = DateConverter.getTime(event.mStartDate,event.mEndDate);
+        String date = DateConverter.getDate(event.mStartDate,event.mEndDate);
+
+        ((TextView) findViewById(R.id.detail_title)).setText(event.mTitle);
+        ((TextView) findViewById(R.id.detail_date)).setText(date);
+        ((TextView) findViewById(R.id.detail_distance)).setText(event.mAddress);
+        ((TextView) findViewById(R.id.detail_desc)).setText(event.mDescription);
+        ((TextView) findViewById(R.id.detail_tickets)).setText(participations);
+        ((TextView) findViewById(R.id.detail_price)).setText(price);
+        ((TextView) findViewById(R.id.detail_time)).setText(time);
+
+
+        final View.OnClickListener listener = new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                Snackbar.make(v.getRootView(), "Bought", Snackbar.LENGTH_LONG)
+                        .setAction("action", null)
+                        .show();
+            }
+        };
+    }
+
+    public void animateFAB(){
+
+        if(isFabOpen){
+
+            fab.startAnimation(rotate_backward);
+            fab1.startAnimation(fab_close);
+            fab2.startAnimation(fab_close);
+            fab1.setClickable(false);
+            fab2.setClickable(false);
+            isFabOpen = false;
+            Log.d("Raj", "close");
+
+        } else {
+
+            fab.startAnimation(rotate_forward);
+            fab1.startAnimation(fab_open);
+            fab2.startAnimation(fab_open);
+            fab1.setClickable(true);
+            fab2.setClickable(true);
+            isFabOpen = true;
+            Log.d("Raj","open");
+
+        }
+    }
+}
+/*
 
         fab_detail.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -218,134 +360,4 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
             }
         });
-
-        setInfo(mCurrentEvent);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.anchor_map);
-
-        mapFragment.getMapAsync(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        showMap();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-
-        mGoogleMap = googleMap;
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-
-        mGoogleMap.setMyLocationEnabled(true);
-
-        showMap();
-    }
-
-
-    private void expandFAB() {
-
-        //Floating Action Button 1
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
-        layoutParams.rightMargin += (int) (fab1.getWidth() * 1.7);
-        layoutParams.bottomMargin += (int) (fab1.getHeight() * 0.25);
-        fab1.setLayoutParams(layoutParams);
-        fab1.startAnimation(show_fab_1);
-        fab1.setClickable(true);
-
-        //Floating Action Button 2
-        FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) fab2.getLayoutParams();
-        layoutParams2.rightMargin += (int) (fab2.getWidth() * 1.5);
-        layoutParams2.bottomMargin += (int) (fab2.getHeight() * 1.5);
-        fab2.setLayoutParams(layoutParams2);
-        fab2.startAnimation(show_fab_2);
-        fab2.setClickable(true);
-
-    }
-
-    private void hideFAB() {
-
-        //Floating Action Button 1
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
-        layoutParams.rightMargin -= (int) (fab1.getWidth() * 1.7);
-        layoutParams.bottomMargin -= (int) (fab1.getHeight() * 0.25);
-        fab1.setLayoutParams(layoutParams);
-        fab1.startAnimation(hide_fab_1);
-        fab1.setClickable(false);
-
-        //Floating Action Button 2
-        FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) fab2.getLayoutParams();
-        layoutParams2.rightMargin -= (int) (fab2.getWidth() * 1.5);
-        layoutParams2.bottomMargin -= (int) (fab2.getHeight() * 1.5);
-        fab2.setLayoutParams(layoutParams2);
-        fab2.startAnimation(hide_fab_2);
-        fab2.setClickable(false);
-    }
-
-    private void showMap() {
-
-        if(mGoogleMap == null || mCurrentEvent == null) {
-
-            return;
-        }
-
-        LatLng mLocationEvent = new LatLng(mCurrentEvent.mLatitude,
-                mCurrentEvent.mLongitude);
-
-        mGoogleMap.addMarker(new MarkerOptions()
-                .position(mLocationEvent)
-                .title(mCurrentEvent.mTitle))
-                .setIcon(BitmapDescriptorFactory.defaultMarker());
-
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mLocationEvent));
-    }
-
-    private void setInfo(Event event) {
-
-        String participations = event.mParticipation + "/" + event.mMaxTicket;
-        String price = event.mPrice + "€";
-
-        String time = DateConverter.getTime(event.mStartDate,event.mEndDate);
-        String date = DateConverter.getDate(event.mStartDate,event.mEndDate);
-
-        ((TextView) findViewById(R.id.detail_title)).setText(event.mTitle);
-        ((TextView) findViewById(R.id.detail_date)).setText(date);
-        ((TextView) findViewById(R.id.detail_distance)).setText(event.mAddress);
-        ((TextView) findViewById(R.id.detail_desc)).setText(event.mDescription);
-        ((TextView) findViewById(R.id.detail_tickets)).setText(participations);
-        ((TextView) findViewById(R.id.detail_price)).setText(price);
-        ((TextView) findViewById(R.id.detail_time)).setText(time);
-
-
-        final View.OnClickListener listener = new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                Snackbar.make(v.getRootView(), "Bought", Snackbar.LENGTH_LONG)
-                        .setAction("action", null)
-                        .show();
-            }
-        };
-    }
-}
+        */

@@ -14,4 +14,7 @@
     <color name="lightRed">#ef5350</color>
     <color name="lightText">#999999</color>
     <color name="darkerText">#363F45</color>
+
+    <color name="colorFAB1">#2196F3</color>
+    <color name="colorFAB2">#E040FB</color>
 </resources>
