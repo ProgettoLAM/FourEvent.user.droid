@@ -1,6 +1,7 @@
 package lam.project.foureventuserdroid;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity
     private boolean mResolvingError;
 
     private Location mCurrentLocation;
+
+    private Fragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +214,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_profile:
 
                 mNextFragment = new ProfileFragment();
+                profileFragment = mNextFragment;
                 break;
 
             case R.id.nav_wallet:
@@ -318,6 +322,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
+        profileFragment.onActivityResult(requestCode, resultCode, data);
     }
 
     public void manageLocationPermission() {
@@ -521,4 +526,5 @@ public class MainActivity extends AppCompatActivity
 
         txtLocation.setText(addressText);
     }
+
 }
