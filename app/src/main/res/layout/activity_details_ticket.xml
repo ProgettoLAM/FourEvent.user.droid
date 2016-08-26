@@ -9,12 +9,20 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
 
+    <TextView
+        android:id="@+id/ticket_synced"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ticket_list"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorPrimary"
+        android:text="Biglietto Sincronizzato"/>
+
     <Button
         android:id="@+id/ticket_sync"
-        android:layout_below="@id/ticket_list"
+        android:layout_below="@id/ticket_synced"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SYNC braclet"
         android:layout_centerHorizontal="true"/>
-
 </RelativeLayout>

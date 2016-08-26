@@ -11,6 +11,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -34,6 +35,9 @@ public class TicketDetailsActivity extends AppCompatActivity {
     private Button mButton;
     private NfcAdapter mNfcAdapter;
     private boolean mIsSearching;
+    private boolean mIsSynced;
+
+    private View mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +89,13 @@ public class TicketDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+
+        findViewById(R.id.ticket_synced).setVisibility(View.VISIBLE);
+
+        if(!mIsSynced) {
+
+            findViewById(R.id.ticket_synced).setVisibility(View.INVISIBLE);
+        }
 
         enableForegroundDispatchSystem();
         super.onResume();
@@ -150,7 +161,8 @@ public class TicketDetailsActivity extends AppCompatActivity {
                 ndef.writeNdefMessage(ndefMessage);
                 ndef.close();
 
-                Toast.makeText(this, "Tag writed", Toast.LENGTH_SHORT).show();
+                Snackbar.make(mTextView,"Braccialetto sincronizzato con successo",Snackbar.LENGTH_LONG).show();
+                mIsSynced = true;
             }
 
         } catch (IOException | FormatException ex) {
