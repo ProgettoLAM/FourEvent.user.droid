@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import lam.project.foureventuserdroid.complete_profile.StepManager;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
+import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
@@ -117,8 +118,7 @@ public class RegistrationActivity extends AppCompatActivity {
             try {
 
 
-                String url = getResources().getString(R.string.backend_uri_put_user);
-
+                String url = FourEventUri.Builder.create(FourEventUri.Keys.USER).getUri();
 
                 CustomRequest request = new CustomRequest(Request.Method.PUT, url, user.toJson(),
                     new Response.Listener<JSONObject>() {

@@ -47,6 +47,7 @@ import lam.project.foureventuserdroid.complete_profile.StepManager;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.Utility;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
+import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
@@ -148,8 +149,8 @@ public class ProfileFragment extends Fragment {
                         if(user.password.equals(oldPassword) && newPassword.length() >= 8) {
 
                             try {
-
-                                String url = getResources().getString(R.string.backend_uri_change_pass) + "/" + user.email;
+                                String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
+                                        .appendPath("changepassword/").appendEncodedPath(user.email).getUri();
 
                                 JSONObject obj = new JSONObject("{'oldPassword':'"+user.password+"', 'newPassword':'"+newPassword+"'}");
 

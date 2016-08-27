@@ -31,6 +31,7 @@ import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.fragment.recyclerView.EventAdapter;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.utils.connection.EventListRequest;
+import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 
@@ -172,7 +173,9 @@ public class AllEventsFragment extends Fragment {
 
     private void setModel(){
 
-        EventListRequest request = new EventListRequest(getString(R.string.url_service),
+        String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT).getUri();
+
+        EventListRequest request = new EventListRequest(url,
                 new Response.Listener<List<Event>>() {
                     @Override
                     public void onResponse(List<Event> response) {

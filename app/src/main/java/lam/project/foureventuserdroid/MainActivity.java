@@ -79,8 +79,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         //se il profilo è completo
         if (StepManager.get(this).getStep() == StepManager.COMPLETE) {
 

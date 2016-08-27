@@ -32,11 +32,6 @@
     <string name="todo_wallet">TODO: Recycler view wallet</string>
     <string name="todo_settings">TODO: Recycler view settings</string>
 
-    <!-- Stringhe url Volley -->
-    <string name="backend_uri_put_user">http://annina.cs.unibo.it:8080/api/user</string>
-    <string name="backend_uri_change_pass">http://annina.cs.unibo.it:8080/api/user/changepassword</string>
-    <string name="url_service">http://annina.cs.unibo.it:8080/api/event</string>
-
     <!-- Stringhe categorie -->
     <string name="musica">Musica</string>
     <string name="tecnologia">Tecnologia</string>
