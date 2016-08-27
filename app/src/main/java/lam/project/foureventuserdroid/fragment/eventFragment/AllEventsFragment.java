@@ -2,6 +2,7 @@ package lam.project.foureventuserdroid.fragment.eventFragment;
 
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -27,7 +28,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
+import lam.project.foureventuserdroid.fragment.WalletFragment;
 import lam.project.foureventuserdroid.fragment.recyclerView.EventAdapter;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.utils.connection.EventListRequest;
@@ -228,5 +231,15 @@ public class AllEventsFragment extends Fragment {
         });
 
         VolleyRequest.get(getContext()).add(request);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == MainActivity.WALLET_CODE) {
+
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.anchor_point, new WalletFragment())
+                    .commit();
+        }
     }
 }

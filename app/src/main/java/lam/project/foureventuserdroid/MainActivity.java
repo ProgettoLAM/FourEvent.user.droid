@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity
 
     private Location mCurrentLocation;
 
+    public static int WALLET_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -316,6 +318,16 @@ public class MainActivity extends AppCompatActivity
 
                     mGoogleApiClient.connect();
                 }
+            }
+        }
+
+        else if (requestCode == WALLET_CODE) {
+
+            if(resultCode == RESULT_OK) {
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.anchor_point, new WalletFragment())
+                        .commit();
             }
         }
     }

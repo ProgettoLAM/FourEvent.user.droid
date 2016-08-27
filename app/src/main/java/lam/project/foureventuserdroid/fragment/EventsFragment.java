@@ -1,5 +1,6 @@
 package lam.project.foureventuserdroid.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.utils.tabs.SlidingTabLayout;
 import lam.project.foureventuserdroid.utils.tabs.ViewPagerAdapter;
@@ -56,6 +58,16 @@ public class EventsFragment extends Fragment {
     private void setTitle() {
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == MainActivity.WALLET_CODE) {
+
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.anchor_point, new WalletFragment())
+                    .commit();
+        }
     }
 
 }
