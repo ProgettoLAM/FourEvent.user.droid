@@ -4,7 +4,33 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/tickets_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/content_events_list" />
+
+    <ImageView
+        android:id="@+id/sad_emoticon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_sad_emoticon"
+        android:layout_gravity="center"
+        android:layout_marginTop="-40dp"
+        android:visibility="invisible"
+        />
+
     <TextView
+        android:id="@+id/not_events"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Non sono presenti biglietti acquistati"
+        android:textSize="20dp"
+        android:textColor="#999"
+        android:layout_gravity="center"
+        android:visibility="invisible"/>
+
+   <!-- <TextView
         android:id="@+id/ticket_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,6 +43,6 @@
         android:layout_below="@id/ticket_list"
         android:text="SYNC NFC"
         android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"/> -->
 
 </RelativeLayout>
