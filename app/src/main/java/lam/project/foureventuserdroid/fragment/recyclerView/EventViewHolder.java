@@ -34,6 +34,7 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
 
     private ImageView mFavouriteList;
     private TextView mPriceList;
+    private ImageView mImgEvent;
 
 
     EventViewHolder(final Activity activity, final List<Event> model, final View itemView) {
@@ -51,15 +52,7 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
         mFavouriteList = (ImageView) itemView.findViewById(R.id.favourite_list);
         mPriceList = (TextView) itemView.findViewById(R.id.price_list);
 
-        ImageView imgEvent = (ImageView) itemView.findViewById(R.id.img_event);
-
-        //TODO completare
-        String uri = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
-                .appendPath("img")
-                .appendPath("img00.jpg")
-                .getUri();
-
-        Picasso.with(itemView.getContext()).load(uri).resize(1200,600).into(imgEvent);
+        mImgEvent = (ImageView) itemView.findViewById(R.id.img_event);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,5 +109,10 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
 
             mFavouriteList.setBackgroundResource(R.drawable.ic_star_empty);
         }
+
+        String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
+                .appendPath("img").appendPath(event.mId).getUri();
+
+        Picasso.with(itemView.getContext()).load(url).resize(1200,600).into(mImgEvent);
     }
 }
