@@ -1,23 +1,26 @@
 package lam.project.foureventuserdroid;
 
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -34,6 +37,7 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 
+import lam.project.foureventuserdroid.fragment.WalletFragment;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.model.Record;
 import lam.project.foureventuserdroid.utils.DateConverter;
@@ -47,177 +51,67 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
     private GoogleMap mGoogleMap;
 
-    private FloatingActionButton fab1;
-    private FloatingActionButton fab2;
-    private Animation show_fab_1;
-    private Animation show_fab_2;
-    private Animation hide_fab_1;
-    private Animation hide_fab_2;
-
     private Event mCurrentEvent;
 
+    private boolean isFabOpen;
+
+    private AlertDialog mAlertDialog;
+
     //Status del fab -> close
-    private boolean FAB_Status = false;
+    private FloatingActionButton fab;
+    private FloatingActionButton fab1;
+    private FloatingActionButton fab2;
+
+    private Activity thisActivity;
+
+    private Animation fab_open, fab_close, rotate_forward, rotate_backward;
+
+    private View.OnClickListener fabClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            int id = v.getId();
+            switch (id) {
+                case R.id.fab:
+
+                    animateFAB();
+                    break;
+                case R.id.fab1:
+
+                    shareEvent();
+                    break;
+                case R.id.fab2:
+
+                    buyTicket();
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_event);
 
+        thisActivity = this;
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+
+        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
+        rotate_forward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_forward);
+        rotate_backward = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_backward);
+
+        fab.setOnClickListener(fabClickListener);
+        fab1.setOnClickListener(fabClickListener);
+        fab2.setOnClickListener(fabClickListener);
+
         //Per disabilitare autofocus all'apertura della Activity
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         mCurrentEvent = getIntent().getParcelableExtra(Event.Keys.EVENT);
-
-        FloatingActionButton fab_detail = (FloatingActionButton) findViewById(R.id.fab_detail);
-        fab1 = (FloatingActionButton) findViewById(R.id.fab_1);
-        fab2 = (FloatingActionButton) findViewById(R.id.fab_2);
-
-        show_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_show);
-        hide_fab_1 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab1_hide);
-        show_fab_2 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab2_show);
-        hide_fab_2 = AnimationUtils.loadAnimation(getApplication(), R.anim.fab2_hide);
-
-
-        fab_detail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (!FAB_Status) {
-                        //Display FAB menu
-                        expandFAB();
-                        FAB_Status = true;
-                    } else {
-                        //Close FAB menu
-                        hideFAB();
-                        FAB_Status = false;
-                    }
-                }
-            });
-
-        fab1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-
-                final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-
-                String message;
-
-                //se il costo del biglietto è inferiore al bilancio del portafoglio dell'utente
-                if(Float.parseFloat(mCurrentEvent.mPrice) <= MainActivity.mCurrentUser.balance) {
-
-                    message = "Il biglietto ha un costo di " + mCurrentEvent.mPrice + " €." +
-                            "\n\nHai un totale di "+MainActivity.mCurrentUser.balance+" crediti.\n\nVuoi acquistarlo?";
-
-                    builder.setTitle("Acquisto biglietto");
-                    builder.setMessage(message);
-
-                    builder.setNegativeButton("Cancella", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            dialog.dismiss();
-                        }
-                    });
-
-                    builder.setPositiveButton("Acquista", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(final DialogInterface dialog, int which) {
-
-                            String url = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
-                                    .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
-
-                            try {
-
-                                JSONObject record = Record.Builder
-                                        .create(-Float.parseFloat(mCurrentEvent.mPrice), Record.Keys.BUY,MainActivity.mCurrentUser.email)
-                                        .withEvent(mCurrentEvent.mId)
-                                        .build().toJson();
-
-                                CustomRequest createRecordRequest = new CustomRequest(Request.Method.PUT,
-                                        url, record,
-                                        new Response.Listener<JSONObject>() {
-
-                                            @Override
-                                            public void onResponse(JSONObject response) {
-
-                                                try {
-
-                                                    Record insertedRecord = Record.fromJson(response);
-
-                                                    //update balance
-                                                    MainActivity.mCurrentUser.updateBalance(insertedRecord.mAmount);
-
-                                                    UserManager.get().save(MainActivity.mCurrentUser);
-
-                                                    dialog.dismiss();
-
-                                                    Snackbar.make(v,
-                                                            "Biglietto acquistato con successo!", Snackbar.LENGTH_SHORT)
-                                                            .show();
-
-                                                    hideFAB();
-
-                                                } catch (JSONException e) {
-
-                                                    e.printStackTrace();
-                                                    dialog.dismiss();
-                                                }
-
-
-                                            }
-                                        }, new Response.ErrorListener() {
-
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-
-                                        error.printStackTrace();
-                                    }
-                                }
-                                );
-
-                                VolleyRequest.get(v.getContext()).add(createRecordRequest);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                } else {
-
-                    builder.setTitle("Credito insufficiente");
-                    builder.setMessage("Non hai abbastanza credito per aquistare questo biglietto!");
-
-                    builder.setNegativeButton("Cancella", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                }
-
-
-                builder.show();
-            }
-        });
-
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-
-                intent.putExtra(Intent.EXTRA_TEXT,
-                        "Guarda questo evento su FourEvent: http://annina.cs.unibo.it:8080/api/event"
-                                + mCurrentEvent);
-
-                startActivity(Intent.createChooser(intent, "Condividi l'evento"));
-
-            }
-        });
 
         setInfo(mCurrentEvent);
 
@@ -262,49 +156,9 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         showMap();
     }
 
-
-    private void expandFAB() {
-
-        //Floating Action Button 1
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
-        layoutParams.rightMargin += (int) (fab1.getWidth() * 1.7);
-        layoutParams.bottomMargin += (int) (fab1.getHeight() * 0.25);
-        fab1.setLayoutParams(layoutParams);
-        fab1.startAnimation(show_fab_1);
-        fab1.setClickable(true);
-
-        //Floating Action Button 2
-        FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) fab2.getLayoutParams();
-        layoutParams2.rightMargin += (int) (fab2.getWidth() * 1.5);
-        layoutParams2.bottomMargin += (int) (fab2.getHeight() * 1.5);
-        fab2.setLayoutParams(layoutParams2);
-        fab2.startAnimation(show_fab_2);
-        fab2.setClickable(true);
-
-    }
-
-    private void hideFAB() {
-
-        //Floating Action Button 1
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) fab1.getLayoutParams();
-        layoutParams.rightMargin -= (int) (fab1.getWidth() * 1.7);
-        layoutParams.bottomMargin -= (int) (fab1.getHeight() * 0.25);
-        fab1.setLayoutParams(layoutParams);
-        fab1.startAnimation(hide_fab_1);
-        fab1.setClickable(false);
-
-        //Floating Action Button 2
-        FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) fab2.getLayoutParams();
-        layoutParams2.rightMargin -= (int) (fab2.getWidth() * 1.5);
-        layoutParams2.bottomMargin -= (int) (fab2.getHeight() * 1.5);
-        fab2.setLayoutParams(layoutParams2);
-        fab2.startAnimation(hide_fab_2);
-        fab2.setClickable(false);
-    }
-
     private void showMap() {
 
-        if(mGoogleMap == null || mCurrentEvent == null) {
+        if (mGoogleMap == null || mCurrentEvent == null) {
 
             return;
         }
@@ -325,8 +179,8 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         String participations = event.mParticipation + "/" + event.mMaxTicket;
         String price = event.mPrice + "€";
 
-        String time = DateConverter.getTime(event.mStartDate,event.mEndDate);
-        String date = DateConverter.getDate(event.mStartDate,event.mEndDate);
+        String time = DateConverter.getTime(event.mStartDate, event.mEndDate);
+        String date = DateConverter.getDate(event.mStartDate, event.mEndDate);
 
         ((TextView) findViewById(R.id.detail_title)).setText(event.mTitle);
         ((TextView) findViewById(R.id.detail_date)).setText(date);
@@ -347,5 +201,201 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                         .show();
             }
         };
+    }
+
+    public void animateFAB() {
+
+        if (isFabOpen) {
+
+            fab.startAnimation(rotate_backward);
+            fab1.startAnimation(fab_close);
+            fab2.startAnimation(fab_close);
+            fab1.setClickable(false);
+            fab2.setClickable(false);
+            isFabOpen = false;
+            Log.d("Raj", "close");
+
+        } else {
+
+            fab.startAnimation(rotate_forward);
+            fab1.startAnimation(fab_open);
+            fab2.startAnimation(fab_open);
+            fab1.setClickable(true);
+            fab2.setClickable(true);
+            isFabOpen = true;
+            Log.d("Raj", "open");
+
+        }
+    }
+
+    private void buyTicket() {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(fab2.getContext());
+
+        String message;
+        String title;
+
+        DialogInterface.OnClickListener positiveListener;
+        String positiveListenerText;
+
+        //se il costo del biglietto è inferiore al bilancio del portafoglio dell'utente
+        if (Float.parseFloat(mCurrentEvent.mPrice) <= MainActivity.mCurrentUser.balance) {
+
+            message = "Il biglietto ha un costo di " + mCurrentEvent.mPrice + " €." +
+                    "\n\nHai un totale di " + MainActivity.mCurrentUser.balance + " €.\n\nVuoi acquistarlo?";
+
+            title = "Acquisto biglietto";
+
+            positiveListenerText = "Acquista";
+            positiveListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(final DialogInterface dialog, int which) {
+
+                    String url = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
+                            .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
+
+                    try {
+
+                        JSONObject record = Record.Builder
+                                .create(-Float.parseFloat(mCurrentEvent.mPrice), Record.Keys.BUY, MainActivity.mCurrentUser.email)
+                                .withEvent(mCurrentEvent.mId)
+                                .build().toJson();
+
+                        CustomRequest createRecordRequest = new CustomRequest(Request.Method.PUT,
+                                url, record,
+                                new Response.Listener<JSONObject>() {
+
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+
+                                        handleResponse(response);
+
+                                    }
+                                }, new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                                String json = null;
+
+                                NetworkResponse response = error.networkResponse;
+                                if(response != null && response.data != null){
+                                    switch(response.statusCode){
+                                        case 403:
+                                            json = new String(response.data);
+                                            json = trimMessage(json, "message");
+                                            if(json != null) displayMessage(json);
+                                            break;
+
+                                        default:
+                                            break;
+                                    }
+                                }
+                            }
+                        });
+
+                        VolleyRequest.get(fab2.getContext()).add(createRecordRequest);
+
+                    } catch (JSONException | ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+        } else {
+
+            title = "Credito insufficiente";
+            message = "Non hai abbastanza crediti per aquistare questo biglietto, ricarica il portafoglio!!";
+
+            positiveListenerText = "Ricarica portafoglio";
+            positiveListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    //TODO Aprire il portafoglio in questo caso @Valentina
+                    startActivityForResult(new Intent(thisActivity, MainActivity.class),MainActivity.WALLET_CODE);
+                }
+            };
+        }
+
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setNegativeButton("Cancella", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton(positiveListenerText,positiveListener);
+
+        mAlertDialog = builder.show();
+    }
+
+    private void handleResponse(JSONObject response) {
+
+        try {
+
+            Record insertedRecord = Record.fromJson(response);
+
+            MainActivity.mCurrentUser.updateBalance(insertedRecord.mAmount);
+
+            UserManager.get().save(MainActivity.mCurrentUser);
+
+            mAlertDialog.dismiss();
+
+            Snackbar responseSnackBar = Snackbar.make(fab2,
+                    "Biglietto acquistato con successo!", Snackbar.LENGTH_LONG);
+
+            responseSnackBar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.lightGreen));
+
+            responseSnackBar.show();
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+            mAlertDialog.dismiss();
+        }
+
+        animateFAB();
+    }
+
+    private void shareEvent() {
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+        intent.putExtra(Intent.EXTRA_TEXT,
+                "Guarda questo evento su FourEvent: http://annina.cs.unibo.it:8080/api/event"
+                        + mCurrentEvent.mId);
+
+        startActivity(Intent.createChooser(intent, "Condividi l'evento"));
+    }
+
+    private String trimMessage(String json, String key){
+        String trimmedString = null;
+
+        try{
+            JSONObject obj = new JSONObject(json);
+            trimmedString = obj.getString(key);
+        } catch(JSONException e){
+            e.printStackTrace();
+            return null;
+        }
+
+        return trimmedString;
+    }
+
+    private void displayMessage(String snackBarString){
+
+        Snackbar snackbarError = Snackbar.make(fab, snackBarString,
+                Snackbar.LENGTH_LONG);
+
+        View snackbarView = snackbarError.getView();
+
+        snackbarView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.lightRed));
+
+        snackbarError.show();
     }
 }

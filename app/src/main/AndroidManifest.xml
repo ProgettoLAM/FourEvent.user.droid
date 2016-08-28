@@ -13,10 +13,15 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.NFC" />
 
     <!-- Libreria grafica per la visualizzazione delle mappe -->
     <uses-feature
         android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <uses-feature
+        android:name="android.hardware.nfc"
         android:required="true" />
 
     <application
@@ -50,12 +55,13 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".TicketActivity"
+            android:name=".TicketDetailsActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.myTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".DetailsEventActivity" />
+
         </activity>
         <activity
             android:name=".SplashActivity"

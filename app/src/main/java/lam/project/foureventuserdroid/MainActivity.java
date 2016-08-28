@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity
     private Location mCurrentLocation;
 
     private Fragment profileFragment;
+    public static int WALLET_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -321,6 +322,16 @@ public class MainActivity extends AppCompatActivity
             }
         }
         profileFragment.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == WALLET_CODE) {
+
+            if(resultCode == RESULT_OK) {
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.anchor_point, new WalletFragment())
+                        .commit();
+            }
+        }
     }
 
     public void manageLocationPermission() {
