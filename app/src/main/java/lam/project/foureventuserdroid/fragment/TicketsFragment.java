@@ -86,7 +86,7 @@ public class TicketsFragment extends Fragment {
 
     private void setModel(){
 
-        String url = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
+        String url = FourEventUri.Builder.create(FourEventUri.Keys.TICKET)
                 .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
 
         RecordListRequest request = new RecordListRequest(url, null,
@@ -107,9 +107,6 @@ public class TicketsFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Snackbar.make(getView(), "Error: " + error.getLocalizedMessage(), Snackbar.LENGTH_SHORT)
-                                .setAction("action", null)
-                                .show();
 
                         sadEmoticon.setVisibility(View.VISIBLE);
                         notEvents.setVisibility(View.VISIBLE);
