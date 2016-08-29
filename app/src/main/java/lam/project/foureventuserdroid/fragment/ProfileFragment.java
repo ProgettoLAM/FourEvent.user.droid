@@ -163,13 +163,13 @@ public class ProfileFragment extends Fragment {
                         oldPassword = oldPasswordField.getText().toString();
                         newPassword = newPasswordField.getText().toString();
 
-                        if(user.password.equals(oldPassword) && newPassword.length() >= 8) {
+                        if(newPassword.length() >= 8) {
 
                             try {
                                 String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
-                                        .appendPath("changepassword/").appendEncodedPath(user.email).getUri();
+                                        .appendPath("changepassword").appendEncodedPath(user.email).getUri();
 
-                                JSONObject obj = new JSONObject("{'oldPassword':'"+user.password+"', 'newPassword':'"+newPassword+"'}");
+                                JSONObject obj = new JSONObject("{'oldPassword':'"+oldPassword+"', 'newPassword':'"+newPassword+"'}");
 
                                 CustomRequest request = new CustomRequest(Request.Method.POST, url, obj,
 
