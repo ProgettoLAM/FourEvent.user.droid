@@ -17,6 +17,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
@@ -41,6 +42,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import lam.project.foureventuserdroid.MainActivity;
@@ -115,7 +117,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        passProfile.setText(user.password);
         emailProfile.setText(user.email);
         nameProfile.setText(user.name);
         if(user.birthDate == null) {
@@ -177,27 +178,43 @@ public class ProfileFragment extends Fragment {
                                             @Override
                                             public void onResponse(JSONObject response) {
 
-                                                snackbar = Snackbar
-                                                        .make(getView(), response.toString(), Snackbar.LENGTH_LONG);
+                                                try{
 
-                                                snackbar.show();
+                                                    snackbar = Snackbar
+                                                            .make(getView(), response.getString("message"), Snackbar.LENGTH_LONG);
+                                                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightGreen));
+                                                    snackbar.show();
 
-                                                user.updatePassword(newPassword);
+                                                    dialog.dismiss();
 
-                                                UserManager.get().save(user);
+                                                } catch (JSONException e) {
 
-                                                dialog.cancel();
+                                                    e.printStackTrace();
+                                                }
+
 
                                             }
                                         }, new Response.ErrorListener() {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
 
-                                        snackbar = Snackbar
-                                                .make(getView(), error.toString(), Snackbar.LENGTH_LONG);
 
-                                        snackbar.show();
+                                        try {
+                                            String responseBody = new String( error.networkResponse.data, "utf-8" );
+                                            JSONObject jsonObject = new JSONObject( responseBody );
 
+                                            String errorText = (String) jsonObject.get("message");
+
+                                            snackbar = Snackbar
+                                                    .make(getView(), errorText, Snackbar.LENGTH_LONG);
+
+                                            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightRed));
+
+                                            snackbar.show();
+
+                                        } catch (NullPointerException | UnsupportedEncodingException | JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 });
 

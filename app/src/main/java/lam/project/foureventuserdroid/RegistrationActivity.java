@@ -113,14 +113,16 @@ public class RegistrationActivity extends AppCompatActivity {
 
             progressDialog.show();
 
-            final User user = User.Builder.create(email, password).build();
+            final User user = User.Builder.create(email).build();
 
             try {
+
+                JSONObject userJson = new JSONObject("{'email':'"+user.email+"','password':'"+password+"'}");
 
 
                 String url = FourEventUri.Builder.create(FourEventUri.Keys.USER).getUri();
 
-                CustomRequest request = new CustomRequest(Request.Method.PUT, url, user.toJson(),
+                CustomRequest request = new CustomRequest(Request.Method.PUT, url, userJson,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {

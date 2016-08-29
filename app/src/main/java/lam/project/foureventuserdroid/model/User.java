@@ -19,8 +19,6 @@ public class User implements Parcelable{
 
     public final String email;
 
-    public String password;
-
     public String name;
 
     public String birthDate;
@@ -35,12 +33,11 @@ public class User implements Parcelable{
 
     public List<Category> categories;
 
-    private User(final String email, final String password, final String name,
+    private User(final String email, final String name,
                  final String birthDate, final String location, final String gender,
                  final float balance, final String image){
 
         this.email = email;
-        this.password = password;
         this.name = name;
         this.birthDate = birthDate;
         this.location = location;
@@ -91,11 +88,6 @@ public class User implements Parcelable{
         return this;
     }
 
-    public User updatePassword(String password) {
-        this.password = password;
-        return this;
-    }
-
     public User updateImage(String image) {
         this.image = image;
         return this;
@@ -104,7 +96,6 @@ public class User implements Parcelable{
     protected User(Parcel in) {
 
         email = in.readString();
-        password = in.readString();
         balance = in.readFloat();
 
         boolean present = in.readByte() == Keys.PRESENT;
@@ -155,9 +146,8 @@ public class User implements Parcelable{
     public static User fromJson(final JSONObject jsonObject) throws JSONException{
 
         final String email = jsonObject.getString(Keys.EMAIL);
-        final String password = jsonObject.getString(Keys.PASSWORD);
 
-        Builder builder = Builder.create(email,password);
+        Builder builder = Builder.create(email);
 
         if (jsonObject.has(Keys.NAME)) {
             builder.withName(jsonObject.getString(Keys.NAME));
@@ -215,7 +205,6 @@ public class User implements Parcelable{
         final JSONObject jsonObject = new JSONObject();
 
         jsonObject.put(Keys.EMAIL, email);
-        jsonObject.put(Keys.PASSWORD, password);
         jsonObject.put(Keys.BALANCE,balance);
 
         if (name != null) {
@@ -267,7 +256,6 @@ public class User implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(email);
-        dest.writeString(password);
         dest.writeFloat(balance);
 
         if (name != null) {
@@ -318,8 +306,6 @@ public class User implements Parcelable{
 
         public static final String EMAIL = "email";
 
-        public static final String PASSWORD = "password";
-
         public static final String NAME = "name";
 
         public static final String BIRTH_DATE = "birth_date";
@@ -345,8 +331,6 @@ public class User implements Parcelable{
 
         private String mEmail;
 
-        private String mPassword;
-
         private String mName;
 
         private String mBirthDate;
@@ -362,15 +346,14 @@ public class User implements Parcelable{
         //TODO completare la classe, aggiungendo i parametri, completare i metodi e usare la classe
         //TODO parcelable, utilizzare il metodo opzionale anche per trasformazione JSON
 
-        private Builder(final String email,final String password){
+        private Builder(final String email){
 
             this.mEmail = email;
-            this.mPassword = password;
         }
 
-        public static Builder create(final String email, final String password){
+        public static Builder create(final String email){
 
-            return new Builder(email,password);
+            return new Builder(email);
         }
 
         public Builder withName(final String name){
@@ -410,7 +393,7 @@ public class User implements Parcelable{
         }
 
         public User build(){
-            return new User(mEmail,mPassword,mName,mBirthDate,mLocation,mGender,mBalance,mImage);
+            return new User(mEmail,mName,mBirthDate,mLocation,mGender,mBalance,mImage);
         }
     }
 }
