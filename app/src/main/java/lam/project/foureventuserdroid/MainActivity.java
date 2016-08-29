@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity
     private Location mCurrentLocation;
 
     private Fragment profileFragment;
-    public static int WALLET_CODE = 1;
+    public static int WALLET_CODE = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
