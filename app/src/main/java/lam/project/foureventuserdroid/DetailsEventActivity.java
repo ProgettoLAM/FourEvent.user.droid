@@ -213,8 +213,6 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
             fab1.setClickable(false);
             fab2.setClickable(false);
             isFabOpen = false;
-            Log.d("Raj", "close");
-
         } else {
 
             fab.startAnimation(rotate_forward);
@@ -223,8 +221,13 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
             fab1.setClickable(true);
             fab2.setClickable(true);
             isFabOpen = true;
-            Log.d("Raj", "open");
 
+        }
+
+        if(mCurrentEvent.mPrice.equals("FREE")) {
+
+            fab1.setVisibility(View.INVISIBLE);
+            fab2.setVisibility(View.INVISIBLE);
         }
     }
 
