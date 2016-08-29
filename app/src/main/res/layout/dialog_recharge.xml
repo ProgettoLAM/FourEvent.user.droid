@@ -15,7 +15,7 @@
         android:textSize="20dp"
         android:textColor="@color/colorPrimary"
         android:theme="@style/MyButton"
-        android:text="5"
+        android:text="5 €"
         android:onClick="onRecharge"
         style="@style/Widget.AppCompat.Button.Borderless"/>
 
@@ -27,7 +27,7 @@
         android:textSize="20dp"
         android:textColor="@color/colorPrimary"
         android:theme="@style/MyButton"
-        android:text="15"
+        android:text="15 €"
         android:onClick="onRecharge"
         style="@style/Widget.AppCompat.Button.Borderless"/>
 
@@ -40,7 +40,7 @@
         android:textColor="@color/colorPrimary"
         android:theme="@style/MyButton"
         android:onClick="onRecharge"
-        android:text="25"
+        android:text="25 €"
         style="@style/Widget.AppCompat.Button.Borderless"/>
 
 </LinearLayout>

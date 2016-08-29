@@ -56,6 +56,8 @@ public class TicketsFragment extends Fragment {
     private ImageView sadEmoticon;
     private TextView notEvents;
 
+    private final static String NAME = "Biglietti";
+
     public TicketsFragment() {}
 
 
@@ -68,6 +70,8 @@ public class TicketsFragment extends Fragment {
         setModel();
 
         final View rootView = inflater.inflate(R.layout.fragment_participation, container, false);
+
+        setTitle();
 
         sadEmoticon = (ImageView) rootView.findViewById(R.id.sad_emoticon);
         notEvents = (TextView) rootView.findViewById(R.id.not_events);
@@ -82,6 +86,10 @@ public class TicketsFragment extends Fragment {
 
         return rootView;
 
+    }
+
+    private void setTitle () {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);
     }
 
     private void setModel(){

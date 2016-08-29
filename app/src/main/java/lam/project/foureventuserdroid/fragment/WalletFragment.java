@@ -92,7 +92,7 @@ public class WalletFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                String value = ((Button) v).getText().toString();
+                String value = ((Button) v).getText().toString().split(" ")[0];
                 Float amount = Float.parseFloat(value);
                 try {
                     recharge(amount);
