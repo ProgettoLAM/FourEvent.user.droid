@@ -158,13 +158,12 @@
                                 android:id="@+id/pass_profile"
                                 android:layout_width="178dp"
                                 android:layout_height="wrap_content"
-                                android:text=""
                                 android:inputType="textPassword"
                                 android:textSize="15sp"
                                 android:paddingLeft="16dp"
                                 android:textColor="@color/darkerText"
                                 android:drawableLeft="@drawable/ic_pass_profile"
-                                android:gravity="center"/>
+                                android:gravity="center_vertical"/>
 
                             <ImageView
                                 android:id="@+id/change_pass"

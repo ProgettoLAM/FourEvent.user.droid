@@ -105,7 +105,7 @@ public class ProfileFragment extends Fragment {
             String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
                     .appendPath("img").appendEncodedPath(user.email).getUri();
 
-            Picasso.with(getContext()).load(url).resize(100, 100).into(imgProfile);
+            Picasso.with(getContext()).load(url).into(imgProfile);
         }
 
         imgProfile.setOnClickListener(new View.OnClickListener() {
@@ -336,6 +336,7 @@ public class ProfileFragment extends Fragment {
                 fo.close();
 
                 imgProfile.setImageBitmap(bm);
+                refreshNavbarImage(bm);
                 uploadImage(destination);
 
             } catch (IOException e) {
@@ -371,7 +372,9 @@ public class ProfileFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         imgProfile.setImageBitmap(thumbnail);
+        refreshNavbarImage(thumbnail);
         uploadImage(destination);
     }
 
@@ -398,6 +401,9 @@ public class ProfileFragment extends Fragment {
                 user.updateImage(mImageUri);
                 loading.dismiss();
 
+                //refresh immagine
+
+
             }
         },toUploadFile,"filename");
 
@@ -405,4 +411,10 @@ public class ProfileFragment extends Fragment {
 
     }
 
+
+    private void refreshNavbarImage(Bitmap bm) {
+
+        ((CircleImageView) MainActivity.headerView.findViewById(R.id.profile_image))
+                .setImageBitmap(bm);
+    }
 }

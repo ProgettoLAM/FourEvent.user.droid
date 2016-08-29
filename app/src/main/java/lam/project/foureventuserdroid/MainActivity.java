@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_ACCESS_LOCATION = 2;
     private static final int MAX_GEOCODER_RESULTS = 5;
 
-    View headerView;
+    public static View headerView;
 
     private boolean mResolvingError;
 
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity
 
             mCurrentUser = UserManager.get(getApplicationContext()).getUser();
 
-            this.headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+            headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
 
             TextView name = (TextView) headerView.findViewById(R.id.name);
             TextView location = (TextView) headerView.findViewById(R.id.location);
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity
                 String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
                         .appendPath("img").appendEncodedPath(mCurrentUser.email).getUri();
 
-                Picasso.with(this).load(url).resize(70, 70).into(imgUser);
+                Picasso.with(this).load(url).into(imgUser);
             }
 
 
