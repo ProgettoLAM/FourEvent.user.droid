@@ -50,13 +50,4 @@
         android:layout_gravity="center"
         android:visibility="invisible"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/events_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:tint="@color/colorPrimary"
-        android:src="@drawable/fab_filter" />
-
 </FrameLayout>

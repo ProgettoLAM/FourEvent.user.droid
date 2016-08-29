@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import lam.project.foureventuserdroid.fragment.eventFragment.AllEventsFragment;
-import lam.project.foureventuserdroid.fragment.eventFragment.NearEventsFragment;
-import lam.project.foureventuserdroid.fragment.eventFragment.PopularEventsFragment;
+import lam.project.foureventuserdroid.fragment.eventFragment.PoularsEventsFragment;
+import lam.project.foureventuserdroid.fragment.eventFragment.CategoriesEventsFragment;
 
 
 /**
@@ -36,11 +36,11 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 break;
 
             case 1:
-                selectedFragment = new PopularEventsFragment();
+                selectedFragment = new CategoriesEventsFragment();
                 break;
 
             case 2:
-                selectedFragment = new NearEventsFragment();
+                selectedFragment = new PoularsEventsFragment();
                 break;
 
             default:
