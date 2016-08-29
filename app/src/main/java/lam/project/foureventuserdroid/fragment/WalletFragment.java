@@ -31,6 +31,8 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,7 +59,7 @@ public class WalletFragment extends Fragment {
     private TimeLineAdapter mTimeLineAdapter;
     private ProgressBar mProgressBar;
 
-    private List<Record> mDataList = new ArrayList<>();
+    private LinkedList<Record> mDataList = new LinkedList<>();
 
     private TextView mTxtBalance;
 
@@ -240,6 +242,8 @@ public class WalletFragment extends Fragment {
                 mDataList.clear();
                 mDataList.addAll(response);
 
+                Collections.reverse(mDataList);
+
                 mTimeLineAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
@@ -284,7 +288,8 @@ public class WalletFragment extends Fragment {
                                 //ritorna l'oggetto che viene parsato e aggiunto
                                 Record insertedRecord = Record.fromJson(response);
 
-                                mDataList.add(insertedRecord);
+                                mDataList.addFirst(insertedRecord);
+
                                 mTimeLineAdapter.notifyDataSetChanged();
 
                                 //update balance
