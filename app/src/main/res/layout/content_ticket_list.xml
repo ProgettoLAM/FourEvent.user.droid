@@ -1,0 +1,59 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:paddingTop="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:background="?android:attr/selectableItemBackground">
+
+
+    <TextView
+        android:id="@+id/title_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:textColor="@color/darkerText"
+        android:text="titolo"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/date_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="24dp"
+        android:layout_toRightOf="@id/img_event"
+        android:layout_below="@id/title_event"
+        android:textColor="@color/lightText"
+        android:textSize="14sp"
+        android:text="data"
+        />
+
+    <TextView
+        android:id="@+id/price_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/title_event"
+        android:textColor="@color/colorPrimary"
+        android:text="15€"
+        android:textSize="14sp"
+        />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#eee"
+        android:layout_below="@id/date_event"
+        android:layout_toRightOf="@id/img_event"
+        android:layout_marginLeft="16dp"
+        />
+
+</RelativeLayout>

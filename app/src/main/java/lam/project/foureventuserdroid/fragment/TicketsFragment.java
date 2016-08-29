@@ -13,10 +13,14 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,30 +33,91 @@ import java.util.List;
 import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.TicketDetailsActivity;
+import lam.project.foureventuserdroid.fragment.recyclerView.TicketAdapter;
+import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.model.Record;
+import lam.project.foureventuserdroid.utils.connection.CustomRequest;
+import lam.project.foureventuserdroid.utils.connection.EventListRequest;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.connection.RecordListRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
+
+import static android.view.View.INVISIBLE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class TicketsFragment extends Fragment {
 
-    private List<Record> mRecords = new ArrayList<>();
-    private TextView mTickets;
+    private List<Record> mRecords;
+    private RecyclerView mRecyclerView;
+    private TicketAdapter mAdapter;
 
+    private ImageView sadEmoticon;
+    private TextView notEvents;
 
-    public TicketsFragment() {
-        // Required empty public constructor
-    }
+    public TicketsFragment() {}
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        startActivity(new Intent(getContext(), TicketDetailsActivity.class));
-        return inflater.inflate(R.layout.fragment_participation, container, false);
+        //startActivity(new Intent(getContext(), TicketDetailsActivity.class));
+        mRecords = new ArrayList<>();
+        setModel();
+
+        final View rootView = inflater.inflate(R.layout.fragment_participation, container, false);
+
+        sadEmoticon = (ImageView) rootView.findViewById(R.id.sad_emoticon);
+        notEvents = (TextView) rootView.findViewById(R.id.not_events);
+
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.tickets_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mAdapter = new TicketAdapter(getActivity(), mRecords);
+
+        mRecyclerView.setAdapter(mAdapter);
+
+        return rootView;
+
+    }
+
+    private void setModel(){
+
+        String url = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
+                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
+
+        RecordListRequest request = new RecordListRequest(url, null,
+                new Response.Listener<List<Record>>() {
+                    @Override
+                    public void onResponse(List<Record> response) {
+
+                        mRecords.clear();
+                        mRecords.addAll(response);
+
+                        mAdapter.notifyDataSetChanged();
+
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                        sadEmoticon.setVisibility(INVISIBLE);
+                        notEvents.setVisibility(INVISIBLE);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Snackbar.make(getView(), "Error: " + error.getLocalizedMessage(), Snackbar.LENGTH_SHORT)
+                                .setAction("action", null)
+                                .show();
+
+                        sadEmoticon.setVisibility(View.VISIBLE);
+                        notEvents.setVisibility(View.VISIBLE);
+                        mRecyclerView.setVisibility(INVISIBLE);
+
+                    }
+                });
+
+        VolleyRequest.get(getContext()).add(request);
     }
 }
