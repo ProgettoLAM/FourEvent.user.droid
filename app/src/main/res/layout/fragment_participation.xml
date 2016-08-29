@@ -15,7 +15,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/ic_sad_emoticon"
-        android:layout_gravity="center"
+        android:layout_centerInParent="true"
         android:layout_marginTop="-40dp"
         android:visibility="invisible"
         />
@@ -27,7 +27,7 @@
         android:text="Non sono presenti biglietti acquistati"
         android:textSize="20dp"
         android:textColor="#999"
-        android:layout_gravity="center"
+        android:layout_below="@id/sad_emoticon"
         android:visibility="invisible"/>
 
    <!-- <TextView
