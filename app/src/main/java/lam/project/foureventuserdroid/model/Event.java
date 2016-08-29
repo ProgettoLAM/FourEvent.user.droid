@@ -22,6 +22,8 @@ public class Event implements Parcelable{
 
     public final String mDescription;
 
+    public final String mAuthor;
+
     public final String mStartDate;
 
     public String mEndDate;
@@ -44,14 +46,15 @@ public class Event implements Parcelable{
 
     public boolean mIsPreferred;
 
-    private Event(final String id, final String title, final String description, final String startDate,
-                  final String endDate, final String tag, final String address, final float latitude,
-                  final float longitude, final String price, final int participation, final String image,
-                  final int maxTic){
+    private Event(final String id, final String title, final String description, final String author,
+                  final String startDate, final String endDate, final String tag, final String address,
+                  final float latitude, final float longitude, final String price, final int participation,
+                  final String image, final int maxTic){
 
         this.mId = id;
         this.mTitle = title;
         this.mDescription = description;
+        this.mAuthor = author;
         this.mStartDate = startDate;
         this.mEndDate = endDate;
         this.mTag = tag;
@@ -109,6 +112,7 @@ public class Event implements Parcelable{
 
         mTitle = in.readString();
         mDescription = in.readString();
+        mAuthor = in.readString();
         mStartDate = in.readString();
         mTag = in.readString();
         mAddress = in.readString();
@@ -146,7 +150,7 @@ public class Event implements Parcelable{
 
         final String title = jsonObject.getString(Keys.TITLE);
         final String description = jsonObject.getString(Keys.DESCRIPTION);
-
+        final String author = jsonObject.getString(Keys.AUTHOR);
         final String startDate = DateConverter.fromMillis(jsonObject.getLong(Keys.START_DATE));
 
         final String tag = jsonObject.getString(Keys.TAG);
@@ -156,7 +160,7 @@ public class Event implements Parcelable{
         final float latitude = BigDecimal.valueOf(jsonObject.getDouble(Keys.LATITUDE)).floatValue();
         final float longitude = BigDecimal.valueOf(jsonObject.getDouble(Keys.LONGITUDE)).floatValue();
 
-        Builder builder = Builder.create(title, description, startDate).withTag(tag).withAddress(address)
+        Builder builder = Builder.create(title, description, author, startDate).withTag(tag).withAddress(address)
                 .withLocation(latitude,longitude).withPrice(price).withImage(image);
 
         if(jsonObject.has(Keys.END_DATE)) {
@@ -192,6 +196,7 @@ public class Event implements Parcelable{
 
         jsonObject.put(Keys.TITLE, mTitle);
         jsonObject.put(Keys.DESCRIPTION, mDescription);
+        jsonObject.put(Keys.AUTHOR, mAuthor);
 
         jsonObject.put(Keys.TAG, mTag);
         jsonObject.put(Keys.ADDRESS, mAddress);
@@ -240,6 +245,7 @@ public class Event implements Parcelable{
         }
         dest.writeString(mTitle);
         dest.writeString(mDescription);
+        dest.writeString(mAuthor);
         dest.writeString(mStartDate);
         dest.writeString(mTag);
         dest.writeString(mAddress);
@@ -281,6 +287,7 @@ public class Event implements Parcelable{
         public static final String ADDRESS = "address";
         public static final String LATITUDE = "latitude";
         public static final String LONGITUDE = "longitude";
+        public static final String AUTHOR = "author";
         public static final String PRICE = "price";
         public static final String PARTICIPATION = "participations";
         public static final String MAX_TICKETS = "tickets";
@@ -305,23 +312,25 @@ public class Event implements Parcelable{
         private String mAddress;
         private float mLatitude;
         private float mLongitude;
+        private String mAuthor;
         private String mPrice;
         private int mParticipation;
         private String mImage;
         private int mMaxTicket;
 
 
-        private Builder(final String title, final String description, final String startDate){
+        private Builder(final String title, final String description, final String author, final String startDate){
 
             this.mTitle = title;
             this.mDescription = description;
             this.mStartDate = startDate;
+            this.mAuthor = author;
         }
 
-        public static Builder create(final String title, final String description,
+        public static Builder create(final String title, final String description, final String author,
                                      final String startDate){
 
-            return new Builder(title, description, startDate);
+            return new Builder(title, description, author, startDate);
         }
 
         public Builder withTag(final String tag){
@@ -375,7 +384,7 @@ public class Event implements Parcelable{
 
         public Event build(){
 
-            return new Event(mId,mTitle, mDescription, mStartDate, mEndDate, mTag, mAddress, mLatitude,
+            return new Event(mId,mTitle, mDescription, mAuthor, mStartDate, mEndDate, mTag, mAddress, mLatitude,
                             mLongitude, mPrice, mParticipation, mImage, mMaxTicket);
         }
     }

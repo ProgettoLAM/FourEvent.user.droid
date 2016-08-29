@@ -31,12 +31,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.model.Record;
@@ -107,6 +109,15 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         fab.setOnClickListener(fabClickListener);
         fab1.setOnClickListener(fabClickListener);
         fab2.setOnClickListener(fabClickListener);
+
+        CircleImageView imgUser = (CircleImageView) findViewById(R.id.profile_image);
+        TextView nameAuthor = (TextView) findViewById(R.id.profile_owner_name);
+        nameAuthor.setText(mCurrentEvent.mAuthor);
+
+        String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
+                .appendPath("img").appendEncodedPath(mCurrentEvent.mAuthor).getUri();
+
+        Picasso.with(this).load(url).resize(50, 50).into(imgUser);
 
         //Per disabilitare autofocus all'apertura della Activity
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);

@@ -3,6 +3,7 @@ package lam.project.foureventuserdroid.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +50,7 @@ import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.Utility;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
+import lam.project.foureventuserdroid.utils.connection.MultipartRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
@@ -58,6 +61,8 @@ public class ProfileFragment extends Fragment {
 
     private final String NAME = "Profilo";
 
+    private User user;
+
     private String oldPassword;
     private String newPassword;
     private Snackbar snackbar;
@@ -65,7 +70,6 @@ public class ProfileFragment extends Fragment {
     private String mImageUri;
 
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
-    private int REQUEST_ADDRESS = 3;
     private String userChoosenTask;
 
     private CircleImageView imgProfile;
@@ -80,7 +84,7 @@ public class ProfileFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        final User user = UserManager.get().getUser();
+        user = UserManager.get().getUser();
 
         ImageView editPass = (ImageView) view.findViewById(R.id.change_pass);
 
@@ -91,6 +95,19 @@ public class ProfileFragment extends Fragment {
         TextView locationProfile = (TextView) view.findViewById(R.id.location_profile);
         TextView genderProfile = (TextView) view.findViewById(R.id.gender_profile);
         imgProfile = (CircleImageView) view.findViewById(R.id.profile_image);
+
+        if(user.image == null) {
+            if(user.gender.equals("F")) {
+                imgProfile.setImageResource(R.drawable.img_female);
+            }
+        }
+        else {
+            String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
+                    .appendPath("img").appendEncodedPath(user.email).getUri();
+
+            Picasso.with(getContext()).load(url).resize(100, 100).into(imgProfile);
+        }
+
         imgProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -305,11 +322,28 @@ public class ProfileFragment extends Fragment {
         if (data != null) {
             try {
                 bm = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bm.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+                mImageUri = System.currentTimeMillis() + ".jpg";
+
+                File destination = new File(Environment.getExternalStorageDirectory(),
+                        mImageUri);
+                FileOutputStream fo;
+                destination.createNewFile();
+                fo = new FileOutputStream(destination);
+                fo.write(bytes.toByteArray());
+                fo.close();
+
+                imgProfile.setImageBitmap(bm);
+                uploadImage(destination);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        imgProfile.setImageBitmap(bm);
+
+
     }
 
     //Risultato dell'immagine scattata dalla fotocamera
@@ -326,16 +360,49 @@ public class ProfileFragment extends Fragment {
                 mImageUri);
         FileOutputStream fo;
         try {
+
             destination.createNewFile();
             fo = new FileOutputStream(destination);
             fo.write(bytes.toByteArray());
             fo.close();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
         imgProfile.setImageBitmap(thumbnail);
+        uploadImage(destination);
+    }
+
+    private void uploadImage(File toUploadFile) {
+
+        String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
+                .appendPath("img").appendEncodedPath(user.email).getUri();
+
+        final ProgressDialog loading = ProgressDialog.show(getContext(), "Immagine dell'evento", "Caricamento in corso..", false, false);
+
+        MultipartRequest mMultipartRequest = new MultipartRequest(url, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Snackbar.make(getView(), "Errore nel caricamento dell'immagine", Snackbar.LENGTH_SHORT)
+                        .show();
+                loading.dismiss();
+            }
+        }, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Snackbar.make(getView(), "Immagine caricata!", Snackbar.LENGTH_SHORT)
+                        .show();
+                mImageUri = response;
+                user.updateImage(mImageUri);
+                loading.dismiss();
+
+            }
+        },toUploadFile,"filename");
+
+        VolleyRequest.get(getContext()).add(mMultipartRequest);
+
     }
 
 }

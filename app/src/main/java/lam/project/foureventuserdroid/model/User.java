@@ -31,10 +31,13 @@ public class User implements Parcelable{
 
     public float balance;
 
+    public String image;
+
     public List<Category> categories;
 
     private User(final String email, final String password, final String name,
-                 final String birthDate, final String location, final String gender, final float balance){
+                 final String birthDate, final String location, final String gender,
+                 final float balance, final String image){
 
         this.email = email;
         this.password = password;
@@ -43,6 +46,7 @@ public class User implements Parcelable{
         this.location = location;
         this.gender = gender;
         this.balance = balance;
+        this.image = image;
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -92,6 +96,11 @@ public class User implements Parcelable{
         return this;
     }
 
+    public User updateImage(String image) {
+        this.image = image;
+        return this;
+    }
+
     protected User(Parcel in) {
 
         email = in.readString();
@@ -133,6 +142,12 @@ public class User implements Parcelable{
         else
             categories = null;
 
+        present = in.readByte() == Keys.PRESENT;
+        if(present) {
+            image = in.readString();
+        }
+        else
+            image = null;
 
     }
 
@@ -187,8 +202,10 @@ public class User implements Parcelable{
             user.addCategories(categories);
         }
 
+        if(jsonObject.has(Keys.IMAGE)){
 
-
+            builder.withImage(jsonObject.getString(Keys.IMAGE));
+        }
 
         return user;
     }
@@ -232,6 +249,11 @@ public class User implements Parcelable{
             }
 
             jsonObject.put(Keys.CATEGORIES,array);
+        }
+
+        if (image != null) {
+
+            jsonObject.put(Keys.IMAGE, image);
         }
 
         return jsonObject;
@@ -283,6 +305,13 @@ public class User implements Parcelable{
         }
         else
             dest.writeByte(Keys.NOT_PRESENT);
+
+        if (image != null) {
+            dest.writeByte(Keys.PRESENT);
+            dest.writeString(image);
+        }
+        else
+            dest.writeByte(Keys.NOT_PRESENT);
     }
 
     public static class Keys{
@@ -305,6 +334,8 @@ public class User implements Parcelable{
 
         public static final String BALANCE = "balance";
 
+        public static final String IMAGE = "image";
+
         public static final Byte PRESENT = 1;
 
         public static final Byte NOT_PRESENT = 0;
@@ -325,6 +356,8 @@ public class User implements Parcelable{
         private String mGender;
 
         private float mBalance;
+
+        private String mImage;
 
         //TODO completare la classe, aggiungendo i parametri, completare i metodi e usare la classe
         //TODO parcelable, utilizzare il metodo opzionale anche per trasformazione JSON
@@ -370,8 +403,14 @@ public class User implements Parcelable{
             return this;
         }
 
+        public Builder withImage(final String image) {
+
+            this.mImage = image;
+            return this;
+        }
+
         public User build(){
-            return new User(mEmail,mPassword,mName,mBirthDate,mLocation,mGender,mBalance);
+            return new User(mEmail,mPassword,mName,mBirthDate,mLocation,mGender,mBalance,mImage);
         }
     }
 }

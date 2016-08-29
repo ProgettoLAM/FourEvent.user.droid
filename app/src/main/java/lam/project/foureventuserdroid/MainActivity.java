@@ -34,11 +34,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import lam.project.foureventuserdroid.complete_profile.StepManager;
 import lam.project.foureventuserdroid.complete_profile.CompleteProfileActivity;
 import lam.project.foureventuserdroid.fragment.EventsFragment;
@@ -47,6 +49,7 @@ import lam.project.foureventuserdroid.fragment.TicketsFragment;
 import lam.project.foureventuserdroid.fragment.ProfileFragment;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
 import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.shared_preferences.CategoryManager;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
@@ -111,8 +114,22 @@ public class MainActivity extends AppCompatActivity
 
             TextView name = (TextView) headerView.findViewById(R.id.name);
             TextView location = (TextView) headerView.findViewById(R.id.location);
+            CircleImageView imgUser = (CircleImageView) headerView.findViewById(R.id.profile_image);
+
             name.setText(mCurrentUser.name);
             location.setText(mCurrentUser.location);
+
+            if(mCurrentUser.image == null) {
+                if(mCurrentUser.gender.equals("F")) {
+                    imgUser.setImageResource(R.drawable.img_female);
+                }
+            }
+            else {
+                String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
+                        .appendPath("img").appendEncodedPath(mCurrentUser.email).getUri();
+
+                Picasso.with(this).load(url).resize(70, 70).into(imgUser);
+            }
 
 
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -321,7 +338,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
-        profileFragment.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == WALLET_CODE) {
 
@@ -332,6 +348,8 @@ public class MainActivity extends AppCompatActivity
                         .commit();
             }
         }
+        profileFragment.onActivityResult(requestCode, resultCode, data);
+
     }
 
     public void manageLocationPermission() {
