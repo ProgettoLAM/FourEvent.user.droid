@@ -74,6 +74,10 @@ public class Event implements Parcelable{
         return mPrice.equals(Keys.FREE);
     }
 
+    public void updateWillParticipate() {
+        this.mWillPartecipate = !mWillPartecipate;
+    }
+
     public boolean willPartecipate() {
         return this.mWillPartecipate;
     }

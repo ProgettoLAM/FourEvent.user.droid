@@ -159,18 +159,6 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         ((TextView) findViewById(R.id.detail_time)).setText(time);
 
 
-        if(event.isFree()) {
-
-            if(event.willPartecipate()) {
-
-                fab2.setImageResource(R.drawable.ic_participation_full);
-
-            } else {
-
-                fab2.setImageResource(R.drawable.ic_participation_line);
-            }
-        }
-
         TextView nameAuthor = (TextView) findViewById(R.id.profile_owner_name);
         nameAuthor.setText(mCurrentEvent.mAuthor);
 
@@ -220,6 +208,18 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
     private void updateParticipations(String participations) {
 
         detailTickets.setText(participations);
+
+        if(mCurrentEvent.isFree()) {
+
+            if(mCurrentEvent.willPartecipate()) {
+
+                fab2.setImageResource(R.drawable.ic_participation_full);
+
+            } else {
+
+                fab2.setImageResource(R.drawable.ic_participation_line);
+            }
+        }
     }
 
     //endregion
@@ -354,8 +354,12 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                                 responseSnackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(),
                                         R.color.lightGreen));
 
-                                mCurrentEvent.incrementParticipation();
-                                updateParticipations(""+mCurrentEvent.mParticipation);
+                                responseSnackbar.show();
+
+                                mCurrentEvent.updateWillParticipate();
+
+                                updateParticipations(""+response.getInt("participations"));
+
 
                             } catch (JSONException e) {
 
