@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class DateConverter {
 
     private static final String FORMATTER = "dd/MM - HH:mm";
+    private static final String FORMATTER_DATE = "dd/MM/yyyy - HH:mm";
     private static final String DIVIDER = " - ";
 
     public static String fromMillis(long millis) {
@@ -31,6 +32,13 @@ public class DateConverter {
     public static String toMillis(String date) throws ParseException{
 
         Date parsedDate = new SimpleDateFormat(FORMATTER,Locale.ITALY).parse(date);
+
+        return Long.toString(parsedDate.getTime());
+    }
+
+    public static String toMillisComplete(String date) throws ParseException{
+
+        Date parsedDate = new SimpleDateFormat(FORMATTER_DATE,Locale.ITALY).parse(date);
 
         return Long.toString(parsedDate.getTime());
     }
@@ -59,9 +67,19 @@ public class DateConverter {
 
         if(end != null && !startDate.equals(endDate)) {
 
-            time += DIVIDER + startDate;
+            time += DIVIDER + endDate;
         }
 
         return time;
+    }
+    public static long addYear(String date) {
+        GregorianCalendar cal = new GregorianCalendar();
+        try {
+            return Long.valueOf(toMillisComplete(date.split(" - ")[0] + "/" + cal.get(Calendar.YEAR) + " - "+ date.split(" - ")[1]));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+
     }
 }

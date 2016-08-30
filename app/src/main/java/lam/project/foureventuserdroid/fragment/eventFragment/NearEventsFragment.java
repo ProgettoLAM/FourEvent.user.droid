@@ -38,6 +38,7 @@ import lam.project.foureventuserdroid.utils.connection.EventListRequest;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
+import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 
 /**
@@ -146,7 +147,8 @@ public class NearEventsFragment extends Fragment {
 
     private void setModel(){
 
-        String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT).getUri();
+        String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
+                .appendEncodedPath(UserManager.get(getContext()).getUser().email).getUri();
 
         EventListRequest request = new EventListRequest(url,
                 new Response.Listener<List<Event>>() {
