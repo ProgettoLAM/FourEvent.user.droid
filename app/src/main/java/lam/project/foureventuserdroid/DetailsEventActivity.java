@@ -48,8 +48,6 @@ import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 public class DetailsEventActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private final static String FREE = "FREE";
-
     private GoogleMap mGoogleMap;
 
     private Event mCurrentEvent;
@@ -57,6 +55,8 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
     private boolean isFabOpen;
 
     private AlertDialog mAlertDialog;
+
+    private TextView detailTickets;
 
     //Status del fab -> close
     private FloatingActionButton fab;
@@ -66,6 +66,10 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
     private Activity thisActivity;
 
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
+
+    //region create + setView
+
+    //region fabListener
 
     private View.OnClickListener fabClickListener = new View.OnClickListener() {
         @Override
@@ -98,6 +102,8 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         }
     };
 
+    //endregion
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +124,8 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         fab1.setOnClickListener(fabClickListener);
         fab2.setOnClickListener(fabClickListener);
 
+        detailTickets = (TextView) findViewById(R.id.detail_tickets);
+
         //Per disabilitare autofocus all'apertura della Activity
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -131,63 +139,12 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         mapFragment.getMapAsync(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        showMap();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-
-        mGoogleMap = googleMap;
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-
-        mGoogleMap.setMyLocationEnabled(true);
-
-        showMap();
-    }
-
-    private void showMap() {
-
-        if (mGoogleMap == null || mCurrentEvent == null) {
-
-            return;
-        }
-
-        LatLng mLocationEvent = new LatLng(mCurrentEvent.mLatitude,
-                mCurrentEvent.mLongitude);
-
-        mGoogleMap.addMarker(new MarkerOptions()
-                .position(mLocationEvent)
-                .title(mCurrentEvent.mTitle))
-                .setIcon(BitmapDescriptorFactory.defaultMarker());
-
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mLocationEvent));
-    }
-
     private void setInfo(Event event) {
 
         String participations = (event.mMaxTicket > 0) ? event.mParticipation + "/" + event.mMaxTicket
                 : ""+event.mParticipation;
+
+        updateParticipations(participations);
 
         String price = (event.isFree()) ? event.mPrice : event.mPrice + "€";
 
@@ -198,26 +155,35 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         ((TextView) findViewById(R.id.detail_date)).setText(date);
         ((TextView) findViewById(R.id.detail_distance)).setText(event.mAddress);
         ((TextView) findViewById(R.id.detail_desc)).setText(event.mDescription);
-        ((TextView) findViewById(R.id.detail_tickets)).setText(participations);
         ((TextView) findViewById(R.id.detail_price)).setText(price);
         ((TextView) findViewById(R.id.detail_time)).setText(time);
 
 
         if(event.isFree()) {
 
-            fab2.setImageResource(R.drawable.ic_participation);
+            if(event.willPartecipate()) {
+
+                fab2.setImageResource(R.drawable.ic_participation_full);
+
+            } else {
+
+                fab2.setImageResource(R.drawable.ic_participation_line);
+            }
         }
 
-
-        CircleImageView imgUser = (CircleImageView) findViewById(R.id.profile_image);
         TextView nameAuthor = (TextView) findViewById(R.id.profile_owner_name);
         nameAuthor.setText(mCurrentEvent.mAuthor);
 
+        //TODO aggiungere immagine profilo planner, per ricercarla
         /*
+
+        CircleImageView imgUser = (CircleImageView) findViewById(R.id.profile_image);
+
         String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
                 .appendPath("img").appendEncodedPath(mCurrentEvent.mAuthor).getUri();
 
         Picasso.with(this).load(url).into(imgUser);
+
         */
     }
 
@@ -242,6 +208,23 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void updateParticipations(String participations) {
+
+        detailTickets.setText(participations);
+    }
+
+    //endregion
+
+    //region fab behaviours
 
     private void buyTicket() {
 
@@ -347,6 +330,98 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         mAlertDialog = builder.show();
     }
 
+    private void addParticipation() {
+
+        try {
+
+            String participation = mCurrentEvent.willPartecipate() ? "notparticipate" : "participate";
+
+            String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
+                    .appendPath(participation).appendEncodedPath(mCurrentEvent.mId).getUri();
+
+            JSONObject userEmail = new JSONObject("{'email':'"+MainActivity.mCurrentUser.email+"'}");
+
+            CustomRequest updateParticipations = new CustomRequest(Request.Method.POST, url, userEmail,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            try{
+
+                                Snackbar responseSnackbar = Snackbar.make(fab,
+                                        response.getString("message"), Snackbar.LENGTH_SHORT);
+
+                                responseSnackbar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(),
+                                        R.color.lightGreen));
+
+                                mCurrentEvent.incrementParticipation();
+                                updateParticipations(""+mCurrentEvent.mParticipation);
+
+                            } catch (JSONException e) {
+
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            error.printStackTrace();
+                        }
+                    });
+
+            VolleyRequest.get(this).add(updateParticipations);
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    private void shareEvent() {
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+        intent.putExtra(Intent.EXTRA_TEXT,
+                "Guarda questo evento su FourEvent: http://annina.cs.unibo.it:8080/api/event"
+                        + mCurrentEvent.mId);
+
+        startActivity(Intent.createChooser(intent, "Condividi l'evento"));
+    }
+
+    //endregion
+
+    //region handle response + error
+
+    private String trimMessage(String json, String key){
+        String trimmedString = null;
+
+        try{
+            JSONObject obj = new JSONObject(json);
+            trimmedString = obj.getString(key);
+        } catch(JSONException e){
+            e.printStackTrace();
+            return null;
+        }
+
+        return trimmedString;
+    }
+
+    private void displayMessage(String snackBarString){
+
+        Snackbar snackbarError = Snackbar.make(fab, snackBarString,
+                Snackbar.LENGTH_LONG);
+
+        View snackbarView = snackbarError.getView();
+
+        snackbarView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.lightRed));
+
+        snackbarError.show();
+    }
+
     private void handleResponse(JSONObject response) {
 
         try {
@@ -375,48 +450,54 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         animateFAB();
     }
 
-    private void shareEvent() {
+    //endregion
 
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+    //region Google map
 
-        intent.putExtra(Intent.EXTRA_TEXT,
-                "Guarda questo evento su FourEvent: http://annina.cs.unibo.it:8080/api/event"
-                        + mCurrentEvent.mId);
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
 
-        startActivity(Intent.createChooser(intent, "Condividi l'evento"));
-    }
+        mGoogleMap = googleMap;
 
-    private String trimMessage(String json, String key){
-        String trimmedString = null;
-
-        try{
-            JSONObject obj = new JSONObject(json);
-            trimmedString = obj.getString(key);
-        } catch(JSONException e){
-            e.printStackTrace();
-            return null;
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
 
-        return trimmedString;
+        mGoogleMap.setMyLocationEnabled(true);
+
+        showMap();
     }
 
-    private void displayMessage(String snackBarString){
+    private void showMap() {
 
-        Snackbar snackbarError = Snackbar.make(fab, snackBarString,
-                Snackbar.LENGTH_LONG);
+        if (mGoogleMap == null || mCurrentEvent == null) {
 
-        View snackbarView = snackbarError.getView();
+            return;
+        }
 
-        snackbarView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.lightRed));
+        LatLng mLocationEvent = new LatLng(mCurrentEvent.mLatitude,
+                mCurrentEvent.mLongitude);
 
-        snackbarError.show();
+        mGoogleMap.addMarker(new MarkerOptions()
+                .position(mLocationEvent)
+                .title(mCurrentEvent.mTitle))
+                .setIcon(BitmapDescriptorFactory.defaultMarker());
+
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mLocationEvent));
     }
 
-    private void addParticipation() {
-
-        //settare la partecipazione
-        Snackbar.make(fab,"Partecipazione",Snackbar.LENGTH_SHORT).show();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showMap();
     }
+
+    //endregion
 }

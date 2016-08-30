@@ -59,6 +59,8 @@ public class NearEventsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    //region creazione view + activity result
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,6 +71,18 @@ public class NearEventsFragment extends Fragment {
 
         return initViews(inflater.inflate(R.layout.fragment_all_events, container, false));
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == MainActivity.WALLET_CODE) {
+
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.anchor_point, new WalletFragment())
+                    .commit();
+        }
+    }
+
+    //endregion
 
     private View initViews(View rootView) {
 
@@ -214,13 +228,4 @@ public class NearEventsFragment extends Fragment {
         VolleyRequest.get(getContext()).add(request);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == MainActivity.WALLET_CODE) {
-
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.anchor_point, new WalletFragment())
-                    .commit();
-        }
-    }
 }

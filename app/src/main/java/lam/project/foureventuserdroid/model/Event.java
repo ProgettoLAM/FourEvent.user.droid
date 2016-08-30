@@ -3,6 +3,7 @@ package lam.project.foureventuserdroid.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,13 +38,14 @@ public class Event implements Parcelable{
 
     public final int mMaxTicket;
 
-    private final String mImage;
-
     public int mParticipation;
 
     public boolean mIsPreferred;
 
-    public boolean mWillPartecipate;
+    private final String mImage;
+
+    private boolean mWillPartecipate;
+
 
     private Event(final String id, final String title, final String description, final String author,
                   final String startDate, final String endDate, final String tag, final String address,
@@ -72,9 +74,12 @@ public class Event implements Parcelable{
         return mPrice.equals(Keys.FREE);
     }
 
-    public Event incrementParticipation() {
-        this.mParticipation++;
-        return this;
+    public boolean willPartecipate() {
+        return this.mWillPartecipate;
+    }
+
+    public int incrementParticipation() {
+        return this.mParticipation++;
     }
 
     //region lettura/scrittura JSON
@@ -96,7 +101,6 @@ public class Event implements Parcelable{
         boolean willPartecipate = false;
 
         if(jsonObject.has(Keys.PARTICIPATE)) {
-
             willPartecipate = jsonObject.getBoolean(Keys.PARTICIPATE);
         }
 
@@ -105,18 +109,16 @@ public class Event implements Parcelable{
                 .withWillPartecipate(willPartecipate);
 
         if(jsonObject.has(Keys.END_DATE)) {
-
             builder.withEndDate(DateConverter.fromMillis(jsonObject.getLong(Keys.END_DATE)));
         }
 
         if(jsonObject.has(Keys.ID)) {
-
             builder.withId(jsonObject.getString(Keys.ID));
         }
 
 
         if(jsonObject.has(Keys.PARTICIPATION)) {
-            builder.withParticipation(jsonObject.getInt(Keys.PARTICIPATION));
+            builder.withParticipation(jsonObject.getJSONArray(Keys.PARTICIPATION).length());
         }
 
         if(jsonObject.has(Keys.MAX_TICKETS)) {
@@ -159,9 +161,6 @@ public class Event implements Parcelable{
             e.printStackTrace();
         }
 
-        if(mParticipation != 0) {
-            jsonObject.put(Keys.PARTICIPATION, mParticipation);
-        }
         if(mMaxTicket != 0) {
             jsonObject.put(Keys.MAX_TICKETS, mMaxTicket);
         }
@@ -298,7 +297,7 @@ public class Event implements Parcelable{
         static final String LONGITUDE = "longitude";
         static final String AUTHOR = "author";
         static final String PRICE = "price";
-        static final String PARTICIPATION = "participations";
+        static final String PARTICIPATION = "user_participations";
         static final String MAX_TICKETS = "tickets";
         static final String IMAGE = "image";
         static final String PARTICIPATE = "participate";
