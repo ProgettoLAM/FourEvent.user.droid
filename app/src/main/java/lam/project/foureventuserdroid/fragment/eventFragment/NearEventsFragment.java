@@ -38,7 +38,6 @@ import lam.project.foureventuserdroid.utils.connection.EventListRequest;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
-import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 
 /**
@@ -50,7 +49,7 @@ public class NearEventsFragment extends Fragment {
     RecyclerView mRecyclerView;
     EventAdapter mAdapter;
 
-    public static List<Event> mModel;
+    public static List<Event> mModel = new ArrayList<>();
 
     ImageView mSadImageEmoticon;
     TextView mEventNotFound;
@@ -60,11 +59,11 @@ public class NearEventsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    //region creazione view + activity result
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        mModel = new ArrayList<>();
 
         setModel();
 
@@ -72,6 +71,18 @@ public class NearEventsFragment extends Fragment {
 
         return initViews(inflater.inflate(R.layout.fragment_all_events, container, false));
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == MainActivity.WALLET_CODE) {
+
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.anchor_point, new WalletFragment())
+                    .commit();
+        }
+    }
+
+    //endregion
 
     private View initViews(View rootView) {
 
@@ -148,7 +159,7 @@ public class NearEventsFragment extends Fragment {
     private void setModel(){
 
         String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
-                .appendEncodedPath(UserManager.get(getContext()).getUser().email).getUri();
+                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
 
         EventListRequest request = new EventListRequest(url,
                 new Response.Listener<List<Event>>() {
@@ -217,13 +228,4 @@ public class NearEventsFragment extends Fragment {
         VolleyRequest.get(getContext()).add(request);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == MainActivity.WALLET_CODE) {
-
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.anchor_point, new WalletFragment())
-                    .commit();
-        }
-    }
 }

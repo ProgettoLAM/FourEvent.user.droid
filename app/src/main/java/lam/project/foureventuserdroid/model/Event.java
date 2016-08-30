@@ -3,6 +3,7 @@ package lam.project.foureventuserdroid.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,12 +12,9 @@ import java.text.ParseException;
 
 import lam.project.foureventuserdroid.utils.DateConverter;
 
-/**
- * Created by spino on 28/07/16.
- */
 public class Event implements Parcelable{
 
-    public String mId;
+    public final String mId;
 
     public final String mTitle;
 
@@ -26,7 +24,7 @@ public class Event implements Parcelable{
 
     public final String mStartDate;
 
-    public String mEndDate;
+    public final String mEndDate;
 
     public final String mTag;
 
@@ -38,18 +36,21 @@ public class Event implements Parcelable{
 
     public final String mPrice;
 
+    public final int mMaxTicket;
+
     public int mParticipation;
 
-    public int mMaxTicket;
-
-    public final String mImage;
-
     public boolean mIsPreferred;
+
+    private final String mImage;
+
+    private boolean mWillPartecipate;
+
 
     private Event(final String id, final String title, final String description, final String author,
                   final String startDate, final String endDate, final String tag, final String address,
                   final float latitude, final float longitude, final String price, final int participation,
-                  final String image, final int maxTic){
+                  final String image, final int maxTic, final boolean willPartecipate){
 
         this.mId = id;
         this.mTitle = title;
@@ -65,6 +66,7 @@ public class Event implements Parcelable{
         this.mParticipation = participation;
         this.mImage = image;
         this.mMaxTicket = maxTic;
+        this.mWillPartecipate = willPartecipate;
     }
 
     public boolean isFree() {
@@ -72,84 +74,15 @@ public class Event implements Parcelable{
         return mPrice.equals(Keys.FREE);
     }
 
-    public static final Creator<Event> CREATOR = new Creator<Event>() {
-        @Override
-        public Event createFromParcel(Parcel in) {
-            return new Event(in);
-        }
-
-        @Override
-        public Event[] newArray(int size) {
-            return new Event[size];
-        }
-    };
-
-    public Event addParticipation(int mParticipation) {
-        this.mParticipation = mParticipation;
-        return this;
+    public boolean willPartecipate() {
+        return this.mWillPartecipate;
     }
 
-    public Event addEndDate(String mEndDate) {
-        this.mEndDate = mEndDate;
-        return this;
+    public int incrementParticipation() {
+        return this.mParticipation++;
     }
 
-    public Event addMaxTicket(int mMaxTicket) {
-        this.mMaxTicket = mMaxTicket;
-        return this;
-    }
-
-    public Event addId(String mId) {
-        this.mId = mId;
-        return this;
-    }
-
-
-    protected Event(Parcel in) {
-
-        boolean present = in.readByte() == Keys.PRESENT;
-        if(present) {
-
-            mId = in.readString();
-        }else{
-            mId = null;
-        }
-
-        mTitle = in.readString();
-        mDescription = in.readString();
-        mAuthor = in.readString();
-        mStartDate = in.readString();
-        mTag = in.readString();
-        mAddress = in.readString();
-        mLatitude = in.readFloat();
-        mLongitude = in.readFloat();
-        mPrice = in.readString();
-        mImage = in.readString();
-
-        present = in.readByte() == Keys.PRESENT;
-        if(present) {
-
-            mEndDate = in.readString();
-        }else{
-            mEndDate = null;
-        }
-
-        present = in.readByte() == Keys.PRESENT;
-        if(present) {
-
-            mParticipation = in.readInt();
-        }else{
-            mParticipation = 0;
-        }
-
-        present = in.readByte() == Keys.PRESENT;
-        if(present) {
-
-            mMaxTicket = in.readInt();
-        }else{
-            mMaxTicket = 0;
-        }
-    }
+    //region lettura/scrittura JSON
 
     public static Event fromJson(final JSONObject jsonObject) throws JSONException{
 
@@ -165,22 +98,27 @@ public class Event implements Parcelable{
         final float latitude = BigDecimal.valueOf(jsonObject.getDouble(Keys.LATITUDE)).floatValue();
         final float longitude = BigDecimal.valueOf(jsonObject.getDouble(Keys.LONGITUDE)).floatValue();
 
+        boolean willPartecipate = false;
+
+        if(jsonObject.has(Keys.PARTICIPATE)) {
+            willPartecipate = jsonObject.getBoolean(Keys.PARTICIPATE);
+        }
+
         Builder builder = Builder.create(title, description, author, startDate).withTag(tag).withAddress(address)
-                .withLocation(latitude,longitude).withPrice(price).withImage(image);
+                .withLocation(latitude,longitude).withPrice(price).withImage(image)
+                .withWillPartecipate(willPartecipate);
 
         if(jsonObject.has(Keys.END_DATE)) {
-
             builder.withEndDate(DateConverter.fromMillis(jsonObject.getLong(Keys.END_DATE)));
         }
 
         if(jsonObject.has(Keys.ID)) {
-
             builder.withId(jsonObject.getString(Keys.ID));
         }
 
 
         if(jsonObject.has(Keys.PARTICIPATION)) {
-            builder.withParticipation(jsonObject.getInt(Keys.PARTICIPATION));
+            builder.withParticipation(jsonObject.getJSONArray(Keys.PARTICIPATION).length());
         }
 
         if(jsonObject.has(Keys.MAX_TICKETS)) {
@@ -223,15 +161,28 @@ public class Event implements Parcelable{
             e.printStackTrace();
         }
 
-        if(mParticipation != 0) {
-            jsonObject.put(Keys.PARTICIPATION, mParticipation);
-        }
         if(mMaxTicket != 0) {
             jsonObject.put(Keys.MAX_TICKETS, mMaxTicket);
         }
 
         return jsonObject;
     }
+
+    //endregion
+
+    //region parcelable methods
+
+    public static final Creator<Event> CREATOR = new Creator<Event>() {
+        @Override
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
+        }
+
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
 
     @Override
     public int describeContents() {
@@ -258,6 +209,7 @@ public class Event implements Parcelable{
         dest.writeFloat(mLongitude);
         dest.writeString(mPrice);
         dest.writeString(mImage);
+        dest.writeByte((byte) (mWillPartecipate ? 1 : 0));
 
         if(mEndDate != null) {
             dest.writeByte(Keys.PRESENT);
@@ -281,32 +233,87 @@ public class Event implements Parcelable{
             dest.writeByte(Keys.NOT_PRESENT);
     }
 
+    protected Event(Parcel in) {
+
+        boolean present = in.readByte() == Keys.PRESENT;
+        if(present) {
+
+            mId = in.readString();
+        }else{
+            mId = null;
+        }
+
+        mTitle = in.readString();
+        mDescription = in.readString();
+        mAuthor = in.readString();
+        mStartDate = in.readString();
+        mTag = in.readString();
+        mAddress = in.readString();
+        mLatitude = in.readFloat();
+        mLongitude = in.readFloat();
+        mPrice = in.readString();
+        mImage = in.readString();
+        mWillPartecipate = in.readByte() != 0;
+
+        present = in.readByte() == Keys.PRESENT;
+        if(present) {
+
+            mEndDate = in.readString();
+        }else{
+            mEndDate = null;
+        }
+
+        present = in.readByte() == Keys.PRESENT;
+        if(present) {
+
+            mParticipation = in.readInt();
+        }else{
+            mParticipation = 0;
+        }
+
+        present = in.readByte() == Keys.PRESENT;
+        if(present) {
+
+            mMaxTicket = in.readInt();
+        }else{
+            mMaxTicket = 0;
+        }
+    }
+
+    //endregion
+
+    //region Keys
+
     public static class Keys{
 
-        public static final String ID = "_id";
-        public static final String TITLE = "title";
-        public static final String DESCRIPTION = "description";
-        public static final String START_DATE = "start_date";
-        public static final String END_DATE = "end_date";
-        public static final String TAG = "tag";
-        public static final String ADDRESS = "address";
-        public static final String LATITUDE = "latitude";
-        public static final String LONGITUDE = "longitude";
-        public static final String AUTHOR = "author";
-        public static final String PRICE = "price";
-        public static final String PARTICIPATION = "participations";
-        public static final String MAX_TICKETS = "tickets";
-        public static final String IMAGE = "image";
+        static final String ID = "_id";
+        static final String TITLE = "title";
+        static final String DESCRIPTION = "description";
+        static final String START_DATE = "start_date";
+        static final String END_DATE = "end_date";
+        static final String TAG = "tag";
+        static final String ADDRESS = "address";
+        static final String LATITUDE = "latitude";
+        static final String LONGITUDE = "longitude";
+        static final String AUTHOR = "author";
+        static final String PRICE = "price";
+        static final String PARTICIPATION = "user_participations";
+        static final String MAX_TICKETS = "tickets";
+        static final String IMAGE = "image";
+        static final String PARTICIPATE = "participate";
 
         static final String FREE = "FREE";
 
-        public static final Byte PRESENT = 1;
-        public static final Byte NOT_PRESENT = 0;
+        static final Byte PRESENT = 1;
+        static final Byte NOT_PRESENT = 0;
 
         public static final String EVENT = "event";
 
     }
 
+    //endregion
+
+    //region Builder
 
     public static class Builder{
 
@@ -324,6 +331,7 @@ public class Event implements Parcelable{
         private int mParticipation;
         private String mImage;
         private int mMaxTicket;
+        private boolean mWillPartecipate;
 
 
         private Builder(final String title, final String description, final String author, final String startDate){
@@ -340,59 +348,66 @@ public class Event implements Parcelable{
             return new Builder(title, description, author, startDate);
         }
 
-        public Builder withTag(final String tag){
+        Builder withTag(final String tag){
 
             this.mTag = tag;
             return this;
         }
 
-        public Builder withAddress(final String address){
+        Builder withAddress(final String address){
 
             this.mAddress = address;
             return this;
         }
 
-        public Builder withLocation(final float latitude, final float longitude){
+        Builder withLocation(final float latitude, final float longitude){
 
             this.mLatitude = latitude;
             this.mLongitude = longitude;
             return this;
         }
 
-        public Builder withPrice(final String price) {
+        Builder withPrice(final String price) {
             this.mPrice = price;
             return this;
         }
 
-        public Builder withEndDate(final String endDate) {
+        Builder withEndDate(final String endDate) {
             this.mEndDate = endDate;
             return this;
         }
 
-        public Builder withParticipation(final int participation) {
+        Builder withParticipation(final int participation) {
             this.mParticipation = participation;
             return this;
         }
 
-        public Builder withImage(final String image) {
+        Builder withImage(final String image) {
             this.mImage = image;
             return this;
         }
 
-        public Builder withMaxTic(final int maxTicket) {
+        Builder withMaxTic(final int maxTicket) {
             this.mMaxTicket = maxTicket;
             return this;
         }
 
-        public Builder withId(final String id) {
+        Builder withId(final String id) {
             this.mId = id;
+            return this;
+        }
+
+        Builder withWillPartecipate(final boolean willPartecipate) {
+            this.mWillPartecipate = willPartecipate;
             return this;
         }
 
         public Event build(){
 
             return new Event(mId,mTitle, mDescription, mAuthor, mStartDate, mEndDate, mTag, mAddress, mLatitude,
-                            mLongitude, mPrice, mParticipation, mImage, mMaxTicket);
+                            mLongitude, mPrice, mParticipation, mImage, mMaxTicket, mWillPartecipate);
         }
     }
+
+    //endregion
 }
