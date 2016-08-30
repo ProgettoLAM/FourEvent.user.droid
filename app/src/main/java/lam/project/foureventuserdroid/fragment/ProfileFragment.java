@@ -90,7 +90,6 @@ public class ProfileFragment extends Fragment {
 
         ImageView editPass = (ImageView) view.findViewById(R.id.change_pass);
 
-        TextView passProfile = (TextView) view.findViewById(R.id.pass_profile);
         TextView emailProfile = (TextView) view.findViewById(R.id.email_profile);
         TextView nameProfile = (TextView) view.findViewById(R.id.name_profile);
         TextView birthDateProfile = (TextView) view.findViewById(R.id.birth_date_profile);
@@ -99,8 +98,10 @@ public class ProfileFragment extends Fragment {
         imgProfile = (CircleImageView) view.findViewById(R.id.profile_image);
 
         if(user.image == null) {
-            if(user.gender.equals("F")) {
-                imgProfile.setImageResource(R.drawable.img_female);
+            if(user.gender != null) {
+                if(user.gender.equals("F")) {
+                    imgProfile.setImageResource(R.drawable.img_female);
+                }
             }
         }
         else {
