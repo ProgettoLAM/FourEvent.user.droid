@@ -110,15 +110,6 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         fab1.setOnClickListener(fabClickListener);
         fab2.setOnClickListener(fabClickListener);
 
-        CircleImageView imgUser = (CircleImageView) findViewById(R.id.profile_image);
-        TextView nameAuthor = (TextView) findViewById(R.id.profile_owner_name);
-        nameAuthor.setText(mCurrentEvent.mAuthor);
-
-        String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
-                .appendPath("img").appendEncodedPath(mCurrentEvent.mAuthor).getUri();
-
-        Picasso.with(this).load(url).resize(50, 50).into(imgUser);
-
         //Per disabilitare autofocus all'apertura della Activity
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -188,7 +179,8 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
     private void setInfo(Event event) {
 
         String participations = event.mParticipation + "/" + event.mMaxTicket;
-        String price = event.mPrice + "€";
+
+        String price = (event.mPrice.equals("FREE")) ? event.mPrice : event.mPrice + "€";
 
         String time = DateConverter.getTime(event.mStartDate, event.mEndDate);
         String date = DateConverter.getDate(event.mStartDate, event.mEndDate);
@@ -200,18 +192,15 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         ((TextView) findViewById(R.id.detail_tickets)).setText(participations);
         ((TextView) findViewById(R.id.detail_price)).setText(price);
         ((TextView) findViewById(R.id.detail_time)).setText(time);
+        
+        CircleImageView imgUser = (CircleImageView) findViewById(R.id.profile_image);
+        TextView nameAuthor = (TextView) findViewById(R.id.profile_owner_name);
+        nameAuthor.setText(mCurrentEvent.mAuthor);
 
+        String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
+                .appendPath("img").appendEncodedPath(mCurrentEvent.mAuthor).getUri();
 
-        final View.OnClickListener listener = new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                Snackbar.make(v.getRootView(), "Bought", Snackbar.LENGTH_LONG)
-                        .setAction("action", null)
-                        .show();
-            }
-        };
+        Picasso.with(this).load(url).into(imgUser);
     }
 
     public void animateFAB() {
