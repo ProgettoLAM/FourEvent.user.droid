@@ -67,6 +67,11 @@ public class Event implements Parcelable{
         this.mMaxTicket = maxTic;
     }
 
+    public boolean isFree() {
+
+        return mPrice.equals(Keys.FREE);
+    }
+
     public static final Creator<Event> CREATOR = new Creator<Event>() {
         @Override
         public Event createFromParcel(Parcel in) {
@@ -292,6 +297,8 @@ public class Event implements Parcelable{
         public static final String PARTICIPATION = "participations";
         public static final String MAX_TICKETS = "tickets";
         public static final String IMAGE = "image";
+
+        static final String FREE = "FREE";
 
         public static final Byte PRESENT = 1;
         public static final Byte NOT_PRESENT = 0;

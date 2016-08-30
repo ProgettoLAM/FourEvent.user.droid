@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -31,7 +30,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +37,6 @@ import org.json.JSONObject;
 import java.text.ParseException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import lam.project.foureventuserdroid.fragment.WalletFragment;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.model.Record;
 import lam.project.foureventuserdroid.utils.DateConverter;
@@ -50,6 +47,8 @@ import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 
 public class DetailsEventActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private final static String FREE = "FREE";
 
     private GoogleMap mGoogleMap;
 
@@ -84,7 +83,16 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                     break;
                 case R.id.fab2:
 
-                    buyTicket();
+                    animateFAB();
+
+                    if(mCurrentEvent.isFree()) {
+
+                        addParticipation();
+
+                    } else {
+
+                        buyTicket();
+                    }
                     break;
             }
         }
@@ -180,7 +188,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
         String participations = event.mParticipation + "/" + event.mMaxTicket;
 
-        String price = (event.mPrice.equals("FREE")) ? event.mPrice : event.mPrice + "€";
+        String price = (event.isFree()) ? event.mPrice : event.mPrice + "€";
 
         String time = DateConverter.getTime(event.mStartDate, event.mEndDate);
         String date = DateConverter.getDate(event.mStartDate, event.mEndDate);
@@ -192,6 +200,12 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         ((TextView) findViewById(R.id.detail_tickets)).setText(participations);
         ((TextView) findViewById(R.id.detail_price)).setText(price);
         ((TextView) findViewById(R.id.detail_time)).setText(time);
+
+
+        if(event.isFree()) {
+
+            fab2.setImageResource(R.drawable.ic_participation);
+        }
 
 
         CircleImageView imgUser = (CircleImageView) findViewById(R.id.profile_image);
@@ -226,12 +240,6 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
             isFabOpen = true;
 
         }
-
-        if(mCurrentEvent.mPrice.equals("FREE")) {
-
-            fab1.setVisibility(View.INVISIBLE);
-            fab2.setVisibility(View.INVISIBLE);
-        }
     }
 
     private void buyTicket() {
@@ -248,7 +256,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         if (Float.parseFloat(mCurrentEvent.mPrice) <= MainActivity.mCurrentUser.balance) {
 
             message = "Il biglietto ha un costo di " + mCurrentEvent.mPrice + " €." +
-                    "\n\nHai un totale di " + MainActivity.mCurrentUser.balance + " €.\n\nVuoi acquistarlo?";
+                    "\n\nHai un totale di " + MainActivity.mCurrentUser.balance + " €.\nVuoi acquistarlo?";
 
             title = "Acquisto biglietto";
 
@@ -403,5 +411,11 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         snackbarView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.lightRed));
 
         snackbarError.show();
+    }
+
+    private void addParticipation() {
+
+        //settare la partecipazione
+        Snackbar.make(fab,"Partecipazione",Snackbar.LENGTH_SHORT).show();
     }
 }
