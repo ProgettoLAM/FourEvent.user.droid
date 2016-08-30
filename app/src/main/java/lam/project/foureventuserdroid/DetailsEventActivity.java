@@ -186,7 +186,8 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
     private void setInfo(Event event) {
 
-        String participations = event.mParticipation + "/" + event.mMaxTicket;
+        String participations = (event.mMaxTicket > 0) ? event.mParticipation + "/" + event.mMaxTicket
+                : ""+event.mParticipation;
 
         String price = (event.isFree()) ? event.mPrice : event.mPrice + "€";
 

@@ -121,7 +121,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Posti liberi"
+                            android:text="Partecipanti"
                             android:textSize="15sp"
                             android:textColor="@color/colorPrimary"
                             android:gravity="center"/>
