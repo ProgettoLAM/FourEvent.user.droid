@@ -13,9 +13,9 @@ import lam.project.foureventuserdroid.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PoularsEventsFragment extends Fragment {
+public class PopularsEventsFragment extends Fragment {
     
-    public PoularsEventsFragment() {
+    public PopularsEventsFragment() {
         // Required empty public constructor
     }
 

@@ -3,6 +3,7 @@ package lam.project.foureventuserdroid;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -53,6 +54,8 @@ import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.shared_preferences.CategoryManager;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
+
+import static lam.project.foureventuserdroid.DetailsEventActivity.OPEN_FRAGMENT_WALLET;
 
 
 public class MainActivity extends AppCompatActivity
@@ -129,6 +132,13 @@ public class MainActivity extends AppCompatActivity
                         .appendPath("img").appendEncodedPath(mCurrentUser.email).getUri();
 
                 Picasso.with(this).load(url).into(imgUser);
+            }
+
+            if (getIntent().hasExtra(OPEN_FRAGMENT_WALLET))
+            {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.anchor_point, new WalletFragment())
+                        .commit();
             }
 
 
@@ -339,15 +349,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        if (requestCode == WALLET_CODE) {
-
-            if(resultCode == RESULT_OK) {
-
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.anchor_point, new WalletFragment())
-                        .commit();
-            }
-        }
         profileFragment.onActivityResult(requestCode, resultCode, data);
 
     }

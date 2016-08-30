@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -35,8 +36,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import lam.project.foureventuserdroid.fragment.WalletFragment;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.model.Record;
 import lam.project.foureventuserdroid.utils.DateConverter;
@@ -62,8 +66,11 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
     private FloatingActionButton fab;
     private FloatingActionButton fab1;
     private FloatingActionButton fab2;
+    private FloatingActionButton fab3;
 
     private Activity thisActivity;
+
+    public static String OPEN_FRAGMENT_WALLET = "Portafoglio";
 
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
 
@@ -84,6 +91,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                 case R.id.fab1:
 
                     shareEvent();
+
                     break;
                 case R.id.fab2:
 
@@ -97,6 +105,15 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
                         buyTicket();
                     }
+                    break;
+                case R.id.fab3:
+
+                    try {
+                        shareInCalendar();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
                     break;
             }
         }
@@ -114,6 +131,8 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab1 = (FloatingActionButton) findViewById(R.id.fab1);
         fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab3 = (FloatingActionButton) findViewById(R.id.fab3);
+
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
@@ -123,6 +142,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         fab.setOnClickListener(fabClickListener);
         fab1.setOnClickListener(fabClickListener);
         fab2.setOnClickListener(fabClickListener);
+        fab3.setOnClickListener(fabClickListener);
 
         detailTickets = (TextView) findViewById(R.id.detail_tickets);
 
@@ -182,16 +202,20 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
             fab.startAnimation(rotate_backward);
             fab1.startAnimation(fab_close);
             fab2.startAnimation(fab_close);
+            fab3.startAnimation(fab_close);
             fab1.setClickable(false);
             fab2.setClickable(false);
+            fab3.setClickable(false);
             isFabOpen = false;
         } else {
 
             fab.startAnimation(rotate_forward);
             fab1.startAnimation(fab_open);
             fab2.startAnimation(fab_open);
+            fab3.startAnimation(fab_open);
             fab1.setClickable(true);
             fab2.setClickable(true);
+            fab3.setClickable(true);
             isFabOpen = true;
 
         }
@@ -310,8 +334,9 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    //TODO Aprire il portafoglio in questo caso @Valentina
-                    startActivityForResult(new Intent(thisActivity, MainActivity.class),MainActivity.WALLET_CODE);
+            Intent openFragmentBIntent = new Intent(getApplicationContext(), MainActivity.class);
+            openFragmentBIntent.putExtra(OPEN_FRAGMENT_WALLET, "Portafoglio");
+            startActivity(openFragmentBIntent);
                 }
             };
         }
@@ -394,6 +419,36 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                         + mCurrentEvent.mId);
 
         startActivity(Intent.createChooser(intent, "Condividi l'evento"));
+
+
+    }
+
+    private void shareInCalendar()  throws ParseException {
+
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setType("vnd.android.cursor.item/event");
+        intent.putExtra(CalendarContract.Events.TITLE, mCurrentEvent.mTitle);
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, mCurrentEvent.mAddress);
+        intent.putExtra(CalendarContract.Events.DESCRIPTION, mCurrentEvent.mDescription);
+
+        // Setting dates
+        GregorianCalendar calDate = new GregorianCalendar();
+        long startDate = DateConverter.addYear(mCurrentEvent.mStartDate);
+        calDate.setTimeInMillis(startDate);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                calDate.getTimeInMillis());
+
+        if(mCurrentEvent.mEndDate != null) {
+
+            long endDate = DateConverter.addYear(mCurrentEvent.mEndDate);
+            calDate.setTimeInMillis(endDate);
+            intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                    calDate.getTimeInMillis());
+        }
+
+        intent.putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
+
+        startActivity(intent);
     }
 
     //endregion
