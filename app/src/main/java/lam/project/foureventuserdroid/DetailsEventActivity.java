@@ -192,15 +192,18 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         ((TextView) findViewById(R.id.detail_tickets)).setText(participations);
         ((TextView) findViewById(R.id.detail_price)).setText(price);
         ((TextView) findViewById(R.id.detail_time)).setText(time);
-        
+
+
         CircleImageView imgUser = (CircleImageView) findViewById(R.id.profile_image);
         TextView nameAuthor = (TextView) findViewById(R.id.profile_owner_name);
         nameAuthor.setText(mCurrentEvent.mAuthor);
 
+        /*
         String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
                 .appendPath("img").appendEncodedPath(mCurrentEvent.mAuthor).getUri();
 
         Picasso.with(this).load(url).into(imgUser);
+        */
     }
 
     public void animateFAB() {
