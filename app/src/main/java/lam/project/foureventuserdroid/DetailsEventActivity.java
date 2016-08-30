@@ -70,6 +70,8 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
     private Activity thisActivity;
 
+    public static String OPEN_FRAGMENT_WALLET = "Portafoglio";
+
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
 
     private View.OnClickListener fabClickListener = new View.OnClickListener() {
@@ -349,8 +351,9 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    //TODO Aprire il portafoglio in questo caso @Valentina
-                    startActivity(new Intent(thisActivity, WalletFragment.class));
+            Intent openFragmentBIntent = new Intent(getApplicationContext(), MainActivity.class);
+            openFragmentBIntent.putExtra(OPEN_FRAGMENT_WALLET, "Portafoglio");
+            startActivity(openFragmentBIntent);
                 }
             };
         }
