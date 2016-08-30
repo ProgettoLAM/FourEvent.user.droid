@@ -49,7 +49,7 @@ public class NearEventsFragment extends Fragment {
     RecyclerView mRecyclerView;
     EventAdapter mAdapter;
 
-    public static List<Event> mModel;
+    public static List<Event> mModel = new ArrayList<>();
 
     ImageView mSadImageEmoticon;
     TextView mEventNotFound;
@@ -62,8 +62,6 @@ public class NearEventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        mModel = new ArrayList<>();
 
         setModel();
 
@@ -146,7 +144,8 @@ public class NearEventsFragment extends Fragment {
 
     private void setModel(){
 
-        String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT).getUri();
+        String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
+                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
 
         EventListRequest request = new EventListRequest(url,
                 new Response.Listener<List<Event>>() {
