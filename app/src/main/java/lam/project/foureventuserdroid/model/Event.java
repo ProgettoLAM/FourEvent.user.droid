@@ -3,7 +3,6 @@ package lam.project.foureventuserdroid.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -80,10 +79,6 @@ public class Event implements Parcelable{
 
     public boolean willPartecipate() {
         return this.mWillPartecipate;
-    }
-
-    public int incrementParticipation() {
-        return this.mParticipation++;
     }
 
     //region lettura/scrittura JSON

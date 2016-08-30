@@ -68,8 +68,6 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
     private FloatingActionButton fab2;
     private FloatingActionButton fab3;
 
-    private Activity thisActivity;
-
     public static String OPEN_FRAGMENT_WALLET = "Portafoglio";
 
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
@@ -97,7 +95,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
                     animateFAB();
 
-                    if(mCurrentEvent.isFree()) {
+                    if (mCurrentEvent.isFree()) {
 
                         addParticipation();
 
@@ -125,8 +123,6 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_event);
-
-        thisActivity = this;
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab1 = (FloatingActionButton) findViewById(R.id.fab1);
@@ -162,7 +158,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
     private void setInfo(Event event) {
 
         String participations = (event.mMaxTicket > 0) ? event.mParticipation + "/" + event.mMaxTicket
-                : ""+event.mParticipation;
+                : "" + event.mParticipation;
 
         updateParticipations(participations);
 
@@ -233,9 +229,9 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
         detailTickets.setText(participations);
 
-        if(mCurrentEvent.isFree()) {
+        if (mCurrentEvent.isFree()) {
 
-            if(mCurrentEvent.willPartecipate()) {
+            if (mCurrentEvent.willPartecipate()) {
 
                 fab2.setImageResource(R.drawable.ic_participation_full);
 
@@ -298,15 +294,15 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                             @Override
                             public void onErrorResponse(VolleyError error) {
 
-                                String json = null;
+                                String json;
 
                                 NetworkResponse response = error.networkResponse;
-                                if(response != null && response.data != null){
-                                    switch(response.statusCode){
+                                if (response != null && response.data != null) {
+                                    switch (response.statusCode) {
                                         case 403:
                                             json = new String(response.data);
                                             json = trimMessage(json, "message");
-                                            if(json != null) displayMessage(json);
+                                            if (json != null) displayMessage(json);
                                             break;
 
                                         default:
@@ -334,9 +330,9 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-            Intent openFragmentBIntent = new Intent(getApplicationContext(), MainActivity.class);
-            openFragmentBIntent.putExtra(OPEN_FRAGMENT_WALLET, "Portafoglio");
-            startActivity(openFragmentBIntent);
+                    Intent openFragmentBIntent = new Intent(getApplicationContext(), MainActivity.class);
+                    openFragmentBIntent.putExtra(OPEN_FRAGMENT_WALLET, "Portafoglio");
+                    startActivity(openFragmentBIntent);
                 }
             };
         }
@@ -350,7 +346,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                 dialog.dismiss();
             }
         });
-        builder.setPositiveButton(positiveListenerText,positiveListener);
+        builder.setPositiveButton(positiveListenerText, positiveListener);
 
         mAlertDialog = builder.show();
     }
@@ -364,14 +360,14 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
             String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
                     .appendPath(participation).appendEncodedPath(mCurrentEvent.mId).getUri();
 
-            JSONObject userEmail = new JSONObject("{'email':'"+MainActivity.mCurrentUser.email+"'}");
+            JSONObject userEmail = new JSONObject("{'email':'" + MainActivity.mCurrentUser.email + "'}");
 
             CustomRequest updateParticipations = new CustomRequest(Request.Method.POST, url, userEmail,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
 
-                            try{
+                            try {
 
                                 Snackbar responseSnackbar = Snackbar.make(fab,
                                         response.getString("message"), Snackbar.LENGTH_SHORT);
@@ -383,7 +379,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
                                 mCurrentEvent.updateWillParticipate();
 
-                                updateParticipations(""+response.getInt("participations"));
+                                updateParticipations("" + response.getInt("participations"));
 
 
                             } catch (JSONException e) {
@@ -423,7 +419,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
     }
 
-    private void shareInCalendar()  throws ParseException {
+    private void shareInCalendar() throws ParseException {
 
         Intent intent = new Intent(Intent.ACTION_INSERT);
         intent.setType("vnd.android.cursor.item/event");
@@ -438,7 +434,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
                 calDate.getTimeInMillis());
 
-        if(mCurrentEvent.mEndDate != null) {
+        if (mCurrentEvent.mEndDate != null) {
 
             long endDate = DateConverter.addYear(mCurrentEvent.mEndDate);
             calDate.setTimeInMillis(endDate);
@@ -455,13 +451,13 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
     //region handle response + error
 
-    private String trimMessage(String json, String key){
-        String trimmedString = null;
+    private String trimMessage(String json, String key) {
+        String trimmedString;
 
-        try{
+        try {
             JSONObject obj = new JSONObject(json);
             trimmedString = obj.getString(key);
-        } catch(JSONException e){
+        } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
@@ -469,7 +465,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         return trimmedString;
     }
 
-    private void displayMessage(String snackBarString){
+    private void displayMessage(String snackBarString) {
 
         Snackbar snackbarError = Snackbar.make(fab, snackBarString,
                 Snackbar.LENGTH_LONG);

@@ -42,7 +42,9 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
         Record record = mFeedList.get(position);
 
-        holder.mType.setText(record.mType);
+        String title = record.mEvent == null ? record.mType : record.mType+" : "+record.mEvent;
+
+        holder.mType.setText(title);
         holder.mDate.setText(record.mDate);
 
         String amount = "";
