@@ -11,8 +11,10 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,14 +47,10 @@ import lam.project.foureventuserdroid.utils.connection.MultipartRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
-/**
- * Created by Vale on 11/08/2016.
- */
-
 public class Step1Info extends AbstractStep{
 
-    private int i = 1;
-    public static TextView dateInfo;
+    //TODO gestire in modo diverso
+    protected static TextView dateInfo;
 
     private CircleImageView imgUser;
     private EditText txtName;
@@ -167,8 +165,10 @@ public class Step1Info extends AbstractStep{
     @Override
     public String error() {
 
-        return "Inserisci nome e cognome";
+        return "Inserisci nome, cognome.";
     }
+
+    //region intent salvataggio immagine
 
     private void selectImage() {
 
@@ -211,34 +211,50 @@ public class Step1Info extends AbstractStep{
         startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
     }
 
-    //Permessi per scattare una foto/scegliere un'immagine dalla galleria
+    //endregion
+
+    //region fetch/scatta immagine + upload server
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
         switch (requestCode) {
+
             case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
                     if (userChoosenTask.equals("Take Photo"))
+
                         cameraIntent();
+
                     else if (userChoosenTask.equals("Choose from Library"))
+
                         galleryIntent();
+
                 } else {
-                    //Codice per negare i permessi
+                    //Codice per negare i permessi TODO @Valentina
                 }
+
                 break;
         }
     }
 
-    /*Risultato della scelta dell'immagine in base al codice che ritorna:
-      - se ritorna "SELECT_FILE" si richiama il metodo per la scelta dalla galleria
-      - se ritorna "REQUEST_CAMERA" si richiama il metodo per la scelta dalla fotocamera
-     */
+    //Risultato della scelta dell'immagine in base al codice che ritorna:
+    //- se ritorna "SELECT_FILE" si richiama il metodo per la scelta dalla galleria
+    //- se ritorna "REQUEST_CAMERA" si richiama il metodo per la scelta dalla fotocamera
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == Activity.RESULT_OK) {
+
             if (requestCode == SELECT_FILE)
+
                 onSelectFromGalleryResult(data);
+
             else if (requestCode == REQUEST_CAMERA)
+
                 onCaptureImageResult(data);
         }
     }
@@ -310,32 +326,49 @@ public class Step1Info extends AbstractStep{
 
         final ProgressDialog loading = ProgressDialog.show(getContext(), "Immagine dell'evento", "Caricamento in corso..", false, false);
 
-        MultipartRequest mMultipartRequest = new MultipartRequest(url, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Snackbar.make(getView(), "Errore nel caricamento dell'immagine", Snackbar.LENGTH_SHORT)
-                        .show();
-                loading.dismiss();
-            }
-        }, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Snackbar.make(getView(), "Immagine caricata!", Snackbar.LENGTH_SHORT)
-                        .show();
-                mImageUri = response;
-                loading.dismiss();
+        MultipartRequest mMultipartRequest = new MultipartRequest(url,
+                new Response.ErrorListener() {
+                @Override
+                    public void onErrorResponse(VolleyError error) {
 
-            }
-        },toUploadFile,"filename");
+                    loading.dismiss();
+
+                    Snackbar errorSnackbar = Snackbar.make(getView(), "Errore nel caricamento dell'immagine!",
+                            Snackbar.LENGTH_SHORT);
+
+                    errorSnackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightRed));
+                    errorSnackbar.show();
+
+                    }
+                },
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        loading.dismiss();
+
+                        Snackbar successSnackbar = Snackbar.make(getView(), "Immagine caricata!",
+                                Snackbar.LENGTH_SHORT);
+
+                        successSnackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightGreen));
+                        successSnackbar.show();
+
+                        mImageUri = response;
+
+                    }
+                },toUploadFile,"filename");
 
         VolleyRequest.get(getContext()).add(mMultipartRequest);
-
     }
 
+    //endregion
 
     //Classe relativa alla visualizzazione del dialog del calendario per la selezione della mData di nascita
     public static class SelectDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
+        public SelectDateFragment() {}
+
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Calendar calendar = Calendar.getInstance();
@@ -355,11 +388,10 @@ public class Step1Info extends AbstractStep{
         public void onDateSet(DatePicker view, int yy, int mm, int dd) {
             populateSetDate(yy, mm+1, dd);
         }
+
         public void populateSetDate(int year, int month, int day) {
             dateInfo.setText(month+"/"+day+"/"+year);
         }
-
     }
-
 }
 
