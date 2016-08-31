@@ -82,6 +82,14 @@ public class MainActivity extends AppCompatActivity
     private Fragment profileFragment;
     public static int WALLET_CODE = 5;
 
+    private static int clicked;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        clicked = 0;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -275,10 +283,19 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
+
             drawer.closeDrawer(GravityCompat.START);
         } else {
 
-            super.onBackPressed();
+            if(clicked == 0) {
+
+                Toast.makeText(this,"Clicca ancora per uscire dall'applicazione",Toast.LENGTH_LONG).show();
+                clicked ++;
+
+            } else {
+
+                super.onBackPressed();
+            }
         }
     }
 
