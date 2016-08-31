@@ -5,9 +5,11 @@
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
+        android:background="#fff"
         android:orientation="vertical">
 
         <TextView
@@ -15,142 +17,150 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="Scegli le categorie di interesse"
-            android:textColor="@color/colorPrimaryDark"
+            android:text="@string/header_categories"
+            android:textColor="@color/darkerText"
             android:gravity="center"
             android:layout_margin="20dp"/>
 
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="3"
-            android:rowCount="3"
-            android:orientation="horizontal"
-            android:background="#fff"
-            android:layout_below="@id/title_categories">
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:stretchColumns="*">
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:height="@dimen/button_grid_height"
-                android:layout_gravity="fill_horizontal"
-                android:text="@string/musica"
-                android:tag="0"
-                android:textColor="@color/button_categories_text"
-                android:background="#fff"
-                android:onClick="selectedButton"/>
+            <TableRow
+                android:layout_weight="1"
+                android:gravity="center">
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_height="@dimen/button_grid_height"
-                android:layout_gravity="fill_horizontal"
-                android:text="@string/viaggi"
-                android:tag="1"
-                android:textColor="@color/button_categories_text"
-                android:background="#fff"
-                android:onClick="selectedButton"/>
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:height="@dimen/button_grid_height"
+                    android:text="@string/musica"
+                    android:tag="0"
+                    android:textColor="@color/button_categories_text"
+                    android:background="#fff"
+                    android:onClick="selectedButton"/>
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_height="@dimen/button_grid_height"
-                android:layout_gravity="fill_horizontal"
-                android:text="@string/tecnologia"
-                android:tag="2"
-                android:textColor="@color/button_categories_text"
-                android:background="#fff"
-                android:onClick="selectedButton" />
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_height="@dimen/button_grid_height"
+                    android:text="@string/viaggi"
+                    android:tag="1"
+                    android:textColor="@color/button_categories_text"
+                    android:background="#fff"
+                    android:onClick="selectedButton"/>
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_height="@dimen/button_grid_height"
-                android:layout_gravity="fill_horizontal"
-                android:text="@string/cibo"
-                android:tag="3"
-                android:textColor="@color/button_categories_text"
-                android:background="#fff"
-                android:onClick="selectedButton"/>
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_height="@dimen/button_grid_height"
+                    android:text="@string/tecnologia"
+                    android:tag="2"
+                    android:textColor="@color/button_categories_text"
+                    android:background="#fff"
+                    android:onClick="selectedButton" />
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_height="@dimen/button_grid_height"
-                android:layout_gravity="fill_horizontal"
-                android:text="@string/arte"
-                android:tag="4"
-                android:textColor="@color/button_categories_text"
-                android:background="#fff"
-                android:onClick="selectedButton"/>
+            </TableRow>
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_height="@dimen/button_grid_height"
-                android:layout_gravity="fill_horizontal"
-                android:text="@string/marketing"
-                android:tag="5"
-                android:textColor="@color/button_categories_text"
-                android:background="#fff"
-                android:onClick="selectedButton"/>
+            <TableRow
+                android:layout_weight="1"
+                android:gravity="center">
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_height="@dimen/button_grid_height"
-                android:layout_gravity="fill_horizontal"
-                android:text="@string/natura"
-                android:tag="6"
-                android:textColor="@color/button_categories_text"
-                android:background="#fff"
-                android:onClick="selectedButton"/>
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_height="@dimen/button_grid_height"
+                    android:text="@string/cibo"
+                    android:tag="3"
+                    android:textColor="@color/button_categories_text"
+                    android:background="#fff"
+                    android:onClick="selectedButton"/>
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_height="@dimen/button_grid_height"
-                android:layout_gravity="fill_horizontal"
-                android:text="@string/sport"
-                android:tag="7"
-                android:textColor="@color/button_categories_text"
-                android:background="#fff"
-                android:onClick="selectedButton"/>
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_height="@dimen/button_grid_height"
+                    android:text="@string/arte"
+                    android:tag="4"
+                    android:textColor="@color/button_categories_text"
+                    android:background="#fff"
+                    android:onClick="selectedButton"/>
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_height="@dimen/button_grid_height"
-                android:layout_gravity="fill_horizontal"
-                android:text="@string/fotografia"
-                android:tag="8"
-                android:textColor="@color/button_categories_text"
-                android:background="#fff"
-                android:onClick="selectedButton"/>
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_height="@dimen/button_grid_height"
+                    android:text="@string/marketing"
+                    android:tag="5"
+                    android:textColor="@color/button_categories_text"
+                    android:background="#fff"
+                    android:onClick="selectedButton"/>
+            </TableRow>
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_height="@dimen/button_grid_height"
-                android:layout_gravity="fill_horizontal"
-                android:text="@string/moda"
-                android:tag="9"
-                android:textColor="@color/button_categories_text"
-                android:background="#fff"
-                android:onClick="selectedButton"/>
+            <TableRow
+                android:layout_weight="1"
+                android:gravity="center">
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_height="@dimen/button_grid_height"
-                android:layout_gravity="fill_horizontal"
-                android:text="@string/lettura"
-                android:tag="10"
-                android:textColor="@color/button_categories_text"
-                android:background="#fff"
-                android:onClick="selectedButton"/>
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_height="@dimen/button_grid_height"
+                    android:text="@string/natura"
+                    android:tag="6"
+                    android:textColor="@color/button_categories_text"
+                    android:background="#fff"
+                    android:onClick="selectedButton"/>
 
-            <Button
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_height="@dimen/button_grid_height"
-                android:layout_gravity="fill_horizontal"
-                android:text="@string/videogiochi"
-                android:tag="11"
-                android:textColor="@color/button_categories_text"
-                android:background="#fff"
-                android:onClick="selectedButton"/>
-        </GridLayout>
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_height="@dimen/button_grid_height"
+                    android:text="@string/sport"
+                    android:tag="7"
+                    android:textColor="@color/button_categories_text"
+                    android:background="#fff"
+                    android:onClick="selectedButton"/>
 
-    </RelativeLayout>
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_height="@dimen/button_grid_height"
+                    android:text="@string/fotografia"
+                    android:tag="8"
+                    android:textColor="@color/button_categories_text"
+                    android:background="#fff"
+                    android:onClick="selectedButton"/>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_height="@dimen/button_grid_height"
+                    android:text="@string/moda"
+                    android:tag="9"
+                    android:textColor="@color/button_categories_text"
+                    android:background="#fff"
+                    android:onClick="selectedButton"/>
+
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_height="@dimen/button_grid_height"
+                    android:text="@string/lettura"
+                    android:tag="10"
+                    android:textColor="@color/button_categories_text"
+                    android:background="#fff"
+                    android:onClick="selectedButton"/>
+
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_height="@dimen/button_grid_height"
+                    android:text="@string/videogiochi"
+                    android:tag="11"
+                    android:textColor="@color/button_categories_text"
+                    android:background="#fff"
+                    android:onClick="selectedButton"/>
+
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
 
 </ScrollView>
 
