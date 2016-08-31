@@ -1,5 +1,6 @@
 package lam.project.foureventuserdroid.complete_profile;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,6 +48,11 @@ public class Step3Credits extends AbstractStep {
     @Override
     public void onNext() {
 
+        final ProgressDialog progressDialog = ProgressDialog.show(getContext(),"Creazione dell'utente in corso",
+                "Attendere prego...",true,false);
+
+        progressDialog.show();
+
         mCreatedUserWithCategories = getStepDataFor(2).getParcelable(User.Keys.USER);
 
         String uri = FourEventUri.Builder.create(FourEventUri.Keys.USER)
@@ -65,6 +71,8 @@ public class Step3Credits extends AbstractStep {
                         @Override
                         public void onResponse(JSONObject response) {
 
+                            progressDialog.dismiss();
+
                             StepManager.get(getContext()).setStep(StepManager.COMPLETE);
                             UserManager.get().save(mCreatedUserWithCategories);
                             CategoryManager.get().save();
@@ -77,6 +85,8 @@ public class Step3Credits extends AbstractStep {
                         @Override
                         public void onErrorResponse(VolleyError error) {
 
+                            progressDialog.dismiss();
+                            
                             System.out.println(error.toString());
                         }
                     }
