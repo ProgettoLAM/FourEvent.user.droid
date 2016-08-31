@@ -49,7 +49,7 @@ import static android.view.View.INVISIBLE;
  */
 public class TicketsFragment extends Fragment {
 
-    private List<Record> mRecords;
+    private List<Record> mRecords = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private TicketAdapter mAdapter;
 
@@ -65,8 +65,6 @@ public class TicketsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //startActivity(new Intent(getContext(), TicketDetailsActivity.class));
-        mRecords = new ArrayList<>();
         setModel();
 
         final View rootView = inflater.inflate(R.layout.fragment_participation, container, false);

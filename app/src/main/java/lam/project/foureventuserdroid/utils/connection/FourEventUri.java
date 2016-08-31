@@ -51,7 +51,7 @@ public class FourEventUri {
         private static final String BASE = "http://annina.cs.unibo.it:8080/api/";
         public static final String USER = "user";
         public static final String EVENT = "event";
-        public static final String RECORD = "record";
+        public static final String RECORD = "records";
         public static final String TICKET = "tickets";
     }
 }

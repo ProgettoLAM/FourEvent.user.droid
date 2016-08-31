@@ -24,30 +24,29 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
+import lam.project.foureventuserdroid.model.Record;
+
 public class TicketDetailsActivity extends AppCompatActivity {
-
-    public static final String TAG = "NfcDemo";
-
-    private final String ID = "57bf19e25dfa260b9dd83edd";
 
     private ProgressDialog mProgressDialog;
     private TextView mTextView;
-    private Button mButton;
     private NfcAdapter mNfcAdapter;
     private boolean mIsSearching;
     private boolean mIsSynced;
 
-    private View mView;
+    private String mId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_ticket);
 
-        mTextView = (TextView) findViewById(R.id.ticket_list);
-        mTextView.setText(ID);
+        mId = getIntent().getStringExtra(Record.Keys.ID);
 
-        mButton = (Button) findViewById(R.id.ticket_sync);
+        mTextView = (TextView) findViewById(R.id.ticket_list);
+        mTextView.setText(mId);
+
+        Button mButton = (Button) findViewById(R.id.ticket_sync);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +84,7 @@ public class TicketDetailsActivity extends AppCompatActivity {
 
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
-            NdefMessage ndefMessage = createNdefMessage(ID);
+            NdefMessage ndefMessage = createNdefMessage(mId);
 
             writeNdefMessage(tag,ndefMessage);
 

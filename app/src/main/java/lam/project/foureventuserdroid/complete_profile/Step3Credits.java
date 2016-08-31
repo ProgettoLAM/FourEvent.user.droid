@@ -80,13 +80,15 @@ public class Step3Credits extends AbstractStep {
                             Intent intent = new Intent(getContext(), MainActivity.class);
                             startActivity(intent);
 
+                            getActivity().finish();
+
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
 
                             progressDialog.dismiss();
-                            
+
                             System.out.println(error.toString());
                         }
                     }
