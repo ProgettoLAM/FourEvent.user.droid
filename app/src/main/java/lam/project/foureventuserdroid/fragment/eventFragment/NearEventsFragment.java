@@ -4,7 +4,6 @@ package lam.project.foureventuserdroid.fragment.eventFragment;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -69,7 +68,7 @@ public class NearEventsFragment extends Fragment {
 
         FavouriteManager.get(getContext());
 
-        return initViews(inflater.inflate(R.layout.fragment_all_events, container, false));
+        return initView(inflater.inflate(R.layout.fragment_list_events, container, false));
     }
 
     @Override
@@ -84,7 +83,7 @@ public class NearEventsFragment extends Fragment {
 
     //endregion
 
-    private View initViews(View rootView) {
+    private View initView(View rootView) {
 
         mSadImageEmoticon = (ImageView) rootView.findViewById(R.id.events_sad_emoticon);
         mEventNotFound = (TextView) rootView.findViewById(R.id.events_not_found);
