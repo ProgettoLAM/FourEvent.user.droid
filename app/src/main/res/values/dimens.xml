@@ -7,10 +7,11 @@
 
     <dimen name="splash_size">90dp</dimen>
 
+    <dimen name="button_grid_height">120dp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_margin1">90dp</dimen>
     <dimen name="fab_margin2">160dp</dimen>
-    <dimen name="fab_margin3">230dp</dimen>
+    <dimen name="fab_margin3">220dp</dimen>
 
 </resources>
