@@ -86,7 +86,7 @@ public class Step3Credits extends AbstractStep {
                         public void onErrorResponse(VolleyError error) {
 
                             progressDialog.dismiss();
-                            
+
                             System.out.println(error.toString());
                         }
                     }

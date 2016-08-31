@@ -235,24 +235,26 @@ public class WalletFragment extends Fragment {
         String uri = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
                 .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
 
-        RecordListRequest recordListRequest = new RecordListRequest(uri, null, new Response.Listener<List<Record>>() {
-            @Override
-            public void onResponse(List<Record> response) {
+        RecordListRequest recordListRequest = new RecordListRequest(uri, null,
+                new Response.Listener<List<Record>>() {
+                    @Override
+                    public void onResponse(List<Record> response) {
 
-                mDataList.clear();
-                mDataList.addAll(response);
+                        mDataList.clear();
+                        mDataList.addAll(response);
 
-                Collections.reverse(mDataList);
+                        Collections.reverse(mDataList);
 
-                mTimeLineAdapter.notifyDataSetChanged();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+                        mTimeLineAdapter.notifyDataSetChanged();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
 
-                System.out.println(error.toString());
-            }
-        });
+                        System.out.println(error.toString());
+                    }
+                });
 
         VolleyRequest.get(getContext()).add(recordListRequest);
     }

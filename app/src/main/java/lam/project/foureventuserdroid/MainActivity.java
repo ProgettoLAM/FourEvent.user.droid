@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity
             location.setText(mCurrentUser.location);
 
             if(mCurrentUser.image == null) {
-                if(mCurrentUser.gender.equals("F")) {
+                if(mCurrentUser.gender != null && mCurrentUser.gender.equals("F")) {
                     imgUser.setImageResource(R.drawable.img_female);
                 }
             }
