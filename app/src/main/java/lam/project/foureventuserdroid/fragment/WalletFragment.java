@@ -286,7 +286,7 @@ public class WalletFragment extends Fragment {
                             try {
 
                                 //ritorna l'oggetto che viene parsato e aggiunto
-                                Record insertedRecord = Record.fromJson(response);
+                                Record insertedRecord = Record.fromJson(response.getJSONObject(Record.Keys.RECORD));
 
                                 mDataList.addFirst(insertedRecord);
 

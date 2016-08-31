@@ -144,6 +144,7 @@ public class Record {
         public static String TYPE = "type";
         public static String USER = "user";
         public static String EVENT = "event";
+        public static String RECORD =  "record";
 
         public static final String RECHARGE = "Ricarica conto";
         public static final String BUY = "Acquisto biglietto";

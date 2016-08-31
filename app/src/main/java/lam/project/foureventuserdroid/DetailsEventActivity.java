@@ -227,8 +227,6 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
     private void updateParticipations(String participations) {
 
-        detailTickets.setText(participations);
-
         if (mCurrentEvent.isFree()) {
 
             if (mCurrentEvent.willPartecipate()) {
@@ -239,7 +237,11 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
                 fab2.setImageResource(R.drawable.ic_participation_line);
             }
+
         }
+
+
+        detailTickets.setText(participations);
     }
 
     //endregion
@@ -312,6 +314,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                             }
                         });
 
+                        animateFAB();
                         VolleyRequest.get(fab2.getContext()).add(createRecordRequest);
 
                     } catch (JSONException | ParseException e) {
@@ -481,7 +484,8 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
         try {
 
-            Record insertedRecord = Record.fromJson(response);
+            //TODO modificare in questo modo anche wallet per le ricariche
+            Record insertedRecord = Record.fromJson(response.getJSONObject(Record.Keys.RECORD));
 
             MainActivity.mCurrentUser.updateBalance(insertedRecord.mAmount);
 
@@ -489,8 +493,10 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
             mAlertDialog.dismiss();
 
+            updateParticipations(response.getString("participations") + "/" +mCurrentEvent.mMaxTicket);
+
             Snackbar responseSnackBar = Snackbar.make(fab2,
-                    "Biglietto acquistato con successo!", Snackbar.LENGTH_LONG);
+                    response.getString("message"), Snackbar.LENGTH_LONG);
 
             responseSnackBar.getView().setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.lightGreen));
 
