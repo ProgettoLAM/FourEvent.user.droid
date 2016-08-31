@@ -32,7 +32,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketViewHolder> {
         final View layout = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.content_ticket_list,parent,false);
 
-        return new TicketViewHolder(mSenderActivity,mRecords,layout);
+        return new TicketViewHolder(mSenderActivity,layout);
     }
 
     @Override
