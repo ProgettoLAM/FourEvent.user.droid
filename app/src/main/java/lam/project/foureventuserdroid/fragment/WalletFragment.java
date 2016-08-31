@@ -285,8 +285,9 @@ public class WalletFragment extends Fragment {
 
                             try {
 
+                                dialog.dismiss();
                                 //ritorna l'oggetto che viene parsato e aggiunto
-                                Record insertedRecord = Record.fromJson(response.getJSONObject(Record.Keys.RECORD));
+                                Record insertedRecord = Record.fromJson(response);
 
                                 mDataList.addFirst(insertedRecord);
 
@@ -299,7 +300,6 @@ public class WalletFragment extends Fragment {
 
                                 UserManager.get().save(MainActivity.mCurrentUser);
 
-                                dialog.dismiss();
 
                             } catch (JSONException e) {
 
