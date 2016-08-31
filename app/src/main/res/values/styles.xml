@@ -21,6 +21,12 @@
         <item name="colorControlHighlight">#eee</item>
     </style>
 
+    <style name="ButtonCategories" parent="@android:style/Widget.Holo.Button.Borderless.Small">
+        <item name="android:background">#fff</item>
+        <item name="android:textColor">@color/button_categories_text</item>
+        <item name="android:onClick">selectedButton</item>
+    </style>
+
 
 
 </resources>

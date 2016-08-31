@@ -33,18 +33,18 @@
     <string name="todo_settings">TODO: Recycler view settings</string>
 
     <!-- Stringhe categorie -->
-    <string name="musica">Musica</string>
-    <string name="tecnologia">Tecnologia</string>
-    <string name="lettura">Lettura</string>
-    <string name="sport">Sport</string>
-    <string name="moda">Moda</string>
-    <string name="fotografia">Fotografia</string>
-    <string name="marketing">Marketing</string>
-    <string name="natura">Natura</string>
-    <string name="arte">Arte</string>
-    <string name="cibo">Cibo</string>
-    <string name="viaggi">Viaggi</string>
-    <string name="videogiochi">Videogiochi</string>
+    <string name="musica">MUSICA</string>
+    <string name="tecnologia">TECNOLOGIA</string>
+    <string name="lettura">LETTURA</string>
+    <string name="sport">SPORT</string>
+    <string name="moda">MODA</string>
+    <string name="fotografia">FOTOGRAFIA</string>
+    <string name="marketing">MARKETING</string>
+    <string name="natura">NATURA</string>
+    <string name="arte">ARTE</string>
+    <string name="cibo">CIBO</string>
+    <string name="viaggi">VIAGGI</string>
+    <string name="videogiochi">VIDEOGIOCHI</string>
 
     <!-- Altro -->
     <string name="male">M</string>
