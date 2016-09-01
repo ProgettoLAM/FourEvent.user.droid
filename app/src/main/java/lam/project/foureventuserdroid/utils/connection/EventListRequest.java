@@ -25,7 +25,9 @@ public class EventListRequest extends JsonRequest<List<Event>> {
 
     public final static String TYPE_NEAR = "near";
     public final static String TYPE_CATEGORIES = "category";
-    public final static String TYPE_FAVOURITE = "favourite";
+    public final static String TYPE_POPULAR = "popular";
+
+public final static String QUERY_TYPE = "type";
 
 
     public EventListRequest(String url, Response.Listener<List<Event>> listener, Response.ErrorListener errorListener) {

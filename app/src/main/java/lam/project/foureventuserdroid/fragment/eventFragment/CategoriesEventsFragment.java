@@ -158,8 +158,9 @@ public class CategoriesEventsFragment extends Fragment {
     private void setModel(){
 
         String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
-                .appendPath(EventListRequest.TYPE_CATEGORIES)
-                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
+                .appendEncodedPath(MainActivity.mCurrentUser.email)
+                .appendQueryParameter(EventListRequest.QUERY_TYPE,EventListRequest.TYPE_CATEGORIES)
+                .getUri();
 
         EventListRequest request = new EventListRequest(url,
                 new Response.Listener<List<Event>>() {

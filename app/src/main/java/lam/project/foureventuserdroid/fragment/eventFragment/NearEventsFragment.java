@@ -63,8 +63,6 @@ public class NearEventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        setModel();
-
         FavouriteManager.get(getContext());
 
         return initView(inflater.inflate(R.layout.fragment_list_events, container, false));
@@ -112,6 +110,8 @@ public class NearEventsFragment extends Fragment {
         });
 
         startAnim();
+
+        setModel();
 
         return rootView;
     }
@@ -170,8 +170,8 @@ public class NearEventsFragment extends Fragment {
             double lat = MainActivity.mCurrentLocation.getLatitude();
 
             String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
-                    .appendPath(EventListRequest.TYPE_NEAR)
                     .appendEncodedPath(MainActivity.mCurrentUser.email)
+                    .appendQueryParameter(EventListRequest.QUERY_TYPE,EventListRequest.TYPE_NEAR)
                     .appendQueryParameter("lng",String.valueOf(lng))
                     .appendQueryParameter("lat",String.valueOf(lat))
                     .getUri();
@@ -220,5 +220,7 @@ public class NearEventsFragment extends Fragment {
 
             VolleyRequest.get(getContext()).add(request);
         }
+
+        showAndHideViews();
     }
 }
