@@ -23,6 +23,11 @@ import lam.project.foureventuserdroid.model.Event;
 
 public class EventListRequest extends JsonRequest<List<Event>> {
 
+    public final static String TYPE_NEAR = "near";
+    public final static String TYPE_CATEGORIES = "category";
+    public final static String TYPE_FAVOURITE = "favourite";
+
+
     public EventListRequest(String url, Response.Listener<List<Event>> listener, Response.ErrorListener errorListener) {
         super(Request.Method.GET, url, null, listener, errorListener);
     }

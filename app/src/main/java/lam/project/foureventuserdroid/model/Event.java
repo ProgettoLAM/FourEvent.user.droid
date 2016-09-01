@@ -3,6 +3,7 @@ package lam.project.foureventuserdroid.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,8 +95,13 @@ public class Event implements Parcelable{
         final String address = jsonObject.getString(Keys.ADDRESS);
         final String price = jsonObject.getString(Keys.PRICE);
         final String image = jsonObject.getString(Keys.IMAGE);
-        final float latitude = BigDecimal.valueOf(jsonObject.getDouble(Keys.LATITUDE)).floatValue();
-        final float longitude = BigDecimal.valueOf(jsonObject.getDouble(Keys.LONGITUDE)).floatValue();
+
+        //prendere latitudine e longitudine
+
+        JSONArray coordinates = jsonObject.getJSONObject("loc").getJSONArray("coordinates");
+
+        final float latitude = BigDecimal.valueOf(coordinates.getDouble(1)).floatValue();
+        final float longitude = BigDecimal.valueOf(coordinates.getDouble(0)).floatValue();
 
         boolean willPartecipate = false;
 

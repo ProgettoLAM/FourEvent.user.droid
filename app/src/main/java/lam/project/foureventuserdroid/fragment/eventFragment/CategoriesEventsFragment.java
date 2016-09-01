@@ -35,6 +35,7 @@ import lam.project.foureventuserdroid.fragment.recyclerView.EventAdapter;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.utils.connection.EventListRequest;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
+import lam.project.foureventuserdroid.utils.connection.HandlerManager;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 
@@ -157,6 +158,7 @@ public class CategoriesEventsFragment extends Fragment {
     private void setModel(){
 
         String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
+                .appendPath(EventListRequest.TYPE_CATEGORIES)
                 .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
 
         EventListRequest request = new EventListRequest(url,
@@ -195,31 +197,9 @@ public class CategoriesEventsFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        String responseBody = null;
+                        mEventNotFound.setText(HandlerManager.handleError(error));
 
-                        try {
-
-                            responseBody = new String( error.networkResponse.data, "utf-8" );
-                            JSONObject jsonObject = new JSONObject( responseBody );
-
-                            String errorText = (String) jsonObject.get("message");
-
-                            mEventNotFound.setText(errorText);
-
-                            showAndHideViews();
-
-                        } catch (NullPointerException | UnsupportedEncodingException | JSONException e) {
-
-                            if( e instanceof NullPointerException) {
-
-                                Snackbar snackbar = Snackbar.make(mEventNotFound,"Impossibile raggiungere il server",Snackbar.LENGTH_INDEFINITE);
-                                snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightRed));
-                                snackbar.show();
-                            }
-
-                            showAndHideViews();
-                            e.printStackTrace();
-                        }
+                        showAndHideViews();
                     }
                 });
 

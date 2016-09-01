@@ -32,15 +32,16 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                selectedFragment = new NearEventsFragment();
+                selectedFragment = new PopularsEventsFragment();
+
                 break;
 
             case 1:
-                selectedFragment = new CategoriesEventsFragment();
+                selectedFragment = new NearEventsFragment();
                 break;
 
             case 2:
-                selectedFragment = new PopularsEventsFragment();
+                selectedFragment = new CategoriesEventsFragment();
                 break;
 
             default:

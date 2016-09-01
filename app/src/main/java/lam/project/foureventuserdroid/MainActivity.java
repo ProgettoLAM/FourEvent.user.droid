@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static User mCurrentUser;
+
     private Fragment mNextFragment;
 
     private GoogleApiClient mGoogleApiClient;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity
 
     private boolean mResolvingError;
 
-    private Location mCurrentLocation;
+    public static Location mCurrentLocation;
 
     private Fragment profileFragment;
     public static int WALLET_CODE = 5;
@@ -575,6 +576,7 @@ public class MainActivity extends AppCompatActivity
             if(addresses != null) {
 
                 updateDrawerHeader(addresses.get(0).getLocality());
+
             }
         }
     }

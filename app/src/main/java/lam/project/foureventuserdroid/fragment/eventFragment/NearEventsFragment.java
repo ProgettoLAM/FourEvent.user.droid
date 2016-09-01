@@ -164,51 +164,61 @@ public class NearEventsFragment extends Fragment {
 
     private void setModel(){
 
-        String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
-                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
+        if(MainActivity.mCurrentLocation != null) {
 
-        EventListRequest request = new EventListRequest(url,
-                new Response.Listener<List<Event>>() {
-                    @Override
-                    public void onResponse(List<Event> response) {
+            double lng = MainActivity.mCurrentLocation.getLongitude();
+            double lat = MainActivity.mCurrentLocation.getLatitude();
 
-                        mModel.clear();
-                        mModel.addAll(response);
+            String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
+                    .appendPath(EventListRequest.TYPE_NEAR)
+                    .appendEncodedPath(MainActivity.mCurrentUser.email)
+                    .appendQueryParameter("lng",String.valueOf(lng))
+                    .appendQueryParameter("lat",String.valueOf(lat))
+                    .getUri();
 
-                        List<Event> favouriteEvents = FavouriteManager.get().getFavouriteEvents();
+            EventListRequest request = new EventListRequest(url,
+                    new Response.Listener<List<Event>>() {
+                        @Override
+                        public void onResponse(List<Event> response) {
 
-                        for (Event event : mModel) {
+                            mModel.clear();
+                            mModel.addAll(response);
 
-                            for (Event favouriteEvent : favouriteEvents) {
+                            List<Event> favouriteEvents = FavouriteManager.get().getFavouriteEvents();
 
-                                if (favouriteEvent.mId != null && favouriteEvent.mId.equals(event.mTitle)) {
+                            for (Event event : mModel) {
 
-                                    event.mIsPreferred = true;
+                                for (Event favouriteEvent : favouriteEvents) {
+
+                                    if (favouriteEvent.mId != null && favouriteEvent.mId.equals(event.mTitle)) {
+
+                                        event.mIsPreferred = true;
+                                    }
                                 }
                             }
+
+                            mAdapter.notifyDataSetChanged();
+
+                            if(mSwipeRefreshLayout.isRefreshing()) {
+
+                                mSwipeRefreshLayout.setRefreshing(false);
+                            }
+
+                            showAndHideViews();
+
                         }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
 
-                        mAdapter.notifyDataSetChanged();
+                            mEventNotFound.setText(HandlerManager.handleError(error));
 
-                        if(mSwipeRefreshLayout.isRefreshing()) {
-
-                            mSwipeRefreshLayout.setRefreshing(false);
+                            showAndHideViews();
                         }
+                    });
 
-                        showAndHideViews();
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        mEventNotFound.setText(HandlerManager.handleError(error));
-
-                        showAndHideViews();
-                    }
-                });
-
-        VolleyRequest.get(getContext()).add(request);
+            VolleyRequest.get(getContext()).add(request);
+        }
     }
 }

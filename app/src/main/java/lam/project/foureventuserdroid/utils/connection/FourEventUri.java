@@ -40,6 +40,12 @@ public class FourEventUri {
             return this;
         }
 
+        public Builder appendQueryParameter(String key, String query) {
+
+            mRequestedUriBuilder.appendQueryParameter(key,query);
+            return this;
+        }
+
         public String getUri () {
 
             return mRequestedUriBuilder.build().toString();
