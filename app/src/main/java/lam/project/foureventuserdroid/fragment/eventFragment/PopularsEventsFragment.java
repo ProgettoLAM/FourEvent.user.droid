@@ -49,51 +49,44 @@ public class PopularsEventsFragment extends Fragment {
     public PopularsEventsFragment() {
         // Required empty public constructor
     }
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private EventAdapter mAdapter;
 
+    private ImageView mSadImageEmoticon;
+    private TextView mEventNotFound;
+    private ProgressBar mProgressBar;
 
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    RecyclerView mRecyclerView;
-    EventAdapter mAdapter;
-
-    public static List<Event> mModel = new ArrayList<>();
-
-    ImageView mSadImageEmoticon;
-    TextView mEventNotFound;
-    ProgressBar mProgressBar;
-
-    //region creazione view + activity result
+    private List<Event> mModel = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        View view = initView(inflater.inflate(R.layout.fragment_list_events, container, false));
+
         setModel();
 
         FavouriteManager.get(getContext());
 
-        return initView(inflater.inflate(R.layout.fragment_list_events, container, false));
+        return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == MainActivity.WALLET_CODE) {
-
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.anchor_point, new WalletFragment())
-                    .commit();
-        }
-    }
-
-    //endregion
-
+    /***
+     *
+     * @param rootView view su cui viene fatto l'inflate
+     * @return la stessa view
+     */
     private View initView(View rootView) {
 
+        //Inizializzazione delle view e
         mSadImageEmoticon = (ImageView) rootView.findViewById(R.id.events_sad_emoticon);
         mEventNotFound = (TextView) rootView.findViewById(R.id.events_not_found);
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.events_recycler_view);
 
         mAdapter = new EventAdapter(getActivity(),mModel);
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
@@ -102,8 +95,8 @@ public class PopularsEventsFragment extends Fragment {
 
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mRecyclerView.setAdapter(mAdapter);
 
+        mRecyclerView.setAdapter(mAdapter);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.events_swipe_refresh_layout);
 
@@ -115,11 +108,11 @@ public class PopularsEventsFragment extends Fragment {
             }
         });
 
+        //Inizio l'animazione della progress bar
         ObjectAnimator animation = ObjectAnimator.ofInt (mProgressBar, "progress", 0, 500);
         animation.setDuration (1000);
         animation.setInterpolator (new DecelerateInterpolator());
         animation.start ();
-
 
         //mostro progress bar e nascondo tutto il resto
         mProgressBar.setVisibility(View.VISIBLE);
@@ -131,6 +124,10 @@ public class PopularsEventsFragment extends Fragment {
         return rootView;
     }
 
+    /***
+     * Mostro/Nascondo le view
+     *
+     */
     public final void showAndHideViews() {
 
         //nascondo sempre la progress bar
@@ -155,7 +152,6 @@ public class PopularsEventsFragment extends Fragment {
             mSadImageEmoticon.setVisibility(View.VISIBLE);
             mEventNotFound.setVisibility(View.VISIBLE);
         }
-
     }
 
     private void setModel(){
