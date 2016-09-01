@@ -12,6 +12,7 @@ import lam.project.foureventuserdroid.model.User;
 
 /**
  * Created by spino on 30/07/16.
+ *
  */
 public final class UserManager {
 

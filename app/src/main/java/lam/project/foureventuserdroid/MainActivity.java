@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_ACCESS_LOCATION = 2;
     private static final int MAX_GEOCODER_RESULTS = 5;
 
-    public static View headerView;
+    private View headerView;
 
     private boolean mResolvingError;
 
@@ -203,6 +203,30 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //region Navigation Drawer
+
+    @Override
+    public void onBackPressed() {
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+
+            if(clicked == 0) {
+
+                Toast.makeText(this,"Clicca ancora per uscire dall'applicazione",Toast.LENGTH_LONG).show();
+                clicked ++;
+
+            } else {
+
+                super.onBackPressed();
+            }
+        }
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -277,27 +301,16 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
-    @Override
-    public void onBackPressed() {
+    private void updateDrawerHeader(final String addressText) {
 
+        TextView txtLocation = (TextView) headerView.findViewById(R.id.location);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-
-            if(clicked == 0) {
-
-                Toast.makeText(this,"Clicca ancora per uscire dall'applicazione",Toast.LENGTH_LONG).show();
-                clicked ++;
-
-            } else {
-
-                super.onBackPressed();
-            }
-        }
+        txtLocation.setText(addressText);
     }
+
+    //endregion
+
+    //region Google maps
 
     @Override
     protected void onStart() {
@@ -326,6 +339,7 @@ public class MainActivity extends AppCompatActivity
         public ErrorDialogFragment() {
         }
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -565,11 +579,5 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void updateDrawerHeader(final String addressText) {
-
-        TextView txtLocation = (TextView) headerView.findViewById(R.id.location);
-
-        txtLocation.setText(addressText);
-    }
-
+    //endregion
 }

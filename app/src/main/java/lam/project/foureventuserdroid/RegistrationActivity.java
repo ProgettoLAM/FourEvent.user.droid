@@ -31,6 +31,7 @@ import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 /**
  * Created by Vale on 30/07/2016.
+ *
  */
 
 public class RegistrationActivity extends AppCompatActivity {

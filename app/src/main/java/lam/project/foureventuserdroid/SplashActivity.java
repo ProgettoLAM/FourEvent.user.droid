@@ -7,23 +7,13 @@ import android.os.PersistableBundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import lam.project.foureventuserdroid.complete_profile.StepManager;
 import lam.project.foureventuserdroid.model.User;
-import lam.project.foureventuserdroid.utils.connection.CustomRequest;
-import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 public class SplashActivity extends AppCompatActivity {
@@ -43,17 +33,14 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
 
-            switch (msg.what) {
+            if(msg.what == GO_AHEAD_WHAT){
 
-                case GO_AHEAD_WHAT:
+                long elapsedTime = SystemClock.uptimeMillis() - mStartTime;
+                if(elapsedTime >= MIN_WAIT_INTERVAL && !mIsDone){
 
-                    long elapsedTime = SystemClock.uptimeMillis() - mStartTime;
-                    if(elapsedTime >= MIN_WAIT_INTERVAL && !mIsDone){
-
-                        mIsDone = true;
-                        goAhead();
-                    }
-                    break;
+                    mIsDone = true;
+                    goAhead();
+                }
             }
         }
     };
