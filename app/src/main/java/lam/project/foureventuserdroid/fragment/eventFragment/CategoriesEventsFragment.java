@@ -4,9 +4,7 @@ package lam.project.foureventuserdroid.fragment.eventFragment;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,10 +19,6 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,26 +33,21 @@ import lam.project.foureventuserdroid.utils.connection.HandlerManager;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class CategoriesEventsFragment extends Fragment {
 
     public CategoriesEventsFragment() {
         // Required empty public constructor
     }
 
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    RecyclerView mRecyclerView;
-    EventAdapter mAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private EventAdapter mAdapter;
 
-    public static List<Event> mModel = new ArrayList<>();
+    private ImageView mSadImageEmoticon;
+    private TextView mEventNotFound;
+    private ProgressBar mProgressBar;
 
-    ImageView mSadImageEmoticon;
-    TextView mEventNotFound;
-    ProgressBar mProgressBar;
-
-    //region creazione view + activity result
+    private List<Event> mModel = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,10 +70,14 @@ public class CategoriesEventsFragment extends Fragment {
         }
     }
 
-    //endregion
-
+    /***
+     *
+     * @param rootView view su cui viene fatto l'inflate
+     * @return la stessa view
+     */
     private View initView(View rootView) {
 
+        //Inizializzazione delle view e
         mSadImageEmoticon = (ImageView) rootView.findViewById(R.id.events_sad_emoticon);
         mEventNotFound = (TextView) rootView.findViewById(R.id.events_not_found);
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
@@ -92,15 +85,16 @@ public class CategoriesEventsFragment extends Fragment {
 
         mAdapter = new EventAdapter(getActivity(),mModel);
 
+        /*
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.scrollToPosition(0);
 
         mRecyclerView.setLayoutManager(layoutManager);
+        */
 
         mRecyclerView.setAdapter(mAdapter);
-
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.events_swipe_refresh_layout);
 
@@ -112,11 +106,11 @@ public class CategoriesEventsFragment extends Fragment {
             }
         });
 
+        //Inizio l'animazione della progress bar
         ObjectAnimator animation = ObjectAnimator.ofInt (mProgressBar, "progress", 0, 500);
         animation.setDuration (1000);
         animation.setInterpolator (new DecelerateInterpolator());
         animation.start ();
-
 
         //mostro progress bar e nascondo tutto il resto
         mProgressBar.setVisibility(View.VISIBLE);
@@ -128,6 +122,10 @@ public class CategoriesEventsFragment extends Fragment {
         return rootView;
     }
 
+    /***
+     * Mostro/Nascondo le view
+     *
+     */
     public final void showAndHideViews() {
 
         //nascondo sempre la progress bar
@@ -152,11 +150,15 @@ public class CategoriesEventsFragment extends Fragment {
             mSadImageEmoticon.setVisibility(View.VISIBLE);
             mEventNotFound.setVisibility(View.VISIBLE);
         }
-
     }
 
+    /***
+     *
+     * Setto il modello della recycler view e notifico l'update
+     */
     private void setModel(){
 
+        //creo l'url per la richiesta
         String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
                 .appendEncodedPath(MainActivity.mCurrentUser.email)
                 .appendQueryParameter(EventListRequest.QUERY_TYPE,EventListRequest.TYPE_CATEGORIES)
@@ -167,6 +169,7 @@ public class CategoriesEventsFragment extends Fragment {
                     @Override
                     public void onResponse(List<Event> response) {
 
+                        //rimpiazzio il modello impostando se è un evento preferito
                         mModel.clear();
                         mModel.addAll(response);
 
@@ -176,7 +179,7 @@ public class CategoriesEventsFragment extends Fragment {
 
                             for (Event favouriteEvent : favouriteEvents) {
 
-                                if (favouriteEvent.mTitle.equals(event.mTitle)) {
+                                if (favouriteEvent.mId != null && favouriteEvent.mId.equals(event.mTitle)) {
 
                                     event.mIsPreferred = true;
                                 }
@@ -199,7 +202,6 @@ public class CategoriesEventsFragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
 
                         mEventNotFound.setText(HandlerManager.handleError(error));
-
                         showAndHideViews();
                     }
                 });

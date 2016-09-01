@@ -1,9 +1,7 @@
 package lam.project.foureventuserdroid;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -251,6 +249,11 @@ public class MainActivity extends AppCompatActivity
             finish();
 
             return;
+
+        }
+
+        else if(itemId == R.id.nav_vote) {
+
         }
 
         switch (itemId) {
@@ -287,11 +290,6 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             //Da qui in poi non si hanno modifiche
-
-            case R.id.nav_vote:
-
-                mNextFragment = new EventsFragment();
-                break;
 
             default:
                 throw new IllegalArgumentException("No fragment given");

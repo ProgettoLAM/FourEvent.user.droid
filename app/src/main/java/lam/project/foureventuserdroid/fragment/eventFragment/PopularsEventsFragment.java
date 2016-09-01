@@ -31,6 +31,7 @@ import java.util.List;
 
 import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
+import lam.project.foureventuserdroid.fragment.EventsFragment;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
 import lam.project.foureventuserdroid.fragment.recyclerView.EventAdapter;
 import lam.project.foureventuserdroid.model.Event;
