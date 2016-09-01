@@ -13,6 +13,7 @@ import lam.project.foureventuserdroid.model.Event;
 
 /**
  * Created by spino on 21/08/16.
+ *
  */
 
 public final class EventAdapter extends RecyclerView.Adapter<EventViewHolder>{

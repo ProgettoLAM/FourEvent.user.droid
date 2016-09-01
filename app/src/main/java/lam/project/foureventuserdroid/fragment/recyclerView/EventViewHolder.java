@@ -87,19 +87,24 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void bind(Event event){
+    void bind(Event event){
 
         mTitleList.setText(event.mTitle);
         mAddressList.setText(event.mAddress);
         mDateList.setText(event.mStartDate);
         mTagList.setText(event.mTag);
 
-        if(event.mPrice.equals("FREE")){
-            mPriceList.setText(event.mPrice);
+        String price;
+
+        if(event.isFree()){
+            price = event.mPrice;
             mPriceList.setTextColor(Color.parseColor("#4CAF50"));
         }
         else
-            mPriceList.setText(event.mPrice+ "€");
+            price = event.mPrice+ "€";
+
+
+        mPriceList.setText(price);
 
         if(event.mIsPreferred) {
 

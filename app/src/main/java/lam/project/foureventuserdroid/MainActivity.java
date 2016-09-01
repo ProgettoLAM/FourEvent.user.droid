@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_ACCESS_LOCATION = 2;
     private static final int MAX_GEOCODER_RESULTS = 5;
 
-    private View headerView;
+    public static View headerView;
 
     private boolean mResolvingError;
 

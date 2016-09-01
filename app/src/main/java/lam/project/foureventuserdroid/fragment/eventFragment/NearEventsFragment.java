@@ -35,6 +35,7 @@ import lam.project.foureventuserdroid.fragment.recyclerView.EventAdapter;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.utils.connection.EventListRequest;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
+import lam.project.foureventuserdroid.utils.connection.HandlerManager;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 
@@ -48,17 +49,15 @@ public class NearEventsFragment extends Fragment {
     RecyclerView mRecyclerView;
     EventAdapter mAdapter;
 
-    public static List<Event> mModel = new ArrayList<>();
-
     ImageView mSadImageEmoticon;
     TextView mEventNotFound;
     ProgressBar mProgressBar;
 
+    public static List<Event> mModel = new ArrayList<>();
+
     public NearEventsFragment() {
         // Required empty public constructor
     }
-
-    //region creazione view + activity result
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,7 +80,7 @@ public class NearEventsFragment extends Fragment {
         }
     }
 
-    //endregion
+
 
     private View initView(View rootView) {
 
@@ -112,11 +111,19 @@ public class NearEventsFragment extends Fragment {
             }
         });
 
+        startAnim();
+
+        return rootView;
+    }
+
+    //region animazioni
+
+    private void startAnim() {
+
         ObjectAnimator animation = ObjectAnimator.ofInt (mProgressBar, "progress", 0, 500);
         animation.setDuration (1000);
         animation.setInterpolator (new DecelerateInterpolator());
         animation.start ();
-
 
         //mostro progress bar e nascondo tutto il resto
         mProgressBar.setVisibility(View.VISIBLE);
@@ -124,8 +131,6 @@ public class NearEventsFragment extends Fragment {
         mRecyclerView.setVisibility(View.INVISIBLE);
         mSadImageEmoticon.setVisibility(View.INVISIBLE);
         mEventNotFound.setVisibility(View.INVISIBLE);
-
-        return rootView;
     }
 
     public final void showAndHideViews() {
@@ -155,6 +160,8 @@ public class NearEventsFragment extends Fragment {
 
     }
 
+    //endregion
+
     private void setModel(){
 
         String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
@@ -174,7 +181,7 @@ public class NearEventsFragment extends Fragment {
 
                             for (Event favouriteEvent : favouriteEvents) {
 
-                                if (favouriteEvent.mTitle.equals(event.mTitle)) {
+                                if (favouriteEvent.mId != null && favouriteEvent.mId.equals(event.mTitle)) {
 
                                     event.mIsPreferred = true;
                                 }
@@ -196,35 +203,12 @@ public class NearEventsFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        String responseBody = null;
+                        mEventNotFound.setText(HandlerManager.handleError(error));
 
-                        try {
-
-                            responseBody = new String( error.networkResponse.data, "utf-8" );
-                            JSONObject jsonObject = new JSONObject( responseBody );
-
-                            String errorText = (String) jsonObject.get("message");
-
-                            mEventNotFound.setText(errorText);
-
-                            showAndHideViews();
-
-                        } catch (NullPointerException | UnsupportedEncodingException | JSONException e) {
-
-                            if( e instanceof NullPointerException) {
-
-                                Snackbar snackbar = Snackbar.make(mEventNotFound,"Impossibile raggiungere il server",Snackbar.LENGTH_INDEFINITE);
-                                snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightRed));
-                                snackbar.show();
-                            }
-
-                            showAndHideViews();
-                            e.printStackTrace();
-                        }
+                        showAndHideViews();
                     }
                 });
 
         VolleyRequest.get(getContext()).add(request);
     }
-
 }

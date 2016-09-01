@@ -34,8 +34,8 @@ public class FavouriteFragment extends Fragment {
     private ImageView mSadEmoticon;
     private TextView mEventsNotFound;
 
-    private List<Event> mModel;
-    private List<Event> mFavourite;
+    private List<Event> mModel = new ArrayList<>();
+    private List<Event> mFavourite = new ArrayList<>();;
 
     public FavouriteFragment() {}
 
@@ -59,8 +59,6 @@ public class FavouriteFragment extends Fragment {
 
     private void initRecycler () {
 
-        mModel = new ArrayList<>();
-
         mAdapter = new EventAdapter(getActivity(), mModel);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
@@ -71,6 +69,14 @@ public class FavouriteFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         updateRecycler();
+
+        mRecyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                updateRecycler();
+            }
+        });
 
     }
 
