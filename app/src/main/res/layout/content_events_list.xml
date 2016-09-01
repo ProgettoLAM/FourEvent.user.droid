@@ -41,6 +41,19 @@
                 android:layout_below="@id/img_event"
                 android:textStyle="normal|bold" />
 
+            <TextView
+                android:id="@+id/distance_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12km"
+                android:textColor="@color/lightText"
+                android:paddingTop="16dp"
+                android:paddingRight="16dp"
+                android:textSize="14sp"
+                android:layout_below="@id/img_event"
+                android:textStyle="normal|italic"
+                android:layout_alignParentRight="true"/>
+
 
             <LinearLayout
                 android:id="@+id/details_event"

@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 
 import lam.project.foureventuserdroid.utils.DateConverter;
+import lam.project.foureventuserdroid.utils.Utility;
 
 public class Event implements Parcelable{
 
@@ -42,6 +43,8 @@ public class Event implements Parcelable{
 
     public boolean mIsPreferred;
 
+    public Double mDistance;
+
     private final String mImage;
 
     private boolean mWillPartecipate;
@@ -50,7 +53,7 @@ public class Event implements Parcelable{
     private Event(final String id, final String title, final String description, final String author,
                   final String startDate, final String endDate, final String tag, final String address,
                   final float latitude, final float longitude, final String price, final int participation,
-                  final String image, final int maxTic, final boolean willPartecipate){
+                  final String image, final int maxTic, final boolean willPartecipate, final Double distance){
 
         this.mId = id;
         this.mTitle = title;
@@ -67,11 +70,17 @@ public class Event implements Parcelable{
         this.mImage = image;
         this.mMaxTicket = maxTic;
         this.mWillPartecipate = willPartecipate;
+        this.mDistance = distance;
     }
 
     public boolean isFree() {
 
         return mPrice.equals(Keys.FREE);
+    }
+
+    public boolean hasDistance() {
+
+        return mDistance != null;
     }
 
     public void updateWillParticipate() {
@@ -97,7 +106,6 @@ public class Event implements Parcelable{
         final String image = jsonObject.getString(Keys.IMAGE);
 
         //prendere latitudine e longitudine
-
         JSONArray coordinates = jsonObject.getJSONObject("loc").getJSONArray("coordinates");
 
         final float latitude = BigDecimal.valueOf(coordinates.getDouble(1)).floatValue();
@@ -128,6 +136,11 @@ public class Event implements Parcelable{
 
         if(jsonObject.has(Keys.MAX_TICKETS)) {
             builder.withMaxTic(jsonObject.getInt(Keys.MAX_TICKETS));
+        }
+
+        if(jsonObject.has(Keys.DISTANCE)) {
+
+            builder.withDistance(jsonObject.getDouble(Keys.DISTANCE) / 1000);
         }
 
         return builder.build();
@@ -306,6 +319,7 @@ public class Event implements Parcelable{
         static final String MAX_TICKETS = "tickets";
         static final String IMAGE = "image";
         static final String PARTICIPATE = "participate";
+        static final String DISTANCE = "distance";
 
         static final String FREE = "FREE";
 
@@ -337,6 +351,7 @@ public class Event implements Parcelable{
         private String mImage;
         private int mMaxTicket;
         private boolean mWillPartecipate;
+        private Double mDistance;
 
 
         private Builder(final String title, final String description, final String author, final String startDate){
@@ -407,10 +422,15 @@ public class Event implements Parcelable{
             return this;
         }
 
+        Builder withDistance(final Double distance) {
+            this.mDistance = distance;
+            return this;
+        }
+
         public Event build(){
 
             return new Event(mId,mTitle, mDescription, mAuthor, mStartDate, mEndDate, mTag, mAddress, mLatitude,
-                            mLongitude, mPrice, mParticipation, mImage, mMaxTicket, mWillPartecipate);
+                            mLongitude, mPrice, mParticipation, mImage, mMaxTicket, mWillPartecipate,mDistance);
         }
     }
 

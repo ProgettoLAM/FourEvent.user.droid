@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import lam.project.foureventuserdroid.DetailsEventActivity;
@@ -31,6 +32,7 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
     private TextView mAddressList;
     private TextView mDateList;
     private TextView mTagList;
+    private TextView mDistanceList;
 
     private ImageView mFavouriteList;
     private TextView mPriceList;
@@ -48,11 +50,13 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
         mAddressList = (TextView) itemView.findViewById(R.id.address_list);
         mDateList = (TextView) itemView.findViewById(R.id.date_list);
         mTagList = (TextView) itemView.findViewById(R.id.tag_list);
+        mPriceList = (TextView) itemView.findViewById(R.id.price_list);
+        mDistanceList = (TextView) itemView.findViewById(R.id.distance_list);
 
         mFavouriteList = (ImageView) itemView.findViewById(R.id.favourite_list);
-        mPriceList = (TextView) itemView.findViewById(R.id.price_list);
-
         mImgEvent = (ImageView) itemView.findViewById(R.id.img_event);
+
+
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,17 +107,17 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
         else
             price = event.mPrice+ "€";
 
-
         mPriceList.setText(price);
 
-        if(event.mIsPreferred) {
+        mFavouriteList.setBackgroundResource((event.mIsPreferred)?R.drawable.ic_star:R.drawable.ic_star_empty);
 
-            mFavouriteList.setBackgroundResource(R.drawable.ic_star);
+        if(event.hasDistance()) {
 
-        } else {
-
-            mFavouriteList.setBackgroundResource(R.drawable.ic_star_empty);
+            String distance = new DecimalFormat("#0.00").format(event.mDistance)+" km";
+            mDistanceList.setText(distance);
         }
+
+
 
         String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
                 .appendPath("img").appendPath(event.mId).getUri();

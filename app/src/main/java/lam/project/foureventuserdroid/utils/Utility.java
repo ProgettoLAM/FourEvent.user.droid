@@ -11,6 +11,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by Vale on 24/08/2016.
  */
@@ -50,6 +52,11 @@ public class Utility {
         } else {
             return true;
         }
+    }
+
+    public static double getKm (double input) {
+
+        return Double.parseDouble(new DecimalFormat("#0.00").format(input));
     }
 }
 
