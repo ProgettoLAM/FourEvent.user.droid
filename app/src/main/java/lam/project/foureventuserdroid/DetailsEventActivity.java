@@ -326,7 +326,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         } else {
 
             title = "Credito insufficiente";
-            message = "Non hai abbastanza crediti per aquistare questo biglietto, ricarica il portafoglio!!";
+            message = "Non hai abbastanza crediti per acquistare questo biglietto, ricarica il portafoglio!!";
 
             positiveListenerText = "Ricarica portafoglio";
             positiveListener = new DialogInterface.OnClickListener() {

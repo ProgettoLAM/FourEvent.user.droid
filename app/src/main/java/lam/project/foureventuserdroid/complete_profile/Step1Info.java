@@ -62,7 +62,7 @@ public class Step1Info extends AbstractStep{
     private String userChoosenTask;
 
     private String mImageUri;
-    private User mCurrentUser;
+    private User mCurrentUser = UserManager.get().getUser();
 
 
     @Override
@@ -124,8 +124,6 @@ public class Step1Info extends AbstractStep{
 
         if(isNotEmptyName){
 
-            //setto il nome dell'utente
-            mCurrentUser = UserManager.get().getUser();
             mCurrentUser.addName(txtName.getText().toString()+ " "
                     + txtSurname.getText().toString());
 
