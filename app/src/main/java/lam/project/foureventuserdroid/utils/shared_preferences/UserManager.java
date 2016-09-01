@@ -48,7 +48,7 @@ public final class UserManager {
         return sInstance;
     }
 
-    public @NonNull User getUser(){
+    public User getUser(){
 
         if(mChacedUser != null){
 
