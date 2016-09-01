@@ -92,9 +92,13 @@ public class WalletFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                String value = ((Button) v).getText().toString().split(" ")[0];
-                Float amount = Float.parseFloat(value);
                 try {
+
+                    dialog.dismiss();
+
+                    String value = ((Button) v).getText().toString().split(" ")[0];
+                    Float amount = Float.parseFloat(value);
+
                     recharge(amount);
 
                 }
@@ -110,16 +114,14 @@ public class WalletFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                //TODO insert record
-
                 builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Ricarica il portafoglio");
 
                 View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_recharge, (ViewGroup) getView(), false);
 
-                ((Button)viewInflated.findViewById(R.id.button_1_recharge)).setOnClickListener(rechargeButtonListener);
-                ((Button)viewInflated.findViewById(R.id.button_2_recharge)).setOnClickListener(rechargeButtonListener);
-                ((Button)viewInflated.findViewById(R.id.button_3_recharge)).setOnClickListener(rechargeButtonListener);
+                viewInflated.findViewById(R.id.button_1_recharge).setOnClickListener(rechargeButtonListener);
+                viewInflated.findViewById(R.id.button_2_recharge).setOnClickListener(rechargeButtonListener);
+                viewInflated.findViewById(R.id.button_3_recharge).setOnClickListener(rechargeButtonListener);
 
                 builder.setView(viewInflated);
 

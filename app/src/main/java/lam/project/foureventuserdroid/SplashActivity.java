@@ -100,8 +100,9 @@ public class SplashActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
 
                 long elapsedTime = SystemClock.uptimeMillis() - mStartTime;
-                if(elapsedTime >= MIN_WAIT_INTERVAL){
+                if(elapsedTime >= MIN_WAIT_INTERVAL && !mIsDone){
 
+                    mIsDone = true;
                     goAhead();
                 }
 
@@ -125,9 +126,7 @@ public class SplashActivity extends AppCompatActivity {
             intent = new Intent(this,MainActivity.class);
         }
 
-        startActivity(intent);
         finish();
+        startActivity(intent);
     }
-
-
 }

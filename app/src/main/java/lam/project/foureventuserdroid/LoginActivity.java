@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     private ImageView ic_warning_email;
     private ImageView ic_warning_password;
 
-    private final static String TAG = ".LoginActivity";
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +61,6 @@ public class LoginActivity extends AppCompatActivity {
 
         ic_warning_email = (ImageView) findViewById(R.id.ic_alert_email);
         ic_warning_password = (ImageView) findViewById(R.id.ic_alert_pass);
-
-    }
-
-    public void goToRegistration(final View view) {
-
-        Intent intent = new Intent(this, RegistrationActivity.class);
-        startActivity(intent);
 
     }
 
@@ -91,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
     public void login(final View view) {
         if(controlUser()) {
 
-            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog = new ProgressDialog(this);
 
             progressDialog.setMessage("Login in corso...");
             progressDialog.setIndeterminate(true);
@@ -124,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                                 catch (JSONException ex ) {}
 
-                                progressDialog.dismiss();
+
 
                             }
                         }, new Response.ErrorListener() {
@@ -161,8 +154,10 @@ public class LoginActivity extends AppCompatActivity {
         StepManager.get(this).setStep(StepManager.COMPLETE);
 
         Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+
+        progressDialog.dismiss();
         finish();
+        startActivity(intent);
     }
 
     private final TextWatcher watcher = new TextWatcher() {
