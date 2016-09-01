@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity
 
             if(clicked == 0) {
 
-                Toast.makeText(this,"Clicca ancora per uscire dall'applicazione",Toast.LENGTH_LONG).show();
+                Toast.makeText(this,"Clicca ancora per chiudere l'app",Toast.LENGTH_LONG).show();
                 clicked ++;
 
             } else {
