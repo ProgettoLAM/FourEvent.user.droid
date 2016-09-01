@@ -75,6 +75,7 @@ public class ProfileFragment extends Fragment {
     private String userChoosenTask;
 
     private CircleImageView imgProfile;
+    private Bitmap bm;
 
     public ProfileFragment() {}
 
@@ -105,10 +106,19 @@ public class ProfileFragment extends Fragment {
             }
         }
         else {
-            String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
-                    .appendPath("img").appendEncodedPath(user.email).getUri();
+             /*String filepath = "/sdcard/Pictures/"+ planner.image;
+            File imagefile = new File(filepath);
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(imagefile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
 
-            Picasso.with(getContext()).load(url).into(imgProfile);
+            bm = BitmapFactory.decodeStream(fis);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 100 , baos);
+            imgProfile.setImageBitmap(bm);*/
         }
 
         imgProfile.setOnClickListener(new View.OnClickListener() {

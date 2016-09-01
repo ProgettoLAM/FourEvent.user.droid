@@ -62,6 +62,7 @@ public class Step1Info extends AbstractStep{
     private String userChoosenTask;
 
     private String mImageUri;
+    private User mCurrentUser;
 
 
     @Override
@@ -124,7 +125,7 @@ public class Step1Info extends AbstractStep{
         if(isNotEmptyName){
 
             //setto il nome dell'utente
-            User mCurrentUser = UserManager.get().getUser();
+            mCurrentUser = UserManager.get().getUser();
             mCurrentUser.addName(txtName.getText().toString()+ " "
                     + txtSurname.getText().toString());
 
@@ -269,15 +270,18 @@ public class Step1Info extends AbstractStep{
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 bm.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
-                mImageUri = System.currentTimeMillis() + ".jpg";
+                mImageUri =  mCurrentUser.email + ".jpg";
 
                 File destination = new File(Environment.getExternalStorageDirectory(),
                         mImageUri);
                 FileOutputStream fo;
+
                 destination.createNewFile();
                 fo = new FileOutputStream(destination);
                 fo.write(bytes.toByteArray());
                 fo.close();
+                MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
+                        destination.getAbsolutePath(), destination.getName(), null);
 
                 imgUser.setImageBitmap(bm);
                 uploadImage(destination);
@@ -298,7 +302,7 @@ public class Step1Info extends AbstractStep{
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
-        mImageUri = System.currentTimeMillis() + ".jpg";
+        mImageUri = mCurrentUser.email + ".jpg";
 
         File destination = new File(Environment.getExternalStorageDirectory(),
                 mImageUri);
@@ -309,6 +313,8 @@ public class Step1Info extends AbstractStep{
             fo = new FileOutputStream(destination);
             fo.write(bytes.toByteArray());
             fo.close();
+            MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
+                    destination.getAbsolutePath(), destination.getName(), null);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
