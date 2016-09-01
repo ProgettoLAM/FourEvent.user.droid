@@ -117,11 +117,9 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
             mDistanceList.setText(distance);
         }
 
-
-
         String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
                 .appendPath("img").appendPath(event.mId).getUri();
 
-        Picasso.with(itemView.getContext()).load(url).resize(1200,600).into(mImgEvent);
+        Picasso.with(itemView.getContext()).load(url).into(mImgEvent);
     }
 }
