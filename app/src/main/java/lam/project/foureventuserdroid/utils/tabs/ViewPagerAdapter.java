@@ -2,7 +2,7 @@ package lam.project.foureventuserdroid.utils.tabs;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 
 import lam.project.foureventuserdroid.fragment.eventFragment.NearEventsFragment;
 import lam.project.foureventuserdroid.fragment.eventFragment.PopularsEventsFragment;
@@ -12,55 +12,45 @@ import lam.project.foureventuserdroid.fragment.eventFragment.CategoriesEventsFra
 /**
  * Created by Vale on 19/08/2015.
  */
-public class ViewPagerAdapter extends FragmentStatePagerAdapter {
+public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    private String[] mTitles;
-    private int numOfTabs;
+        private String mTitles[];
+        private int numOfTabs;
 
-
-    // Build a Constructor and assign the passed Values to appropriate values in the class
-    public ViewPagerAdapter(FragmentManager fm, String[] mTitles, int numOfTabs) {
-        super(fm);
-        this.mTitles = mTitles;
-        this.numOfTabs = numOfTabs;
-    }
-
-    //This method return the fragment for the every position in the View Pager
-    @Override
-    public Fragment getItem(int position) {
-        Fragment selectedFragment;
-
-        switch (position) {
-            case 0:
-                selectedFragment = new PopularsEventsFragment();
-
-                break;
-
-            case 1:
-                selectedFragment = new NearEventsFragment();
-                break;
-
-            case 2:
-                selectedFragment = new CategoriesEventsFragment();
-                break;
-
-            default:
-                throw new IllegalArgumentException("Tab inesistente");
+        public ViewPagerAdapter(FragmentManager fm, String[] mTitles, int numOfTabs) {
+            super(fm);
+            this.mTitles = mTitles;
+            this.numOfTabs = numOfTabs;
         }
 
-        return selectedFragment;
+        @Override
+        public int getCount() {
+            return numOfTabs;
+        }
 
-    }
+        @Override
+        public Fragment getItem(int position) {
 
-    @Override
-    public String getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return PopularsEventsFragment.newInstance(position +1);
 
-        return mTitles[position];
-    }
+                case 1:
+                    return NearEventsFragment.newInstance(position +2);
 
+                case 2:
+                    return CategoriesEventsFragment.newInstance(position +3);
 
-    @Override
-    public int getCount() {
-        return mTitles.length;
-    }
+                default:
+                    throw new IllegalArgumentException("Tab inesistente");
+            }
+
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            // Generate title based on item position
+            return mTitles[position];
+        }
+
 }

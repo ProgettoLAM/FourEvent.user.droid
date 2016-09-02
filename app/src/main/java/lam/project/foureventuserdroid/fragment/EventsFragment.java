@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.astuetz.PagerSlidingTabStrip;
+
 import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.utils.tabs.SlidingTabLayout;
@@ -35,7 +37,17 @@ public class EventsFragment extends Fragment {
 
         final String[] mTabNames = getResources().getStringArray(R.array.tab_names);
 
-        SlidingTabLayout tabLayout = (SlidingTabLayout) rootView.findViewById(R.id.tabs);
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        viewPager.setAdapter(new ViewPagerAdapter(getActivity().getSupportFragmentManager(), mTabNames, NUMBER_OF_TABS));
+
+        // Give the PagerSlidingTabStrip the ViewPager
+        PagerSlidingTabStrip tabsStrip = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
+
+        // Attach the view pager to the tab strip
+        tabsStrip.setViewPager(viewPager);
+
+        /*SlidingTabLayout tabLayout = (SlidingTabLayout) rootView.findViewById(R.id.tabs);
         ViewPager pager = (ViewPager) rootView.findViewById(R.id.pager);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), mTabNames, NUMBER_OF_TABS);
@@ -50,7 +62,7 @@ public class EventsFragment extends Fragment {
             }
         });
 
-        tabLayout.setViewPager(pager);
+        tabLayout.setViewPager(pager);*/
 
         return rootView;
     }
@@ -60,14 +72,5 @@ public class EventsFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == MainActivity.WALLET_CODE) {
-
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.anchor_point, new WalletFragment())
-                    .commit();
-        }
-    }
 
 }

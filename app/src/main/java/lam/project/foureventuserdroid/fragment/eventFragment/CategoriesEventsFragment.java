@@ -37,6 +37,10 @@ import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 
 public class CategoriesEventsFragment extends Fragment {
 
+    public static final String ARG_PAGE = "ARG_PAGE";
+
+    private int mPage;
+
     public CategoriesEventsFragment() {}
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -49,9 +53,24 @@ public class CategoriesEventsFragment extends Fragment {
 
     private List<Event> mModel = new ArrayList<>();
 
+    public static CategoriesEventsFragment newInstance(int page) {
+        Bundle args = new Bundle();
+        args.putInt(ARG_PAGE, page);
+        CategoriesEventsFragment fragment = new CategoriesEventsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPage = getArguments().getInt(ARG_PAGE);
+    }
+
+    // Inflate the fragment layout we defined above for this fragment
+    // Set the associated text for the title
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = initView(inflater.inflate(R.layout.fragment_list_events, container, false));
 
@@ -62,10 +81,11 @@ public class CategoriesEventsFragment extends Fragment {
     }
 
     /***
-     *
-     * @param rootView view su cui viene fatto l'inflate
-     * @return la stessa view
-     */
+    *
+    * @param rootView view su cui viene fatto l'inflate
+    * @return la stessa view
+     * */
+
     private View initView(View rootView) {
 
         //Inizializzazione delle view e
@@ -75,12 +95,6 @@ public class CategoriesEventsFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.events_recycler_view);
 
         mAdapter = new EventAdapter(getActivity(),mModel);
-
-<<<<<<< HEAD
-=======
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
->>>>>>> a3ef9a72f66baadf14f63fb5be06e7ad1be6b48b
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -117,10 +131,8 @@ public class CategoriesEventsFragment extends Fragment {
         return rootView;
     }
 
-    /***
-     * Mostro/Nascondo le view
-     *
-     */
+
+
     public final void showAndHideViews() {
 
         //nascondo sempre la progress bar
@@ -147,10 +159,7 @@ public class CategoriesEventsFragment extends Fragment {
         }
     }
 
-    /***
-     *
-     * Setto il modello della recycler view e notifico l'update
-     */
+
     private void setModel(){
 
         //creo l'url per la richiesta
@@ -164,7 +173,7 @@ public class CategoriesEventsFragment extends Fragment {
                     @Override
                     public void onResponse(List<Event> response) {
 
-                        //rimpiazzio il modello impostando se è un evento preferito
+                        //rimpiazzo il modello impostando se è un evento preferito
                         mModel.clear();
                         mModel.addAll(response);
 
@@ -203,4 +212,5 @@ public class CategoriesEventsFragment extends Fragment {
 
         VolleyRequest.get(getContext()).add(request);
     }
+
 }

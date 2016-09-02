@@ -45,10 +45,14 @@ import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
  * A simple {@link Fragment} subclass.
  */
 public class PopularsEventsFragment extends Fragment {
-    
+
+    public static final String ARG_PAGE = "ARG_PAGE";
+
+    private int mPage;
+
     public PopularsEventsFragment() {
-        // Required empty public constructor
     }
+
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private EventAdapter mAdapter;
@@ -59,12 +63,26 @@ public class PopularsEventsFragment extends Fragment {
 
     private List<Event> mModel = new ArrayList<>();
 
+    public static PopularsEventsFragment newInstance(int page) {
+        Bundle args = new Bundle();
+        args.putInt(ARG_PAGE, page);
+        PopularsEventsFragment fragment = new PopularsEventsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPage = getArguments().getInt(ARG_PAGE);
+    }
+
+    // Inflate the fragment layout we defined above for this fragment
+    // Set the associated text for the title
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = initView(inflater.inflate(R.layout.fragment_list_events, container, false));
-
         setModel();
 
         FavouriteManager.get(getContext());
@@ -72,11 +90,11 @@ public class PopularsEventsFragment extends Fragment {
         return view;
     }
 
-    /***
-     *
+    /**
      * @param rootView view su cui viene fatto l'inflate
      * @return la stessa view
-     */
+     **/
+
     private View initView(View rootView) {
 
         //Inizializzazione delle view e
@@ -85,7 +103,7 @@ public class PopularsEventsFragment extends Fragment {
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.events_recycler_view);
 
-        mAdapter = new EventAdapter(getActivity(),mModel);
+        mAdapter = new EventAdapter(getActivity(), mModel);
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -109,10 +127,10 @@ public class PopularsEventsFragment extends Fragment {
         });
 
         //Inizio l'animazione della progress bar
-        ObjectAnimator animation = ObjectAnimator.ofInt (mProgressBar, "progress", 0, 500);
-        animation.setDuration (1000);
-        animation.setInterpolator (new DecelerateInterpolator());
-        animation.start ();
+        ObjectAnimator animation = ObjectAnimator.ofInt(mProgressBar, "progress", 0, 500);
+        animation.setDuration(1000);
+        animation.setInterpolator(new DecelerateInterpolator());
+        animation.start();
 
         //mostro progress bar e nascondo tutto il resto
         mProgressBar.setVisibility(View.VISIBLE);
@@ -124,17 +142,17 @@ public class PopularsEventsFragment extends Fragment {
         return rootView;
     }
 
-    /***
+    /**
      * Mostro/Nascondo le view
-     *
      */
+
     public final void showAndHideViews() {
 
         //nascondo sempre la progress bar
         mProgressBar.setVisibility(View.INVISIBLE);
         mProgressBar.clearAnimation();
 
-        if(mModel != null && mModel.size() > 0) {
+        if (mModel != null && mModel.size() > 0) {
 
             //mostro la recyclerview
             mRecyclerView.setVisibility(View.VISIBLE);
@@ -154,45 +172,44 @@ public class PopularsEventsFragment extends Fragment {
         }
     }
 
-    private void setModel(){
+    private void setModel() {
 
         String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
                 .appendEncodedPath(MainActivity.mCurrentUser.email)
-                .appendQueryParameter(EventListRequest.QUERY_TYPE,EventListRequest.TYPE_POPULAR)
+                .appendQueryParameter(EventListRequest.QUERY_TYPE, EventListRequest.TYPE_POPULAR)
                 .getUri();
 
-        EventListRequest request = new EventListRequest(url,
-                new Response.Listener<List<Event>>() {
-                    @Override
-                    public void onResponse(List<Event> response) {
+        EventListRequest request = new EventListRequest(url, new Response.Listener<List<Event>>() {
+            @Override
+            public void onResponse(List<Event> response) {
 
-                        mModel.clear();
-                        mModel.addAll(response);
+                mModel.clear();
+                mModel.addAll(response);
 
-                        List<Event> favouriteEvents = FavouriteManager.get().getFavouriteEvents();
+                List<Event> favouriteEvents = FavouriteManager.get().getFavouriteEvents();
 
-                        for (Event event : mModel) {
+                for (Event event : mModel) {
 
-                            for (Event favouriteEvent : favouriteEvents) {
+                    for (Event favouriteEvent : favouriteEvents) {
 
-                                if (favouriteEvent.mTitle.equals(event.mTitle)) {
+                        if (favouriteEvent.mTitle.equals(event.mTitle)) {
 
-                                    event.mIsPreferred = true;
-                                }
-                            }
+                            event.mIsPreferred = true;
                         }
-
-                        mAdapter.notifyDataSetChanged();
-
-                        if(mSwipeRefreshLayout.isRefreshing()) {
-
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
-
-                        showAndHideViews();
-
                     }
-                },
+                }
+
+                mAdapter.notifyDataSetChanged();
+
+                if (mSwipeRefreshLayout.isRefreshing()) {
+
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+
+                showAndHideViews();
+
+            }
+        },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {

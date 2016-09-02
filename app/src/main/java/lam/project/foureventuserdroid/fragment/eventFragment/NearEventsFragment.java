@@ -47,6 +47,10 @@ import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
  */
 public class NearEventsFragment extends Fragment {
 
+    public static final String ARG_PAGE = "ARG_PAGE";
+
+    private int mPage;
+
     public NearEventsFragment() {}
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -59,10 +63,24 @@ public class NearEventsFragment extends Fragment {
 
     private List<Event> mModel = new ArrayList<>();
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public static NearEventsFragment newInstance(int page) {
+        Bundle args = new Bundle();
+        args.putInt(ARG_PAGE, page);
+        NearEventsFragment fragment = new NearEventsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPage = getArguments().getInt(ARG_PAGE);
+    }
+
+    // Inflate the fragment layout we defined above for this fragment
+    // Set the associated text for the title
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = initView(inflater.inflate(R.layout.fragment_list_events, container, false));
 
         setModel();
@@ -70,14 +88,14 @@ public class NearEventsFragment extends Fragment {
         FavouriteManager.get(getContext());
 
         return view;
-
     }
 
-    /***
-     *
-     * @param rootView view su cui viene fatto l'inflate
-     * @return la stessa view
-     */
+    /**
+    *
+    * @param rootView view su cui viene fatto l'inflate
+    * @return la stessa view
+     **/
+
     private View initView(View rootView) {
 
         //Inizializzazione delle view e
@@ -125,10 +143,7 @@ public class NearEventsFragment extends Fragment {
         return rootView;
     }
 
-    /***
-     * Mostro/Nascondo le view
-     *
-     */
+
     public final void showAndHideViews() {
 
         //nascondo sempre la progress bar
