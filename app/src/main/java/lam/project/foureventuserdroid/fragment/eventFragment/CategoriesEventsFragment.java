@@ -85,14 +85,13 @@ public class CategoriesEventsFragment extends Fragment {
 
         mAdapter = new EventAdapter(getActivity(),mModel);
 
-        /*
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.scrollToPosition(0);
 
         mRecyclerView.setLayoutManager(layoutManager);
-        */
+
 
         mRecyclerView.setAdapter(mAdapter);
 

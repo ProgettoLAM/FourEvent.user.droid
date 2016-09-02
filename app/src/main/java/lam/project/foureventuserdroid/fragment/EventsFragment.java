@@ -38,7 +38,7 @@ public class EventsFragment extends Fragment {
         SlidingTabLayout tabLayout = (SlidingTabLayout) rootView.findViewById(R.id.tabs);
         ViewPager pager = (ViewPager) rootView.findViewById(R.id.pager);
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager(), mTabNames, NUMBER_OF_TABS);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), mTabNames, NUMBER_OF_TABS);
 
         pager.setAdapter(adapter);
 
