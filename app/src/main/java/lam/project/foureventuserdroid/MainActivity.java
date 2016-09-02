@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -22,8 +23,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static User mCurrentUser;
+    private AlertDialog dialog;
 
     private Fragment mNextFragment;
 
@@ -253,6 +259,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         else if(itemId == R.id.nav_vote) {
+            voteApp();
+            return;
 
         }
 
@@ -580,4 +588,44 @@ public class MainActivity extends AppCompatActivity
     }
 
     //endregion
+
+    private void voteApp() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Invia un feedback!");
+        RatingBar ratingBar;
+        final TextView text;
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View view = inflater.inflate(R.layout.dialog_vote_app, null);
+        builder.setView(view);
+
+        ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
+        text = (TextView) view.findViewById(R.id.text_rating);
+
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(final RatingBar ratingBar, float rating, boolean fromUser) {
+                text.setVisibility(View.VISIBLE);
+
+                final int interval = 1000;
+                Handler handler = new Handler();
+                Runnable runnable = new Runnable(){
+                    public void run() {
+                        dialog.cancel();
+                    }
+                };
+                handler.postAtTime(runnable, System.currentTimeMillis()+interval);
+                handler.postDelayed(runnable, interval);
+            }
+        });
+
+        builder.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+       dialog = builder.show();
+    }
 }

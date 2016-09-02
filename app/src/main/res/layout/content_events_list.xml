@@ -2,6 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -25,8 +26,7 @@
                 android:id="@+id/img_event"
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/img_porchetta" />
+                android:scaleType="centerCrop" />
 
 
             <TextView
@@ -40,6 +40,19 @@
                 android:textSize="18sp"
                 android:layout_below="@id/img_event"
                 android:textStyle="normal|bold" />
+
+            <ImageView
+                android:id="@+id/participation_list"
+                android:layout_width="26sp"
+                android:layout_height="26sp"
+                android:tag=""
+                android:src="@drawable/ic_participation_full"
+                android:tint="@color/lightGreen"
+                android:layout_toRightOf="@id/title_list"
+                android:layout_below="@id/img_event"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="4dp"
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@+id/distance_list"
@@ -124,6 +137,7 @@
                         android:layout_marginLeft="10dp"
                         android:background="@drawable/ic_star_empty"
                         android:layout_toRightOf="@id/price_list"/>
+
                 </RelativeLayout>
 
             </RelativeLayout>

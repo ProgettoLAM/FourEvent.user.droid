@@ -35,6 +35,7 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
     private TextView mDistanceList;
 
     private ImageView mFavouriteList;
+    private ImageView mParticipationList;
     private TextView mPriceList;
     private ImageView mImgEvent;
 
@@ -54,6 +55,8 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
         mDistanceList = (TextView) itemView.findViewById(R.id.distance_list);
 
         mFavouriteList = (ImageView) itemView.findViewById(R.id.favourite_list);
+        mParticipationList = (ImageView) itemView.findViewById(R.id.participation_list);
+
         mImgEvent = (ImageView) itemView.findViewById(R.id.img_event);
 
 
@@ -99,6 +102,10 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
         mTagList.setText(event.mTag);
 
         String price;
+
+        if(event.willPartecipate()) {
+            mParticipationList.setVisibility(View.VISIBLE);
+        }
 
         if(event.isFree()){
             price = event.mPrice;

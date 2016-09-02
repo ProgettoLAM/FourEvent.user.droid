@@ -2,8 +2,10 @@ package lam.project.foureventuserdroid.fragment.eventFragment;
 
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,9 +37,7 @@ import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 
 public class CategoriesEventsFragment extends Fragment {
 
-    public CategoriesEventsFragment() {
-        // Required empty public constructor
-    }
+    public CategoriesEventsFragment() {}
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -53,21 +53,12 @@ public class CategoriesEventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        setModel();
+        View view = initView(inflater.inflate(R.layout.fragment_list_events, container, false));
 
+        setModel();
         FavouriteManager.get(getContext());
 
-        return initView(inflater.inflate(R.layout.fragment_list_events, container, false));
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == MainActivity.WALLET_CODE) {
-
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.anchor_point, new WalletFragment())
-                    .commit();
-        }
+        return view;
     }
 
     /***
@@ -85,6 +76,11 @@ public class CategoriesEventsFragment extends Fragment {
 
         mAdapter = new EventAdapter(getActivity(),mModel);
 
+<<<<<<< HEAD
+=======
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+>>>>>>> a3ef9a72f66baadf14f63fb5be06e7ad1be6b48b
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

@@ -2,8 +2,10 @@ package lam.project.foureventuserdroid.fragment.eventFragment;
 
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -45,49 +47,47 @@ import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
  */
 public class NearEventsFragment extends Fragment {
 
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    RecyclerView mRecyclerView;
-    EventAdapter mAdapter;
+    public NearEventsFragment() {}
 
-    ImageView mSadImageEmoticon;
-    TextView mEventNotFound;
-    ProgressBar mProgressBar;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private EventAdapter mAdapter;
 
-    public static List<Event> mModel = new ArrayList<>();
+    private ImageView mSadImageEmoticon;
+    private TextView mEventNotFound;
+    private ProgressBar mProgressBar;
 
-    public NearEventsFragment() {
-        // Required empty public constructor
-    }
+    private List<Event> mModel = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        View view = initView(inflater.inflate(R.layout.fragment_list_events, container, false));
+
+        setModel();
+
         FavouriteManager.get(getContext());
 
-        return initView(inflater.inflate(R.layout.fragment_list_events, container, false));
+        return view;
+
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == MainActivity.WALLET_CODE) {
-
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.anchor_point, new WalletFragment())
-                    .commit();
-        }
-    }
-
-
-
+    /***
+     *
+     * @param rootView view su cui viene fatto l'inflate
+     * @return la stessa view
+     */
     private View initView(View rootView) {
 
+        //Inizializzazione delle view e
         mSadImageEmoticon = (ImageView) rootView.findViewById(R.id.events_sad_emoticon);
         mEventNotFound = (TextView) rootView.findViewById(R.id.events_not_found);
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.events_recycler_view);
 
         mAdapter = new EventAdapter(getActivity(),mModel);
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
@@ -96,8 +96,8 @@ public class NearEventsFragment extends Fragment {
 
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mRecyclerView.setAdapter(mAdapter);
 
+        mRecyclerView.setAdapter(mAdapter);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.events_swipe_refresh_layout);
 
@@ -109,17 +109,7 @@ public class NearEventsFragment extends Fragment {
             }
         });
 
-        startAnim();
-
-        setModel();
-
-        return rootView;
-    }
-
-    //region animazioni
-
-    private void startAnim() {
-
+        //Inizio l'animazione della progress bar
         ObjectAnimator animation = ObjectAnimator.ofInt (mProgressBar, "progress", 0, 500);
         animation.setDuration (1000);
         animation.setInterpolator (new DecelerateInterpolator());
@@ -131,8 +121,14 @@ public class NearEventsFragment extends Fragment {
         mRecyclerView.setVisibility(View.INVISIBLE);
         mSadImageEmoticon.setVisibility(View.INVISIBLE);
         mEventNotFound.setVisibility(View.INVISIBLE);
+
+        return rootView;
     }
 
+    /***
+     * Mostro/Nascondo le view
+     *
+     */
     public final void showAndHideViews() {
 
         //nascondo sempre la progress bar
@@ -157,10 +153,7 @@ public class NearEventsFragment extends Fragment {
             mSadImageEmoticon.setVisibility(View.VISIBLE);
             mEventNotFound.setVisibility(View.VISIBLE);
         }
-
     }
-
-    //endregion
 
     private void setModel(){
 
