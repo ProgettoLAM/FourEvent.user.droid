@@ -76,12 +76,6 @@ public class CategoriesEventsFragment extends Fragment {
 
         mAdapter = new EventAdapter(getActivity(),mModel);
 
-<<<<<<< HEAD
-=======
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
->>>>>>> a3ef9a72f66baadf14f63fb5be06e7ad1be6b48b
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.scrollToPosition(0);

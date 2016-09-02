@@ -49,6 +49,7 @@ import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.complete_profile.StepManager;
 import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.ImageManager;
 import lam.project.foureventuserdroid.utils.Utility;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
@@ -98,28 +99,7 @@ public class ProfileFragment extends Fragment {
         TextView genderProfile = (TextView) view.findViewById(R.id.gender_profile);
         imgProfile = (CircleImageView) view.findViewById(R.id.profile_image);
 
-        if(user.image == null) {
-            if(user.gender != null) {
-                if(user.gender.equals("F")) {
-                    imgProfile.setImageResource(R.drawable.img_female);
-                }
-            }
-        }
-        else {
-             /*String filepath = "/sdcard/Pictures/"+ planner.image;
-            File imagefile = new File(filepath);
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(imagefile);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            bm = BitmapFactory.decodeStream(fis);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bm.compress(Bitmap.CompressFormat.JPEG, 100 , baos);
-            imgProfile.setImageBitmap(bm);*/
-        }
+        setImage();
 
         imgProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -346,64 +326,34 @@ public class ProfileFragment extends Fragment {
     //Risultato dell'immagine scelta dalla galleria
     @SuppressWarnings("deprecation")
     private void onSelectFromGalleryResult(Intent data) {
-        Bitmap bm = null;
-        if (data != null) {
-            try {
-                bm = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bm.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
-                mImageUri = System.currentTimeMillis() + ".jpg";
+        try {
+            Bitmap thumbnail = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+            File createdImage = ImageManager.get().writeImage(MainActivity.mCurrentUser.email,thumbnail);
 
-                File destination = new File(Environment.getExternalStorageDirectory(),
-                        mImageUri);
-                FileOutputStream fo;
-                destination.createNewFile();
-                fo = new FileOutputStream(destination);
-                fo.write(bytes.toByteArray());
-                fo.close();
+            if(createdImage != null) {
 
-                imgProfile.setImageBitmap(bm);
-                refreshNavbarImage(bm);
-                uploadImage(destination);
-
-            } catch (IOException e) {
-                e.printStackTrace();
+                uploadImage(createdImage);
+                imgProfile.setImageBitmap(thumbnail);
+                refreshNavbarImage(thumbnail);
             }
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
         }
-
-
     }
 
     //Risultato dell'immagine scattata dalla fotocamera
     private void onCaptureImageResult(Intent data) {
 
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        File createdImage = ImageManager.get().writeImage(MainActivity.mCurrentUser.email,thumbnail);
 
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        if(createdImage != null) {
 
-        mImageUri = System.currentTimeMillis() + ".jpg";
-
-        File destination = new File(Environment.getExternalStorageDirectory(),
-                mImageUri);
-        FileOutputStream fo;
-        try {
-
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            uploadImage(createdImage);
+            imgProfile.setImageBitmap(thumbnail);
+            refreshNavbarImage(thumbnail);
         }
-
-        imgProfile.setImageBitmap(thumbnail);
-        refreshNavbarImage(thumbnail);
-        uploadImage(destination);
     }
 
     private void uploadImage(File toUploadFile) {
@@ -444,5 +394,23 @@ public class ProfileFragment extends Fragment {
 
         ((CircleImageView) MainActivity.headerView.findViewById(R.id.profile_image))
                 .setImageBitmap(bm);
+    }
+
+    private void setImage() {
+
+        Bitmap contentImage = ImageManager.get().readImage(MainActivity.mCurrentUser.email);
+
+        if(contentImage == null) {
+
+            if(user.gender != null) {
+                if(user.gender.equals("F")) {
+                    imgProfile.setImageResource(R.drawable.img_female);
+                }
+            }
+        }
+        else {
+
+            imgProfile.setImageBitmap(contentImage);
+        }
     }
 }
