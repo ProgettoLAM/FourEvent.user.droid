@@ -127,6 +127,6 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
         String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
                 .appendPath("img").appendPath(event.mId).getUri();
 
-        Picasso.with(itemView.getContext()).load(url).into(mImgEvent);
+        Picasso.with(itemView.getContext()).load(url).resize(500,200).centerCrop().into(mImgEvent);
     }
 }

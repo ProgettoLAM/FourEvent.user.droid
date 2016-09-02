@@ -218,6 +218,7 @@ public class MainActivity extends AppCompatActivity
                     .appendPath("img").appendEncodedPath(mCurrentUser.email).getUri();
 
             Picasso.with(this).load(url).into(imgUser);
+
         }
     }
 

@@ -74,7 +74,6 @@ public class CategoriesEventsFragment extends Fragment {
 
         View view = initView(inflater.inflate(R.layout.fragment_list_events, container, false));
 
-        setModel();
         FavouriteManager.get(getContext());
 
         return view;
@@ -104,6 +103,8 @@ public class CategoriesEventsFragment extends Fragment {
 
 
         mRecyclerView.setAdapter(mAdapter);
+
+        setModel();
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.events_swipe_refresh_layout);
 
