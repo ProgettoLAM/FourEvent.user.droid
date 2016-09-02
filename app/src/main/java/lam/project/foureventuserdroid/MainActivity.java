@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -53,6 +54,7 @@ import lam.project.foureventuserdroid.fragment.TicketsFragment;
 import lam.project.foureventuserdroid.fragment.ProfileFragment;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
 import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.ImageManager;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.shared_preferences.CategoryManager;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
@@ -79,6 +81,8 @@ public class MainActivity extends AppCompatActivity
     private static final int MAX_GEOCODER_RESULTS = 5;
 
     public static View headerView;
+
+    CircleImageView imgUser;
 
     private boolean mResolvingError;
 
@@ -130,22 +134,13 @@ public class MainActivity extends AppCompatActivity
 
             TextView name = (TextView) headerView.findViewById(R.id.name);
             TextView location = (TextView) headerView.findViewById(R.id.location);
-            CircleImageView imgUser = (CircleImageView) headerView.findViewById(R.id.profile_image);
+            imgUser = (CircleImageView) headerView.findViewById(R.id.profile_image);
 
             name.setText(mCurrentUser.name);
             location.setText(mCurrentUser.location);
 
-            if(mCurrentUser.image == null) {
-                if(mCurrentUser.gender != null && mCurrentUser.gender.equals("F")) {
-                    imgUser.setImageResource(R.drawable.img_female);
-                }
-            }
-            else {
-                String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
-                        .appendPath("img").appendEncodedPath(mCurrentUser.email).getUri();
+            setImage();
 
-                Picasso.with(this).load(url).into(imgUser);
-            }
 
             if (getIntent().hasExtra(OPEN_FRAGMENT_WALLET))
             {
@@ -209,6 +204,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     //region Navigation Drawer
+
+    private void setImage () {
+
+        Bitmap imageContent = ImageManager.get().readImage(mCurrentUser.email);
+
+        if(imageContent != null) {
+
+            imgUser.setImageBitmap(imageContent);
+        }
+        else {
+            String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
+                    .appendPath("img").appendEncodedPath(mCurrentUser.email).getUri();
+
+            Picasso.with(this).load(url).into(imgUser);
+        }
+    }
 
     @Override
     public void onBackPressed() {

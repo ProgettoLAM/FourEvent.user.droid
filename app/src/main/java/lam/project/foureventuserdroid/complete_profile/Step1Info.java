@@ -41,6 +41,7 @@ import java.util.Calendar;
 import de.hdodenhof.circleimageview.CircleImageView;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.ImageManager;
 import lam.project.foureventuserdroid.utils.Utility;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.connection.MultipartRequest;
@@ -259,68 +260,35 @@ public class Step1Info extends AbstractStep{
     }
 
     //Risultato dell'immagine scelta dalla galleria
-    @SuppressWarnings("deprecation")
     private void onSelectFromGalleryResult(Intent data) {
-        Bitmap bm = null;
-        if (data != null) {
-            try {
-                bm = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bm.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
-                mImageUri =  mCurrentUser.email + ".jpg";
+        try {
 
-                File destination = new File(Environment.getExternalStorageDirectory(),
-                        mImageUri);
-                FileOutputStream fo;
+            Bitmap thumbnail = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+            File createdImage = ImageManager.get().writeImage(mCurrentUser.email,thumbnail);
 
-                destination.createNewFile();
-                fo = new FileOutputStream(destination);
-                fo.write(bytes.toByteArray());
-                fo.close();
-                MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
-                        destination.getAbsolutePath(), destination.getName(), null);
+            if(createdImage != null) {
 
-                imgUser.setImageBitmap(bm);
-                uploadImage(destination);
-
-            } catch (IOException e) {
-                e.printStackTrace();
+                imgUser.setImageBitmap(thumbnail);
+                uploadImage(createdImage);
             }
+        }catch (IOException e) {
+
+            e.printStackTrace();
         }
-
-
     }
 
     //Risultato dell'immagine scattata dalla fotocamera
     private void onCaptureImageResult(Intent data) {
 
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        File createdImage = ImageManager.get().writeImage(mCurrentUser.email,thumbnail);
 
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        if(createdImage != null) {
 
-        mImageUri = mCurrentUser.email + ".jpg";
-
-        File destination = new File(Environment.getExternalStorageDirectory(),
-                mImageUri);
-        FileOutputStream fo;
-        try {
-
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-            MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
-                    destination.getAbsolutePath(), destination.getName(), null);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            imgUser.setImageBitmap(thumbnail);
+            uploadImage(createdImage);
         }
-        imgUser.setImageBitmap(thumbnail);
-        uploadImage(destination);
     }
 
     private void uploadImage(File toUploadFile) {
