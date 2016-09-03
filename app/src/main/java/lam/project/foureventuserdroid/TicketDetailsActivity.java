@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.nfc.FormatException;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -23,8 +24,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -32,6 +37,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 import lam.project.foureventuserdroid.model.Record;
+import lam.project.foureventuserdroid.utils.qr_code.Contents;
+import lam.project.foureventuserdroid.utils.qr_code.QRCodeEncoder;
 
 public class TicketDetailsActivity extends AppCompatActivity {
     private final String NAME = "Dettagli biglietto";
@@ -113,7 +120,22 @@ public class TicketDetailsActivity extends AppCompatActivity {
         builder.setTitle("Codice QR");
 
         View viewInflated = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_qrcode, (ViewGroup) getWindow().getDecorView(), false);
+        ImageView imgQr = (ImageView) viewInflated.findViewById(R.id.img_qrcode);
         builder.setView(viewInflated);
+
+        //Generazione di un codice Qr con l'id dell'evento
+        QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(mId,
+                null,
+                Contents.Type.TEXT,
+                BarcodeFormat.QR_CODE.toString(), 600);
+        try {
+            Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
+            imgQr.setImageBitmap(bitmap);
+
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+
 
         builder.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
             @Override
