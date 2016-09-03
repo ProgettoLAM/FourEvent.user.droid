@@ -24,6 +24,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -53,6 +54,7 @@ import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 public class DetailsEventActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mGoogleMap;
+    private final static float DEFAULT_ZOOM = 15.0f;
 
     private Event mCurrentEvent;
 
@@ -550,8 +552,10 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                 .position(mLocationEvent)
                 .title(mCurrentEvent.mTitle))
                 .setIcon(BitmapDescriptorFactory.defaultMarker());
+        final CameraUpdate cameraUpdate = CameraUpdateFactory
+                .newLatLngZoom(mLocationEvent, DEFAULT_ZOOM);
 
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mLocationEvent));
+        mGoogleMap.moveCamera(cameraUpdate);
     }
 
     @Override
