@@ -538,12 +538,12 @@ public class MainActivity extends AppCompatActivity
 
             } else {
 
-                Toast.makeText(this,"Geocoder not aviabile", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"Localizzazione non disponibile", Toast.LENGTH_SHORT).show();
             }
 
         } else {
 
-            Toast.makeText(this,"Geocoder not aviabile", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Localizzazione non disponibile", Toast.LENGTH_SHORT).show();
         }
     }
 

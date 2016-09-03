@@ -110,7 +110,7 @@ public class ProfileFragment extends Fragment {
 
         emailProfile.setText(user.email);
         nameProfile.setText(user.name);
-        if(user.birthDate == null) {
+        if(user.birthDate.equals("Data di nascita")) {
             birthDateProfile.setText("--/--/--");
         }
         else {
@@ -122,14 +122,17 @@ public class ProfileFragment extends Fragment {
         else {
             locationProfile.setText(user.location);
         }
-        if(user.gender.equals("F")) {
-            genderProfile.setText("Femmina");
-        }
-        else if(user.gender.equals("M")) {
-            genderProfile.setText("Maschio");
-        }
-        else if(user.gender == null) {
-            genderProfile.setText("N.D.");
+
+        if(user.gender != null) {
+
+            if(user.gender.equals("F")) {
+
+                genderProfile.setText("Femmina");
+
+            } else if(user.gender.equals("M")) {
+
+                genderProfile.setText("Maschio");
+            }
         }
 
         editPass.setOnClickListener(new View.OnClickListener() {
