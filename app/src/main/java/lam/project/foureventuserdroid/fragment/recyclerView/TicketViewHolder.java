@@ -40,7 +40,7 @@ class TicketViewHolder extends RecyclerView.ViewHolder {
 
         titleEvent.setText(record.mEvent);
         dateEvent.setText(record.mDate);
-        priceEvent.setText(String.valueOf(record.mAmount));
+        priceEvent.setText((int) Math.abs(record.mAmount) +" €");
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

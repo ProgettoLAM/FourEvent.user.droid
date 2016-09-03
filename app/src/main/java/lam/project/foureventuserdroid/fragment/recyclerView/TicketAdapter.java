@@ -18,6 +18,7 @@ import lam.project.foureventuserdroid.model.Record;
 public class TicketAdapter extends RecyclerView.Adapter<TicketViewHolder> {
     private final Activity mSenderActivity;
     private final List<Record> mRecords;
+    private View divider;
 
 
     public TicketAdapter(final Activity senderActivity, final List<Record> records){
@@ -32,12 +33,17 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketViewHolder> {
         final View layout = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.content_ticket_list,parent,false);
 
+        divider = layout.findViewById(R.id.divider);
+
         return new TicketViewHolder(mSenderActivity,layout);
     }
 
     @Override
     public void onBindViewHolder(TicketViewHolder holder, int position) {
 
+        if(position == getItemCount() -1) {
+            divider.setVisibility(View.INVISIBLE);
+        }
         holder.bind(mRecords.get(position));
 
     }

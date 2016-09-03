@@ -12,6 +12,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_margin1">90dp</dimen>
     <dimen name="fab_margin2">160dp</dimen>
-    <dimen name="fab_margin3">220dp</dimen>
+    <dimen name="fab_margin3">230dp</dimen>
 
 </resources>

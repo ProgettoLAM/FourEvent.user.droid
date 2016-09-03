@@ -1,10 +1,8 @@
 package lam.project.foureventuserdroid.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -13,9 +11,7 @@ import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 
-import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
-import lam.project.foureventuserdroid.utils.tabs.SlidingTabLayout;
 import lam.project.foureventuserdroid.utils.tabs.ViewPagerAdapter;
 
 

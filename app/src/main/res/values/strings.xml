@@ -56,4 +56,7 @@
     <string name="first_text">Acquistare un BIGLIETTO non è mai stato così semplice!\n\nVai su un evento e premi sul bottone indicato in figura.\n\nNon hai crediti a sufficienza? Sarai diretto al portafoglio per ricaricarlo!</string>
     <string name="second_text">Gestire il PORTAFOGLIO è molto intuitivo!\n\nClicca sul bottone in figura e scegli l\'importo da ricaricare.\n\nPuoi visualizzare una lista delle ricariche e pagamenti effettuati per avere tutto sotto controllo!</string>
 
+    <!--Dettagli biglietto -->
+    <string name="description">Per effettuare il check-in all\'ingresso, puoi scegliere tra due modalità:\n\n<b>1.</b> Sincronizzare il tuo braccialetto <b>NFC</b> (se lo possiedi), avvicinandolo al dispositivo\n\n<b>2.</b> Far scansionare il codice <b>QR</b> dell\'evento all\'entrata.</string>
+    <string name="sub_description">Buon divertimento!</string>
 </resources>

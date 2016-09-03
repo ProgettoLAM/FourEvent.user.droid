@@ -2,6 +2,7 @@ package lam.project.foureventuserdroid;
 
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.FormatException;
@@ -12,9 +13,15 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,12 +34,13 @@ import java.util.Locale;
 import lam.project.foureventuserdroid.model.Record;
 
 public class TicketDetailsActivity extends AppCompatActivity {
+    private final String NAME = "Dettagli biglietto";
 
     private ProgressDialog mProgressDialog;
-    private TextView mTextView;
     private NfcAdapter mNfcAdapter;
     private boolean mIsSearching;
     private boolean mIsSynced;
+    private Button mButtonNFC;
 
     private String mId;
 
@@ -41,30 +49,36 @@ public class TicketDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_ticket);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(NAME);
+        setSupportActionBar(toolbar);
+
+
         mId = getIntent().getStringExtra(Record.Keys.ID);
 
-        mTextView = (TextView) findViewById(R.id.ticket_list);
-        mTextView.setText(mId);
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        Button mButton = (Button) findViewById(R.id.ticket_sync);
-        mButton.setOnClickListener(new View.OnClickListener() {
+        mButtonNFC = (Button) findViewById(R.id.button_nfc);
+
+        mButtonNFC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(!mNfcAdapter.isEnabled()) {
+                    Snackbar snackbar = Snackbar
+                            .make(v, "Perfavore attiva l'NFC e torna indietro per tornare all'applicazione!", Snackbar.LENGTH_LONG);
 
-                    Toast.makeText(v.getContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
+                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(v.getContext(), R.color.lightRed));
+                    snackbar.show();
+
                     startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
 
                 } else if(mNfcAdapter.isEnabled()) {
 
                     mIsSearching = true;
-                    mProgressDialog = ProgressDialog.show(v.getContext(),"Ricerca braccialetto","Ricerca braccialetto FourEvent in corso...",true,true);
+                    mProgressDialog = ProgressDialog.show(v.getContext(),"Ricerca braccialetto","Ricerca braccialetto NFC in corso...",true,true);
                 }
             }
         });
-
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         if (mNfcAdapter == null) {
             // Stop here, we definitely need NFC
@@ -93,14 +107,34 @@ public class TicketDetailsActivity extends AppCompatActivity {
         }
     }
 
+    public void qrButton(final View view) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setTitle("Codice QR");
+
+        View viewInflated = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_qrcode, (ViewGroup) getWindow().getDecorView(), false);
+        builder.setView(viewInflated);
+
+        builder.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
+
     @Override
     protected void onResume() {
 
-        findViewById(R.id.ticket_synced).setVisibility(View.VISIBLE);
-
         if(!mIsSynced) {
 
-            findViewById(R.id.ticket_synced).setVisibility(View.INVISIBLE);
+            mButtonNFC.setEnabled(true);
+
+        }
+        else {
+            mButtonNFC.setEnabled(false);
         }
 
         enableForegroundDispatchSystem();
@@ -166,8 +200,9 @@ public class TicketDetailsActivity extends AppCompatActivity {
 
                 ndef.writeNdefMessage(ndefMessage);
                 ndef.close();
-
-                Snackbar.make(mTextView,"Braccialetto sincronizzato con successo",Snackbar.LENGTH_LONG).show();
+                mButtonNFC.setText("NFC già sincronizzato");
+                mButtonNFC.setEnabled(false);
+                Snackbar.make(getWindow().getDecorView(),"Braccialetto sincronizzato con successo",Snackbar.LENGTH_LONG).show();
                 mIsSynced = true;
             }
 
