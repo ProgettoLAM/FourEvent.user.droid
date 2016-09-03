@@ -296,7 +296,7 @@ public class Step1Info extends AbstractStep{
         String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
                 .appendPath("img").appendEncodedPath(UserManager.get(getContext()).getUser().email).getUri();
 
-        final ProgressDialog loading = ProgressDialog.show(getContext(), "Immagine dell'evento", "Caricamento in corso..", false, false);
+        final ProgressDialog loading = ProgressDialog.show(getContext(), "Immagine del profilo", "Caricamento in corso..", false, false);
 
         MultipartRequest mMultipartRequest = new MultipartRequest(url,
                 new Response.ErrorListener() {
