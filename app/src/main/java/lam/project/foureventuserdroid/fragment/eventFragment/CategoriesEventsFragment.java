@@ -22,6 +22,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import lam.project.foureventuserdroid.MainActivity;
@@ -177,6 +179,7 @@ public class CategoriesEventsFragment extends Fragment {
                         //rimpiazzo il modello impostando se è un evento preferito
                         mModel.clear();
                         mModel.addAll(response);
+                        Collections.reverse(mModel);
 
                         List<Event> favouriteEvents = FavouriteManager.get().getFavouriteEvents();
 

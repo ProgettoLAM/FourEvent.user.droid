@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import lam.project.foureventuserdroid.MainActivity;
@@ -191,6 +192,7 @@ public class NearEventsFragment extends Fragment {
 
                             mModel.clear();
                             mModel.addAll(response);
+                            Collections.reverse(mModel);
 
                             List<Event> favouriteEvents = FavouriteManager.get().getFavouriteEvents();
 
