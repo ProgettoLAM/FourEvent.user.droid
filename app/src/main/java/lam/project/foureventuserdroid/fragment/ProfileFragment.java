@@ -110,7 +110,7 @@ public class ProfileFragment extends Fragment {
 
         emailProfile.setText(user.email);
         nameProfile.setText(user.name);
-        if(user.birthDate.equals("Data di nascita")) {
+        if(user.birthDate == null || user.birthDate.equals("Data di nascita")) {
             birthDateProfile.setText("--/--/--");
         }
         else {
