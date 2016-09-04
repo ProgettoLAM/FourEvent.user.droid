@@ -27,7 +27,7 @@ public class EventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_events, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_category_events, container, false);
 
         setTitle();
 

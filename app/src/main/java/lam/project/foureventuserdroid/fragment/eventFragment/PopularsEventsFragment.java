@@ -81,7 +81,7 @@ public class PopularsEventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = initView(inflater.inflate(R.layout.fragment_list_events, container, false));
+        View view = initView(inflater.inflate(R.layout.fragment_populars_event, container, false));
 
         setModel();
 
