@@ -555,6 +555,9 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         final CameraUpdate cameraUpdate = CameraUpdateFactory
                 .newLatLngZoom(mLocationEvent, DEFAULT_ZOOM);
 
+        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mGoogleMap.setMinZoomPreference(6.0f);
+
         mGoogleMap.moveCamera(cameraUpdate);
     }
 
