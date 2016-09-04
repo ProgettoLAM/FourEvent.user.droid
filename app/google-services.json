@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "2516075147",
+    "firebase_url": "https://project-lam-142419.firebaseio.com",
+    "project_id": "project-lam-142419",
+    "storage_bucket": "project-lam-142419.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2516075147:android:df754e5d3cff749a",
+        "android_client_info": {
+          "package_name": "lam.project.foureventuserdroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "2516075147-tee3s31faos14cqm570k3kl7nvm4bsvq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lam.project.foureventuserdroid",
+            "certificate_hash": "0B52D1B8A7BE5FB9B902F2A52E1619D9164F360D"
+          }
+        },
+        {
+          "client_id": "2516075147-mfuuf9m2k70jcrlaebqgc29hg0a94er3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxNZXpUxQNowwg1bKiScl5dgFxZJUEdxA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "2516075147-mfuuf9m2k70jcrlaebqgc29hg0a94er3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
