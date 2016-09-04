@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity
         switch (itemId) {
 
             case R.id.nav_events:
-
+                startActivity(getIntent());
                 return;
 
             case R.id.nav_favourites:
