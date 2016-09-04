@@ -136,7 +136,6 @@ public class CategoriesEventsFragment extends Fragment {
     }
 
 
-
     public final void showAndHideViews() {
 
         //nascondo sempre la progress bar
