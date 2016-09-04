@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity
     public static Location mCurrentLocation;
 
     private Fragment profileFragment;
-    public static int WALLET_CODE = 5;
 
     private static int clicked;
 
@@ -214,11 +213,17 @@ public class MainActivity extends AppCompatActivity
             imgUser.setImageBitmap(imageContent);
         }
         else {
-            String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
-                    .appendPath("img").appendEncodedPath(mCurrentUser.email).getUri();
-
-            Picasso.with(this).load(url).into(imgUser);
-
+            if(mCurrentUser.gender != null) {
+                if(mCurrentUser.gender.equals("F")) {
+                    imgUser.setImageResource(R.drawable.img_female);
+                }
+                else {
+                    imgUser.setImageResource(R.drawable.img_male);
+                }
+            }
+            else {
+                imgUser.setImageResource(R.drawable.img_male);
+            }
         }
     }
 
