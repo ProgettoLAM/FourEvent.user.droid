@@ -114,7 +114,8 @@ public class ProfileFragment extends Fragment {
             birthDateProfile.setText("--/--/--");
         }
         else {
-            birthDateProfile.setText(user.birthDate);
+
+            birthDateProfile.setText(user.birthDate.split(" - ")[0]);
         }
         if(user.location == null) {
             locationProfile.setText("Italia");
