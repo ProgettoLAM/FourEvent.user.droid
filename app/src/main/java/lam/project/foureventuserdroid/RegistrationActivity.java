@@ -255,6 +255,8 @@ public class RegistrationActivity extends AppCompatActivity {
         return !(password2.equals("") || !password.equals(password2));
     }
 
+    //endregion
+
     //Gestione del Google Cloud Messaging, per la ricezione di notifiche
     private void handleMessaging() {
 
@@ -271,7 +273,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     //Si ricava il mToken dal dispositivo dell'utente
                     mToken = intent.getStringExtra(GCMRegistrationIntentService.TOKEN);
 
-                //Se il broadcast non ha ricevuto con successo, viene mostrato un messaggio di errore
+                    //Se il broadcast non ha ricevuto con successo, viene mostrato un messaggio di errore
                 } else if(intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_ERROR)){
 
                     Snackbar snackbarError = Snackbar.make(getWindow().getDecorView(), "Errore registrazione GCM!",
@@ -307,7 +309,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 GooglePlayServicesUtil.showErrorNotification(resultCode, getApplicationContext());
 
-            //Se il dispositivo non supporta i servizi Google, viene mostrato un messaggio di errore
+                //Se il dispositivo non supporta i servizi Google, viene mostrato un messaggio di errore
             } else {
                 Snackbar snackbarError = Snackbar.make(getWindow().getDecorView(), "Questo dispositivo non supporta il Google Play Services!",
                         Snackbar.LENGTH_LONG);
@@ -316,7 +318,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 snackbarError.show();
             }
 
-        //Se i servizi sono disponibili si fa partire l'intent per registrare il dispositivo
+            //Se i servizi sono disponibili si fa partire l'intent per registrare il dispositivo
         } else {
             //Starting intent to register device
             Intent intent = new Intent(this, GCMRegistrationIntentService.class);
@@ -324,7 +326,4 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
     }
-
-
-    //endregion
 }

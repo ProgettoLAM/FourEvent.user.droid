@@ -222,7 +222,7 @@ public class NearEventsFragment extends Fragment {
                         @Override
                         public void onErrorResponse(VolleyError error) {
 
-                            mEventNotFound.setText(HandlerManager.handleError(error));
+                            mEventNotFound.setText(R.string.events_not_found);
 
                             showAndHideViews();
                         }
