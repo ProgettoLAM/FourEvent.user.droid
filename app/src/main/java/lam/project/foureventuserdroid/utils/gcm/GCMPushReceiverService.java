@@ -23,17 +23,15 @@ public class GCMPushReceiverService extends GcmListenerService {
     private String mMessage;
     private String mTitle;
 
-    //This method will be called on every new message received
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        //Getting the message from the bundle 
+
         mMessage = data.getString(MESSAGE);
         mTitle = data.getString(TITLE);
-        //Displaying a notification with the message
+
         sendNotification();
     }
-    
-    //This method is generating a notification and displaying the notification 
+
     private void sendNotification() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -49,6 +47,6 @@ public class GCMPushReceiverService extends GcmListenerService {
                 .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
  
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0, noBuilder.build()); //0 = ID of notification
+        notificationManager.notify(0, noBuilder.build());
     }
 }
