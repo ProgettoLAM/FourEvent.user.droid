@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -41,6 +42,7 @@ import java.util.Calendar;
 import de.hdodenhof.circleimageview.CircleImageView;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
+import lam.project.foureventuserdroid.utils.DateConverter;
 import lam.project.foureventuserdroid.utils.ImageManager;
 import lam.project.foureventuserdroid.utils.Utility;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
@@ -51,8 +53,13 @@ import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 public class Step1Info extends AbstractStep{
 
+    public static final int REQUEST_CODE = 1;
+
     //TODO gestire in modo diverso
-    protected static TextView dateInfo;
+    private TextView dateInfo;
+
+    private String mDate;
+    private Fragment thisFragment;
 
     private CircleImageView imgUser;
     private EditText txtName;
@@ -82,6 +89,8 @@ public class Step1Info extends AbstractStep{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        thisFragment = this;
+
         return initView(inflater.inflate(R.layout.step1_info, container, false));
     }
 
@@ -109,6 +118,8 @@ public class Step1Info extends AbstractStep{
             public void onClick(View v) {
 
                 DialogFragment newFragment = new SelectDateFragment();
+
+                newFragment.setTargetFragment(thisFragment,REQUEST_CODE);
                 newFragment.show(getFragmentManager(), "DatePicker");
             }
         });
@@ -141,8 +152,8 @@ public class Step1Info extends AbstractStep{
             }
 
             //controllo che esista il giorno di nascita
-            String birthDate = dateInfo.getText().toString();
-            if(!birthDate.matches("")) {
+            String birthDate = mDate;
+            if(birthDate != null && !birthDate.matches("")) {
 
                 mCurrentUser.addBirthDate(birthDate);
             }
@@ -256,6 +267,11 @@ public class Step1Info extends AbstractStep{
             else if (requestCode == REQUEST_CAMERA)
 
                 onCaptureImageResult(data);
+
+        }else if(requestCode == REQUEST_CODE){
+
+            mDate = data.getStringExtra(SelectDateFragment.DATE_RESULT);
+            dateInfo.setText(mDate);
         }
     }
 
@@ -338,6 +354,9 @@ public class Step1Info extends AbstractStep{
     //Classe relativa alla visualizzazione del dialog del calendario per la selezione della mData di nascita
     public static class SelectDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
+        public static String DATE_RESULT = "date";
+        private String mDate;
+
         public SelectDateFragment() {}
 
         @NonNull
@@ -350,7 +369,9 @@ public class Step1Info extends AbstractStep{
             int dd = calendar.get(Calendar.DAY_OF_MONTH);
 
             DatePickerDialog pickerDialog = new DatePickerDialog(getActivity(), this, yy, mm, dd);
+
             pickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
+            pickerDialog.getDatePicker().setMinDate(0);
 
             pickerDialog.setTitle("");
 
@@ -358,11 +379,22 @@ public class Step1Info extends AbstractStep{
         }
 
         public void onDateSet(DatePicker view, int yy, int mm, int dd) {
-            populateSetDate(yy, mm+1, dd);
+            populateSetDate(yy, mm, dd);
+        }
+        public void populateSetDate(int year, int month, int day) {
+
+            final Calendar calendar = Calendar.getInstance();
+            calendar.set(year,month,day);
+            mDate = DateConverter.dateFromCalendar(calendar);
+
+            sendResult(REQUEST_CODE);
         }
 
-        public void populateSetDate(int year, int month, int day) {
-            dateInfo.setText(month+"/"+day+"/"+year);
+        private void sendResult(int REQUEST_CODE) {
+
+            Intent intent = new Intent();
+            intent.putExtra(DATE_RESULT,mDate);
+            getTargetFragment().onActivityResult(getTargetRequestCode(), REQUEST_CODE, intent);
         }
     }
 }

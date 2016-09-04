@@ -35,6 +35,12 @@ public class DateConverter {
         return formatter.format(calendar.getTime());
     }
 
+    public static String dateFromCalendar(Calendar calendar) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMATTER_V2,Locale.ITALY);
+        return dateFormat.format(calendar.getTime());
+    }
+
     public static String dateFromMillis(long millis) {
 
         SimpleDateFormat formatter = new SimpleDateFormat(DATETIME_FORMATTER_V2,Locale.ITALY);
@@ -48,7 +54,7 @@ public class DateConverter {
 
     public static String dateToMillis(String date) throws ParseException{
 
-        Date parsedDate = new SimpleDateFormat(DATETIME_FORMATTER_V2,Locale.ITALY).parse(date);
+        Date parsedDate = new SimpleDateFormat(DATE_FORMATTER_V2,Locale.ITALY).parse(date);
 
         return Long.toString(parsedDate.getTime());
     }

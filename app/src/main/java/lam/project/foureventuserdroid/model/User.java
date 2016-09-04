@@ -9,8 +9,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
+
+import lam.project.foureventuserdroid.utils.DateConverter;
 
 /**
  * Created by spino on 29/07/16.
@@ -155,7 +158,7 @@ public class User implements Parcelable{
 
         if(jsonObject.has(Keys.BIRTH_DATE)){
 
-            builder.withBirthDate(jsonObject.getString(Keys.BIRTH_DATE));
+            builder.withBirthDate(DateConverter.dateFromMillis(jsonObject.getLong(Keys.BIRTH_DATE)));
         }
 
         if(jsonObject.has(Keys.LOCATION)){
@@ -214,7 +217,14 @@ public class User implements Parcelable{
 
         if (birthDate != null) {
 
-            jsonObject.put(Keys.BIRTH_DATE, birthDate);
+            try{
+
+                jsonObject.put(Keys.BIRTH_DATE, DateConverter.dateToMillis(birthDate));
+
+            } catch (ParseException e) {
+
+                e.printStackTrace();
+            }
         }
 
         if (location != null) {
