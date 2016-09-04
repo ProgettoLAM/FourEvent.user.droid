@@ -74,21 +74,13 @@ public class CategoriesEventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        setModel();
+
         View view = initView(inflater.inflate(R.layout.fragment_list_events, container, false));
 
         FavouriteManager.get(getContext());
 
         return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     /***
@@ -116,7 +108,6 @@ public class CategoriesEventsFragment extends Fragment {
 
         mRecyclerView.setAdapter(mAdapter);
 
-        setModel();
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.events_swipe_refresh_layout);
 
