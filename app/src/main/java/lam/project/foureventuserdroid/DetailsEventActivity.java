@@ -417,9 +417,13 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         intent.setType("text/plain");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 
-        intent.putExtra(Intent.EXTRA_TEXT,
-                "Guarda questo evento su FourEvent: http://annina.cs.unibo.it:8080/api/event"
-                        + mCurrentEvent.mId);
+        String address = mCurrentEvent.mStreetAddress;
+
+        String text = "Hey, Guarda questo fantastico evento con FourEvent!\n"+mCurrentEvent.mTitle+
+                " @ "+address+"\nhttp://annina.cs.unibo.it:8080/api/event";
+
+
+        intent.putExtra(Intent.EXTRA_TEXT,text);
 
         startActivity(Intent.createChooser(intent, "Condividi l'evento"));
 
