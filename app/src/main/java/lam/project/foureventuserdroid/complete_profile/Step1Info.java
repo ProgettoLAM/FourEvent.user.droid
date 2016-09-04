@@ -86,7 +86,6 @@ public class Step1Info extends AbstractStep{
 
     private View initView(final View rootView) {
 
-        LinearLayout birth_date = (LinearLayout) rootView.findViewById(R.id.birth_date);
         dateInfo = (TextView) rootView.findViewById(R.id.date_info);
         imgUser = (CircleImageView) rootView.findViewById(R.id.profile_image);
         txtName = (EditText) rootView.findViewById(R.id.name_info);
@@ -103,7 +102,7 @@ public class Step1Info extends AbstractStep{
         });
 
 
-        birth_date.setOnClickListener(new View.OnClickListener() {
+        dateInfo.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
