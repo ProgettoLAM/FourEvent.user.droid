@@ -318,6 +318,8 @@ public class User implements Parcelable{
 
         public static final String NAME = "name";
 
+        public static final String TOKEN = "gcm_token";
+
         public static final String BIRTH_DATE = "birth_date";
 
         public static final String LOCATION = "location";

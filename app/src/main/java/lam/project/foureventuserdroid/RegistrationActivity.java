@@ -58,7 +58,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private String email;
     private String password;
 
-    private String token;
+    private String mToken;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     @Override
@@ -86,7 +86,7 @@ public class RegistrationActivity extends AppCompatActivity {
         passwordField.addTextChangedListener(watcher);
         passwordField2.addTextChangedListener(watcher);
 
-        //Registrazione token dell'utente per la ricezione delle notifiche
+        //Registrazione mToken dell'utente per la ricezione delle notifiche
         handleMessaging();
     }
 
@@ -137,6 +137,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 //inizializzo l'oggetto JSON per completare la richiesta
                 JSONObject userJson = new JSONObject("{'email':'"+user.email+"','password':'"+password+"'}");
+
+                userJson.put(User.Keys.TOKEN,mToken);
 
                 //creo l'url del backend
                 String url = FourEventUri.Builder.create(FourEventUri.Keys.USER).getUri();
@@ -266,8 +268,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 //Se il broadcast ha ricevuto con successo, il dispositivo è pronto per la registrazione
                 if(intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_SUCCESS)){
-                    //Si ricava il token dal dispositivo dell'utente
-                    token = intent.getStringExtra("token");
+                    //Si ricava il mToken dal dispositivo dell'utente
+                    mToken = intent.getStringExtra(GCMRegistrationIntentService.TOKEN);
 
                 //Se il broadcast non ha ricevuto con successo, viene mostrato un messaggio di errore
                 } else if(intent.getAction().equals(GCMRegistrationIntentService.REGISTRATION_ERROR)){
