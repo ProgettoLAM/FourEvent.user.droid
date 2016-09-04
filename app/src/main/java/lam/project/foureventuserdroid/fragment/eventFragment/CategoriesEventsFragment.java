@@ -81,6 +81,16 @@ public class CategoriesEventsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
     /***
     *
     * @param rootView view su cui viene fatto l'inflate
@@ -187,7 +197,7 @@ public class CategoriesEventsFragment extends Fragment {
 
                             for (Event favouriteEvent : favouriteEvents) {
 
-                                if (favouriteEvent.mId != null && favouriteEvent.mId.equals(event.mTitle)) {
+                                if (favouriteEvent.mId != null && favouriteEvent.mId.equals(event.mId)) {
 
                                     event.mIsPreferred = true;
                                 }

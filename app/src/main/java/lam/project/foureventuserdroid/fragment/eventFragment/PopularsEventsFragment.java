@@ -2,6 +2,7 @@ package lam.project.foureventuserdroid.fragment.eventFragment;
 
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -49,8 +50,6 @@ public class PopularsEventsFragment extends Fragment {
 
     public static final String ARG_PAGE = "ARG_PAGE";
 
-    private int mPage;
-
     public PopularsEventsFragment() {
     }
 
@@ -75,7 +74,6 @@ public class PopularsEventsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
     }
 
     // Inflate the fragment layout we defined above for this fragment
@@ -84,11 +82,22 @@ public class PopularsEventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = initView(inflater.inflate(R.layout.fragment_list_events, container, false));
+
         setModel();
 
         FavouriteManager.get(getContext());
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     /**
@@ -195,7 +204,7 @@ public class PopularsEventsFragment extends Fragment {
 
                     for (Event favouriteEvent : favouriteEvents) {
 
-                        if (favouriteEvent.mTitle.equals(event.mTitle)) {
+                        if (favouriteEvent.mId != null && favouriteEvent.mId.equals(event.mId)) {
 
                             event.mIsPreferred = true;
                         }

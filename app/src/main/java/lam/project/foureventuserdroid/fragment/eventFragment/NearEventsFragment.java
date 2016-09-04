@@ -200,7 +200,7 @@ public class NearEventsFragment extends Fragment {
 
                                 for (Event favouriteEvent : favouriteEvents) {
 
-                                    if (favouriteEvent.mId != null && favouriteEvent.mId.equals(event.mTitle)) {
+                                    if (favouriteEvent.mId != null && favouriteEvent.mId.equals(event.mId)) {
 
                                         event.mIsPreferred = true;
                                     }

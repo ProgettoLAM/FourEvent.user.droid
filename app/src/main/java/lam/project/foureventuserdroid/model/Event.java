@@ -106,7 +106,7 @@ public class Event implements Parcelable{
         final String image = jsonObject.getString(Keys.IMAGE);
 
         //prendere latitudine e longitudine
-        JSONArray coordinates = jsonObject.getJSONObject("loc").getJSONArray("coordinates");
+        JSONArray coordinates = jsonObject.getJSONObject(Keys.LOC).getJSONArray(Keys.COORDINATES);
 
         final float latitude = BigDecimal.valueOf(coordinates.getDouble(1)).floatValue();
         final float longitude = BigDecimal.valueOf(coordinates.getDouble(0)).floatValue();
@@ -161,6 +161,18 @@ public class Event implements Parcelable{
 
         jsonObject.put(Keys.TAG, mTag);
         jsonObject.put(Keys.ADDRESS, mAddress);
+
+        //creare array + oggetto
+
+        JSONArray coordinates = new JSONArray();
+        coordinates.put(mLongitude);
+        coordinates.put(mLatitude);
+
+        JSONObject loc = new JSONObject(Keys.TYPE);
+        loc.put(Keys.COORDINATES,coordinates);
+
+        jsonObject.put(Keys.LOC,loc);
+
         jsonObject.put(Keys.LATITUDE, mLatitude);
         jsonObject.put(Keys.LONGITUDE, mLongitude);
         jsonObject.put(Keys.PRICE, mPrice);
@@ -320,6 +332,10 @@ public class Event implements Parcelable{
         static final String IMAGE = "image";
         static final String PARTICIPATE = "participate";
         static final String DISTANCE = "distance";
+
+        static final String TYPE = "{\"type\",\"point\"}";
+        static final String COORDINATES = "coordinates";
+        static final String LOC = "loc";
 
         static final String FREE = "FREE";
 
