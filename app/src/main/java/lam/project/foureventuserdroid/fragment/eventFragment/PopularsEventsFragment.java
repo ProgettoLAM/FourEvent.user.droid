@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -71,10 +72,6 @@ public class PopularsEventsFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     // Inflate the fragment layout we defined above for this fragment
     // Set the associated text for the title
@@ -88,16 +85,6 @@ public class PopularsEventsFragment extends Fragment {
         FavouriteManager.get(getContext());
 
         return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     /**

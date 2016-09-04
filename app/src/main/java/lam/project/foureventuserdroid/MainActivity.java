@@ -53,6 +53,7 @@ import lam.project.foureventuserdroid.fragment.FavouriteFragment;
 import lam.project.foureventuserdroid.fragment.TicketsFragment;
 import lam.project.foureventuserdroid.fragment.ProfileFragment;
 import lam.project.foureventuserdroid.fragment.WalletFragment;
+import lam.project.foureventuserdroid.fragment.eventFragment.PopularsEventsFragment;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.ImageManager;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
@@ -285,8 +286,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.nav_events:
 
-                mNextFragment = new EventsFragment();
-                break;
+                return;
 
             case R.id.nav_favourites:
 
