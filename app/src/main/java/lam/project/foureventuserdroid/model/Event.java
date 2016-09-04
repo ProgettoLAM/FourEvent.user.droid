@@ -49,11 +49,13 @@ public class Event implements Parcelable{
 
     private boolean mWillPartecipate;
 
+    public String mStreetAddress;
+
 
     private Event(final String id, final String title, final String description, final String author,
                   final String startDate, final String endDate, final String tag, final String address,
                   final float latitude, final float longitude, final String price, final int participation,
-                  final String image, final int maxTic, final boolean willPartecipate, final Double distance){
+                  final String image, final int maxTic, final boolean willPartecipate, final Double distance, final String streetAddress){
 
         this.mId = id;
         this.mTitle = title;
@@ -71,6 +73,7 @@ public class Event implements Parcelable{
         this.mMaxTicket = maxTic;
         this.mWillPartecipate = willPartecipate;
         this.mDistance = distance;
+        this.mStreetAddress = streetAddress;
     }
 
     public boolean isFree() {
@@ -98,10 +101,11 @@ public class Event implements Parcelable{
         final String title = jsonObject.getString(Keys.TITLE);
         final String description = jsonObject.getString(Keys.DESCRIPTION);
         final String author = jsonObject.getString(Keys.AUTHOR);
-        final String startDate = DateConverter.fromMillis(jsonObject.getLong(Keys.START_DATE));
+        final String startDate = DateConverter.dateFromMillis(jsonObject.getLong(Keys.START_DATE));
 
         final String tag = jsonObject.getString(Keys.TAG);
         final String address = jsonObject.getString(Keys.ADDRESS);
+
         final String price = jsonObject.getString(Keys.PRICE);
         final String image = jsonObject.getString(Keys.IMAGE);
 
@@ -143,6 +147,11 @@ public class Event implements Parcelable{
             builder.withDistance(jsonObject.getDouble(Keys.DISTANCE) / 1000);
         }
 
+        if(jsonObject.has(Keys.STREET_ADDRESS)) {
+
+            builder.withStreetAddress(jsonObject.getString(Keys.STREET_ADDRESS));
+        }
+
         return builder.build();
     }
 
@@ -177,6 +186,7 @@ public class Event implements Parcelable{
         jsonObject.put(Keys.LONGITUDE, mLongitude);
         jsonObject.put(Keys.PRICE, mPrice);
         jsonObject.put(Keys.IMAGE, mImage);
+        jsonObject.put(Keys.STREET_ADDRESS,mStreetAddress);
 
         try {
 
@@ -261,6 +271,8 @@ public class Event implements Parcelable{
         }
         else
             dest.writeByte(Keys.NOT_PRESENT);
+
+        dest.writeString(mStreetAddress);
     }
 
     protected Event(Parcel in) {
@@ -308,6 +320,8 @@ public class Event implements Parcelable{
         }else{
             mMaxTicket = 0;
         }
+
+        mStreetAddress = in.readString();
     }
 
     //endregion
@@ -332,6 +346,7 @@ public class Event implements Parcelable{
         static final String IMAGE = "image";
         static final String PARTICIPATE = "participate";
         static final String DISTANCE = "distance";
+        static final String STREET_ADDRESS = "street_address";
 
         static final String TYPE = "{\"type\",\"point\"}";
         static final String COORDINATES = "coordinates";
@@ -368,7 +383,7 @@ public class Event implements Parcelable{
         private int mMaxTicket;
         private boolean mWillPartecipate;
         private Double mDistance;
-
+        private String mStreetAddress;
 
         private Builder(final String title, final String description, final String author, final String startDate){
 
@@ -443,10 +458,15 @@ public class Event implements Parcelable{
             return this;
         }
 
+        Builder withStreetAddress(final String streetAddress) {
+            this.mStreetAddress = streetAddress;
+            return this;
+        }
+
         public Event build(){
 
             return new Event(mId,mTitle, mDescription, mAuthor, mStartDate, mEndDate, mTag, mAddress, mLatitude,
-                            mLongitude, mPrice, mParticipation, mImage, mMaxTicket, mWillPartecipate,mDistance);
+                            mLongitude, mPrice, mParticipation, mImage, mMaxTicket, mWillPartecipate,mDistance,mStreetAddress);
         }
     }
 

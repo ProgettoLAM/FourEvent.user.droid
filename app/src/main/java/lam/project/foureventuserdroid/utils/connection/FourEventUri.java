@@ -59,5 +59,6 @@ public class FourEventUri {
         public static final String EVENT = "event";
         public static final String RECORD = "record";
         public static final String TICKET = "ticket";
+        public static final String PLANNER = "planner";
     }
 }

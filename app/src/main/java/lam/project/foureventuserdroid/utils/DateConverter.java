@@ -16,15 +16,26 @@ import java.util.concurrent.TimeUnit;
 public class DateConverter {
 
     private static final String FORMATTER = "dd/MM - HH:mm";
-    private static final String FORMATTER_DATE = "dd/MM/yyyy - HH:mm";
+
+    private static final String DATE_FORMATTER_V2 = "dd MMM yyyy";
+    private static final String TIME_FORMATTER_V2 = "HH:mm";
+    private static final String DATETIME_FORMATTER_V2 = "dd MMM yyyy - HH:mm";
     private static final String DIVIDER = " - ";
 
     public static String fromMillis(long millis) {
 
-
         SimpleDateFormat formatter = new SimpleDateFormat(FORMATTER,Locale.ITALY);
 
         Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTimeInMillis(millis);
+        return formatter.format(calendar.getTime());
+    }
+
+    public static String dateFromMillis(long millis) {
+
+        SimpleDateFormat formatter = new SimpleDateFormat(DATETIME_FORMATTER_V2,Locale.ITALY);
+
+        Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(millis);
         return formatter.format(calendar.getTime());
     }
@@ -38,7 +49,7 @@ public class DateConverter {
 
     public static String toMillisComplete(String date) throws ParseException{
 
-        Date parsedDate = new SimpleDateFormat(FORMATTER_DATE,Locale.ITALY).parse(date);
+        Date parsedDate = new SimpleDateFormat(FORMATTER,Locale.ITALY).parse(date);
 
         return Long.toString(parsedDate.getTime());
     }

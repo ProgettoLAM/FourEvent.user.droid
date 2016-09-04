@@ -32,6 +32,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -169,9 +170,11 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         String time = DateConverter.getTime(event.mStartDate, event.mEndDate);
         String date = DateConverter.getDate(event.mStartDate, event.mEndDate);
 
+        String address = event.mStreetAddress +", "+event.mAddress;
+
         ((TextView) findViewById(R.id.detail_title)).setText(event.mTitle);
         ((TextView) findViewById(R.id.detail_date)).setText(date);
-        ((TextView) findViewById(R.id.detail_distance)).setText(event.mAddress);
+        ((TextView) findViewById(R.id.detail_distance)).setText(address);
         ((TextView) findViewById(R.id.detail_desc)).setText(event.mDescription);
         ((TextView) findViewById(R.id.detail_price)).setText(price);
         ((TextView) findViewById(R.id.detail_time)).setText(time);
@@ -181,16 +184,15 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         nameAuthor.setText(mCurrentEvent.mAuthor);
 
         //TODO aggiungere immagine profilo planner, per ricercarla
-        /*
 
         CircleImageView imgUser = (CircleImageView) findViewById(R.id.profile_image);
 
-        String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
+        String url = FourEventUri.Builder.create(FourEventUri.Keys.PLANNER)
                 .appendPath("img").appendEncodedPath(mCurrentEvent.mAuthor).getUri();
 
         Picasso.with(this).load(url).into(imgUser);
 
-        */
+
     }
 
     public void animateFAB() {
