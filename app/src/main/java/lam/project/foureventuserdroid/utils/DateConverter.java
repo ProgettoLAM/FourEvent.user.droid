@@ -1,5 +1,9 @@
 package lam.project.foureventuserdroid.utils;
 
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -80,7 +84,7 @@ public class DateConverter {
 
         if(end != null && !startDate.equals(endDate)) {
 
-            time += DIVIDER + endDate;
+            time = "Dal " + time + " al " + endDate;
         }
 
         return time;

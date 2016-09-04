@@ -13,6 +13,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -172,8 +175,20 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
         String address = event.mStreetAddress +", "+event.mAddress;
 
+        if(event.mEndDate != null) {
+
+            final SpannableStringBuilder str = new SpannableStringBuilder(date);
+            str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 4, 15, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 19, 30, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            ((TextView) findViewById(R.id.detail_date)).setText(str);
+
+        } else {
+
+            ((TextView) findViewById(R.id.detail_date)).setText(date);
+        }
+
         ((TextView) findViewById(R.id.detail_title)).setText(event.mTitle);
-        ((TextView) findViewById(R.id.detail_date)).setText(date);
         ((TextView) findViewById(R.id.detail_distance)).setText(address);
         ((TextView) findViewById(R.id.detail_desc)).setText(event.mDescription);
         ((TextView) findViewById(R.id.detail_price)).setText(price);
@@ -440,17 +455,14 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
         // Setting dates
         GregorianCalendar calDate = new GregorianCalendar();
-        long startDate = DateConverter.addYear(mCurrentEvent.mStartDate);
-        calDate.setTimeInMillis(startDate);
-        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                calDate.getTimeInMillis());
+
+        calDate.setTimeInMillis(Long.valueOf(DateConverter.dateToMillis(mCurrentEvent.mStartDate)));
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calDate.getTimeInMillis());
 
         if (mCurrentEvent.mEndDate != null) {
 
-            long endDate = DateConverter.addYear(mCurrentEvent.mEndDate);
-            calDate.setTimeInMillis(endDate);
-            intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
-                    calDate.getTimeInMillis());
+            calDate.setTimeInMillis(Long.valueOf(DateConverter.dateToMillis(mCurrentEvent.mEndDate)));
+            intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, calDate.getTimeInMillis());
         }
 
         intent.putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
