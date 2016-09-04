@@ -44,6 +44,7 @@ import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.ImageManager;
 import lam.project.foureventuserdroid.utils.Utility;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
+import lam.project.foureventuserdroid.utils.connection.HandlerManager;
 import lam.project.foureventuserdroid.utils.connection.MultipartRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
@@ -305,7 +306,7 @@ public class Step1Info extends AbstractStep{
 
                     loading.dismiss();
 
-                    Snackbar errorSnackbar = Snackbar.make(getView(), "Errore nel caricamento dell'immagine!",
+                    Snackbar errorSnackbar = Snackbar.make(getView(), HandlerManager.handleError(error),
                             Snackbar.LENGTH_SHORT);
 
                     errorSnackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightRed));
@@ -328,7 +329,7 @@ public class Step1Info extends AbstractStep{
                         mImageUri = response;
 
                     }
-                },toUploadFile,"filename");
+                },toUploadFile,"file");
 
         VolleyRequest.get(getContext()).add(mMultipartRequest);
     }
