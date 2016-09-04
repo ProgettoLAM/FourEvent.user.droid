@@ -5,8 +5,6 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import lam.project.foureventuserdroid.utils.DateConverter;
 
@@ -80,7 +78,7 @@ public class Record {
 
         if(mDate != null) {
 
-            jsonObject.put(Keys.DATE,DateConverter.toMillis(mDate));
+            jsonObject.put(Keys.DATE,DateConverter.dateToMillis(mDate));
         }
 
         if(mId != null) {

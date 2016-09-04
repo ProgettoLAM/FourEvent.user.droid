@@ -40,14 +40,16 @@ public class DateConverter {
         return formatter.format(calendar.getTime());
     }
 
-    public static String toMillis(String date) throws ParseException{
 
-        Date parsedDate = new SimpleDateFormat(FORMATTER,Locale.ITALY).parse(date);
+
+    public static String dateToMillis(String date) throws ParseException{
+
+        Date parsedDate = new SimpleDateFormat(DATETIME_FORMATTER_V2,Locale.ITALY).parse(date);
 
         return Long.toString(parsedDate.getTime());
     }
 
-    public static String toMillisComplete(String date) throws ParseException{
+    private static String toMillisComplete(String date) throws ParseException{
 
         Date parsedDate = new SimpleDateFormat(FORMATTER,Locale.ITALY).parse(date);
 

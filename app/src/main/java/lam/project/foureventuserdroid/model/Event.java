@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 
 import lam.project.foureventuserdroid.utils.DateConverter;
-import lam.project.foureventuserdroid.utils.Utility;
 
 public class Event implements Parcelable{
 
@@ -126,7 +125,7 @@ public class Event implements Parcelable{
                 .withWillPartecipate(willPartecipate);
 
         if(jsonObject.has(Keys.END_DATE)) {
-            builder.withEndDate(DateConverter.fromMillis(jsonObject.getLong(Keys.END_DATE)));
+            builder.withEndDate(DateConverter.dateFromMillis(jsonObject.getLong(Keys.END_DATE)));
         }
 
         if(jsonObject.has(Keys.ID)) {
@@ -182,18 +181,16 @@ public class Event implements Parcelable{
 
         jsonObject.put(Keys.LOC,loc);
 
-        jsonObject.put(Keys.LATITUDE, mLatitude);
-        jsonObject.put(Keys.LONGITUDE, mLongitude);
         jsonObject.put(Keys.PRICE, mPrice);
         jsonObject.put(Keys.IMAGE, mImage);
         jsonObject.put(Keys.STREET_ADDRESS,mStreetAddress);
 
         try {
 
-            jsonObject.put(Keys.START_DATE, DateConverter.toMillis(mStartDate));
+            jsonObject.put(Keys.START_DATE, DateConverter.dateToMillis(mStartDate));
 
             if(mEndDate != null) {
-                jsonObject.put(Keys.END_DATE, DateConverter.toMillis(mEndDate));
+                jsonObject.put(Keys.END_DATE, DateConverter.dateToMillis(mEndDate));
             }
 
         } catch (ParseException e) {
@@ -348,7 +345,7 @@ public class Event implements Parcelable{
         static final String DISTANCE = "distance";
         static final String STREET_ADDRESS = "street_address";
 
-        static final String TYPE = "{\"type\",\"point\"}";
+        static final String TYPE = "{'type':'point'}";
         static final String COORDINATES = "coordinates";
         static final String LOC = "loc";
 

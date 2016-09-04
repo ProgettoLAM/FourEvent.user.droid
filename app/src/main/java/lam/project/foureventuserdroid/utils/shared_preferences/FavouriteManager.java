@@ -83,6 +83,7 @@ public final class FavouriteManager {
             catch (JSONException je){
 
                 je.printStackTrace();
+                mEventCache = new LinkedList<>();
             }
         }else{
 
@@ -101,7 +102,7 @@ public final class FavouriteManager {
 
         for(int i=0; i<mEventCache.size(); i++) {
 
-            if(mEventCache.get(i).mTitle.equals(event.mTitle)) {
+            if(mEventCache.get(i).mId.equals(event.mId)) {
 
                 itemId = i;
                 break;
