@@ -71,11 +71,8 @@ public class TicketDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!mNfcAdapter.isEnabled()) {
-                    Snackbar snackbar = Snackbar
-                            .make(v, "Perfavore attiva l'NFC e torna indietro per tornare all'applicazione!", Snackbar.LENGTH_LONG);
 
-                    snackbar.getView().setBackgroundColor(ContextCompat.getColor(v.getContext(), R.color.lightRed));
-                    snackbar.show();
+                    Toast.makeText(v.getContext(),"Perfavore attiva l'NFC e torna indietro per tornare all'applicazione!",Toast.LENGTH_LONG).show();
 
                     startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
 
@@ -89,9 +86,7 @@ public class TicketDetailsActivity extends AppCompatActivity {
 
         if (mNfcAdapter == null) {
             // Stop here, we definitely need NFC
-            Toast.makeText(this,"NFC non supportato, impossibile continuare",Toast.LENGTH_SHORT).show();
-            finish();
-
+            Toast.makeText(this,"NFC non supportato, Utilizzare codice QR",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -117,7 +112,7 @@ public class TicketDetailsActivity extends AppCompatActivity {
     public void qrButton(final View view) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        builder.setTitle("Codice QR");
+        builder.setTitle("Scansiona il codice, partecipa all'evento!");
 
         View viewInflated = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_qrcode, (ViewGroup) getWindow().getDecorView(), false);
         ImageView imgQr = (ImageView) viewInflated.findViewById(R.id.img_qrcode);
@@ -149,15 +144,6 @@ public class TicketDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-
-        if(!mIsSynced) {
-
-            mButtonNFC.setEnabled(true);
-
-        }
-        else {
-            mButtonNFC.setEnabled(false);
-        }
 
         enableForegroundDispatchSystem();
         super.onResume();
@@ -222,9 +208,8 @@ public class TicketDetailsActivity extends AppCompatActivity {
 
                 ndef.writeNdefMessage(ndefMessage);
                 ndef.close();
-                mButtonNFC.setText("NFC già sincronizzato");
                 mButtonNFC.setEnabled(false);
-                Snackbar.make(getWindow().getDecorView(),"Braccialetto sincronizzato con successo",Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mButtonNFC,"Braccialetto sincronizzato con successo",Snackbar.LENGTH_LONG).show();
                 mIsSynced = true;
             }
 
