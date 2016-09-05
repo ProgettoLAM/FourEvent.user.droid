@@ -129,11 +129,11 @@ public class ProfileFragment extends Fragment {
 
             if(user.gender.equals("F")) {
 
-                genderProfile.setText(R.string.female);
+                genderProfile.setText(R.string.female_complete);
             }
             else if(user.gender.equals("M")) {
 
-                genderProfile.setText(R.string.male);
+                genderProfile.setText(R.string.male_complete);
             }
         }
 

@@ -52,6 +52,9 @@
     <string name="female">F</string>
     <string name="euro">\u20ac</string>
     <string name="city">Italia</string>
+    <string name="male_complete">Maschio</string>
+    <string name="female_complete">Femmina</string>
+
 
     <!-- Text step3 -->
     <string name="first_text">Acquistare un BIGLIETTO non è mai stato così semplice!\n\nVai su un evento e premi sul bottone indicato in figura.\n\nNon hai crediti a sufficienza? Sarai diretto al portafoglio per ricaricarlo!</string>
