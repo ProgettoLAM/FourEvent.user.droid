@@ -6,19 +6,16 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-/**
- * Created by Vale on 01/08/2016.
- */
 
 public class VolleyRequest {
 
     private static RequestQueue mRequestQueue;
-    private static VolleyRequest instance;
-    private static Context context;
+    private VolleyRequest instance;
+    private Context context;
 
     private VolleyRequest(Context context) {
 
-        VolleyRequest.context = context;
+        this.context = context;
 
         if(mRequestQueue == null) {
 
@@ -32,7 +29,7 @@ public class VolleyRequest {
     }
 
     //Singleton, si crea una sola istanza della classe
-    public static VolleyRequest get(Context context) {
+    public VolleyRequest get(Context context) {
 
         if(instance == null) {
 
@@ -42,7 +39,7 @@ public class VolleyRequest {
         return instance;
     }
 
-    public static VolleyRequest get(){
+    public VolleyRequest get(){
 
         if(instance == null){
 
@@ -56,8 +53,4 @@ public class VolleyRequest {
         mRequestQueue.add(request);
     }
 
-    public interface QueueProvider {
-
-        RequestQueue getRequestQueue();
-    }
 }

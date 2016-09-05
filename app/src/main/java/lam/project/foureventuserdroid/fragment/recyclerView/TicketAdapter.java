@@ -11,15 +11,11 @@ import java.util.List;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.Record;
 
-/**
- * Created by Vale on 27/08/2016.
- */
-
 public class TicketAdapter extends RecyclerView.Adapter<TicketViewHolder> {
+
     private final Activity mSenderActivity;
     private final List<Record> mRecords;
     private View divider;
-
 
     public TicketAdapter(final Activity senderActivity, final List<Record> records){
 
@@ -41,6 +37,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketViewHolder> {
     @Override
     public void onBindViewHolder(TicketViewHolder holder, int position) {
 
+        //Se l'item è l'ultimo elemento della lista, non si setta il divider al di sotto
         if(position == getItemCount() -1) {
             divider.setVisibility(View.INVISIBLE);
         }

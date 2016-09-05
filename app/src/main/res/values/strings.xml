@@ -51,6 +51,7 @@
     <string name="male">M</string>
     <string name="female">F</string>
     <string name="euro">\u20ac</string>
+    <string name="city">Italia</string>
 
     <!-- Text step3 -->
     <string name="first_text">Acquistare un BIGLIETTO non è mai stato così semplice!\n\nVai su un evento e premi sul bottone indicato in figura.\n\nNon hai crediti a sufficienza? Sarai diretto al portafoglio per ricaricarlo!</string>

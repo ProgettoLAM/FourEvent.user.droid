@@ -2,7 +2,6 @@ package lam.project.foureventuserdroid.complete_profile;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +24,6 @@ import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.CategoryManager;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
-/**
- * Created by Vale on 11/08/2016.
- */
-
 public class Step3Credits extends AbstractStep {
 
     User mCreatedUserWithCategories;
@@ -38,7 +33,6 @@ public class Step3Credits extends AbstractStep {
 
         return inflater.inflate(R.layout.step3_credits, container, false);
     }
-
 
     @Override
     public String name() {
@@ -53,30 +47,32 @@ public class Step3Credits extends AbstractStep {
 
         progressDialog.show();
 
+        //Si riprende l'utente precedentemente creato nei due step
         mCreatedUserWithCategories = getStepDataFor(2).getParcelable(User.Keys.USER);
 
         String uri = FourEventUri.Builder.create(FourEventUri.Keys.USER)
                 .appendPath(mCreatedUserWithCategories.email)
                 .getUri();
 
+        //Se l'utente esiste si salva nel server
         if(mCreatedUserWithCategories != null) {
 
             try {
 
                 CustomRequest request = new CustomRequest(Request.Method.POST,
-                        uri,
-                    mCreatedUserWithCategories.toJson(),
-
+                        uri, mCreatedUserWithCategories.toJson(),
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
 
                             progressDialog.dismiss();
 
+                            //Completamento dei 3 step e salvataggio dell'utente ultimato
                             StepManager.get(getContext()).setStep(StepManager.COMPLETE);
                             UserManager.get().save(mCreatedUserWithCategories);
                             CategoryManager.get().save();
 
+                            //Richiamo della MainActivity
                             Intent intent = new Intent(getContext(), MainActivity.class);
                             startActivity(intent);
 
@@ -88,8 +84,7 @@ public class Step3Credits extends AbstractStep {
                         public void onErrorResponse(VolleyError error) {
 
                             progressDialog.dismiss();
-
-                            System.out.println(error.toString());
+                            error.printStackTrace();
                         }
                     }
                 );
@@ -109,19 +104,11 @@ public class Step3Credits extends AbstractStep {
     }
 
     @Override
-    public String optional() {
-        return null;
-    }
+    public String optional() { return null;}
 
     @Override
-    public boolean nextIf() {
-
-       return true;
-    }
+    public boolean nextIf() { return true;}
 
     @Override
-    public String error() {
-
-        return "Completa tutti i campi obbligatori";
-    }
+    public String error() { return "Completa tutti i campi obbligatori";}
 }

@@ -6,14 +6,18 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Manager per la gestione delle eccezioni
+ */
 public class HandlerManager {
 
-    private final static String MESSAGE = "message";
-    private final static String EXCEPTION = "exception";
+    private final static String MESSAGE = "Message";
+    private final static String EXCEPTION = "Exception";
 
     public static String handleError (VolleyError error) {
 
         NetworkResponse response = error.networkResponse;
+
         if (response != null && response.data != null) {
 
             String json = new String(response.data);

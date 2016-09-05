@@ -18,6 +18,7 @@ public class CompleteProfileActivity extends DotStepper {
 
         CategoryManager.get(this);
 
+        //Aggiunta dei 3 step per completare il profilo
         addStep(createFragment(new Step1Info()));
         addStep(createFragment(new Step2Categories()));
         addStep(createFragment(new Step3Credits()));
@@ -26,6 +27,11 @@ public class CompleteProfileActivity extends DotStepper {
 
     }
 
+    /**
+     * Creazione dei 3 fragments, ai quali si assegna ad ognuno una posizione
+     * @param fragment fragment di uno step
+     * @return fragment con una posizione
+     */
     private AbstractStep createFragment(AbstractStep fragment) {
         Bundle b = new Bundle();
         b.putInt("position", i++);
@@ -33,6 +39,10 @@ public class CompleteProfileActivity extends DotStepper {
         return fragment;
     }
 
+    /**
+     * Richiamo del metodo di onClick nel fragment delle categorie (secondo step)
+     * @param view view del bottone selezionato nel secondo step
+     */
     public void selectedButton(final View view) {
 
         Step2Categories.selectedButton(view);

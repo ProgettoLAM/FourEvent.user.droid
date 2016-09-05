@@ -20,10 +20,6 @@ import lam.project.foureventuserdroid.fragment.recyclerView.EventAdapter;
 import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class FavouriteFragment extends Fragment {
 
     private static final String NAME = "Preferiti";
@@ -35,14 +31,12 @@ public class FavouriteFragment extends Fragment {
     private TextView mEventsNotFound;
 
     private List<Event> mModel = new ArrayList<>();
-    private List<Event> mFavourite = new ArrayList<>();;
+    private List<Event> mFavourite = new ArrayList<>();
 
     public FavouriteFragment() {}
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_favourite, container, false);
 
@@ -57,6 +51,9 @@ public class FavouriteFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Inizializzazione della recycler view
+     */
     private void initRecycler () {
 
         mAdapter = new EventAdapter(getActivity(), mModel);
@@ -80,10 +77,14 @@ public class FavouriteFragment extends Fragment {
 
     }
 
+    /**
+     * Si setta la lista di eventi preferiti
+     */
     private void updateRecycler () {
 
         setModel();
 
+        //Se è presente un evento preferito, si fa visualizzare la recycler view
         if(mFavourite.size() > 0) {
             mRecyclerView.setVisibility(View.VISIBLE);
 
@@ -95,13 +96,19 @@ public class FavouriteFragment extends Fragment {
 
             mAdapter.notifyDataSetChanged();
         }
+
+        //Altrimenti un testo ed un'icona di eventi non trovati
         else {
+
             mSadEmoticon.setVisibility(View.VISIBLE);
             mEventsNotFound.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.INVISIBLE);
         }
     }
 
+    /**
+     * Si prelevano gli eventi preferiti dall'utente
+     */
     private void setModel () {
 
         mFavourite = FavouriteManager.get(getContext()).getFavouriteEvents();
@@ -112,6 +119,9 @@ public class FavouriteFragment extends Fragment {
         }
     }
 
+    /**
+     * Si setta il titolo del fragment
+     */
     private void setTitle() {
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);

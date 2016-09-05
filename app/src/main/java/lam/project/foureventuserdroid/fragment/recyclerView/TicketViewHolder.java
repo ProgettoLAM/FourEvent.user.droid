@@ -6,15 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.List;
-
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.TicketDetailsActivity;
 import lam.project.foureventuserdroid.model.Record;
 
-/**
- * Created by Vale on 27/08/2016.
- */
 
 class TicketViewHolder extends RecyclerView.ViewHolder {
 
@@ -24,10 +19,15 @@ class TicketViewHolder extends RecyclerView.ViewHolder {
     private TextView dateEvent;
     private TextView priceEvent;
 
-
+    /**
+     * Metodo per inizializzare i campi di un biglietto
+     * @param activity activity dalla quale proviene
+     * @param itemView view del singolo item
+     */
     TicketViewHolder(final Activity activity, final View itemView) {
 
         super(itemView);
+
         mSenderActivity = activity;
 
         titleEvent = (TextView) itemView.findViewById(R.id.title_event);
@@ -36,12 +36,17 @@ class TicketViewHolder extends RecyclerView.ViewHolder {
 
     }
 
+    /**
+     * Bind degli elementi di un item con i dati raccolti dal server
+     * @param record record dalla quale si prendono i dati
+     */
     void bind(final Record record) {
 
         titleEvent.setText(record.mEvent);
         dateEvent.setText(record.mDate);
         priceEvent.setText((int) Math.abs(record.mAmount) +" €");
 
+        //Al click di un biglietto, si apre l'Activity relativa ai dettagli, nel quale si passa l'id
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -5,27 +5,22 @@ import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
-import lam.project.foureventuserdroid.model.User;
-
 /**
- * Created by Vale on 01/08/2016.
+ * Richiesta Volley personalizzata
  */
-
 public class CustomRequest extends JsonObjectRequest{
 
 
     public CustomRequest(int method, String url, JSONObject jsonRequest,
                          Response.Listener<JSONObject> listener,
                          Response.ErrorListener errorListener) {
-        super(method, url, jsonRequest, listener, errorListener);
+            super(method, url, jsonRequest, listener, errorListener);
     }
 
     @Override

@@ -12,6 +12,9 @@ import java.text.ParseException;
 
 import lam.project.foureventuserdroid.utils.DateConverter;
 
+/**
+ * Classe che rappresenta il modello di un evento, con i relativi campi
+ */
 public class Event implements Parcelable{
 
     public final String mId;
@@ -53,8 +56,9 @@ public class Event implements Parcelable{
 
     private Event(final String id, final String title, final String description, final String author,
                   final String startDate, final String endDate, final String tag, final String address,
-                  final float latitude, final float longitude, final String price, final int participation,
-                  final String image, final int maxTic, final boolean willPartecipate, final Double distance, final String streetAddress){
+                  final float latitude, final float longitude, final String price,
+                  final int participation, final String image, final int maxTic,
+                  final boolean willPartecipate, final Double distance, final String streetAddress){
 
         this.mId = id;
         this.mTitle = title;
@@ -93,7 +97,7 @@ public class Event implements Parcelable{
         return this.mWillPartecipate;
     }
 
-    //region lettura/scrittura JSON
+    //Region lettura/scrittura Json
 
     public static Event fromJson(final JSONObject jsonObject) throws JSONException{
 
@@ -108,7 +112,7 @@ public class Event implements Parcelable{
         final String price = jsonObject.getString(Keys.PRICE);
         final String image = jsonObject.getString(Keys.IMAGE);
 
-        //prendere latitudine e longitudine
+        //Si prendono le coordinate
         JSONArray coordinates = jsonObject.getJSONObject(Keys.LOC).getJSONArray(Keys.COORDINATES);
 
         final float latitude = BigDecimal.valueOf(coordinates.getDouble(1)).floatValue();
@@ -170,8 +174,6 @@ public class Event implements Parcelable{
         jsonObject.put(Keys.TAG, mTag);
         jsonObject.put(Keys.ADDRESS, mAddress);
 
-        //creare array + oggetto
-
         JSONArray coordinates = new JSONArray();
         coordinates.put(mLongitude);
         coordinates.put(mLatitude);
@@ -205,9 +207,9 @@ public class Event implements Parcelable{
         return jsonObject;
     }
 
-    //endregion
+    //Endregion
 
-    //region parcelable methods
+    //Region metodi parcelable
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
         @Override
@@ -236,6 +238,7 @@ public class Event implements Parcelable{
         } else {
             dest.writeByte(Keys.NOT_PRESENT);
         }
+
         dest.writeString(mTitle);
         dest.writeString(mDescription);
         dest.writeString(mAuthor);
@@ -321,9 +324,9 @@ public class Event implements Parcelable{
         mStreetAddress = in.readString();
     }
 
-    //endregion
+    //Endregion
 
-    //region Keys
+    //Region Keys
 
     public static class Keys{
 
@@ -334,8 +337,6 @@ public class Event implements Parcelable{
         static final String END_DATE = "end_date";
         static final String TAG = "tag";
         static final String ADDRESS = "address";
-        static final String LATITUDE = "latitude";
-        static final String LONGITUDE = "longitude";
         static final String AUTHOR = "author";
         static final String PRICE = "price";
         static final String PARTICIPATION = "user_participations";
@@ -358,9 +359,9 @@ public class Event implements Parcelable{
 
     }
 
-    //endregion
+    //Endregion
 
-    //region Builder
+    //Region Builder
 
     public static class Builder{
 
@@ -467,5 +468,5 @@ public class Event implements Parcelable{
         }
     }
 
-    //endregion
+    //Endregion
 }

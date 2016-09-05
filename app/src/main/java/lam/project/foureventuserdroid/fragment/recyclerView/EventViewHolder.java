@@ -19,11 +19,7 @@ import lam.project.foureventuserdroid.model.Event;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 
-/**
- * Created by spino on 21/08/16.
- */
-
-public final class EventViewHolder extends RecyclerView.ViewHolder {
+final class EventViewHolder extends RecyclerView.ViewHolder {
 
     private List<Event> mModel;
     private Activity mSenderActivity;
@@ -39,7 +35,12 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
     private TextView mPriceList;
     private ImageView mImgEvent;
 
-
+    /**
+     * Metodo per inizializzare i campi di un evento
+     * @param activity activity dalla quale proviene
+     * @param model lista di eventi
+     * @param itemView la view del singolo item
+     */
     EventViewHolder(final Activity activity, final List<Event> model, final View itemView) {
 
         super(itemView);
@@ -94,6 +95,10 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
+    /**
+     * Bind degli elementi di un item con i dati raccolti dal server per quell'evento
+     * @param event evento singolo della recycler view
+     */
     void bind(Event event){
 
         mTitleList.setText(event.mTitle);
@@ -103,10 +108,12 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
 
         String price;
 
+        //Se l'utente partecipa a questo evento si setta l'icona della partecipazione
         if(event.willPartecipate()) {
             mParticipationList.setVisibility(View.VISIBLE);
         }
 
+        //Se l'evento è gratuito si setta un colore diverso e si toglie il simbolo dell'euro
         if(event.isFree()){
             price = event.mPrice;
             mPriceList.setTextColor(Color.parseColor("#4CAF50"));
@@ -116,14 +123,17 @@ public final class EventViewHolder extends RecyclerView.ViewHolder {
 
         mPriceList.setText(price);
 
+        //Se l'evento è tra i preferiti si colora l'icona relativa
         mFavouriteList.setBackgroundResource((event.mIsPreferred)?R.drawable.ic_star:R.drawable.ic_star_empty);
 
+        //Se si conosce la distanza dell'evento dall'utente, si settano i km
         if(event.hasDistance()) {
 
             String distance = new DecimalFormat("#0.00").format(event.mDistance)+" km";
             mDistanceList.setText(distance);
         }
 
+        //Caricamento dell'immagine dell'evento
         String url = FourEventUri.Builder.create(FourEventUri.Keys.EVENT)
                 .appendPath("img").appendPath(event.mId).getUri();
 

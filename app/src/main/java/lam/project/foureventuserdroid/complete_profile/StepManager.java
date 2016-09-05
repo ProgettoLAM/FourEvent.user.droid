@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 
 import lam.project.foureventuserdroid.R;
 
-/**
- * Created by spino on 12/08/16.
- */
 public class StepManager {
 
     private static StepManager sInstance;
@@ -20,11 +17,11 @@ public class StepManager {
 
     public final static int COMPLETE = 1;
 
-
     private StepManager(final Context context){
 
         String SHARED_PREFERENCES_NAME = context.getResources().getString(R.string.shared_preferences_name);
 
+        //Si ricavano le preferenze degli step
         mSharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
@@ -48,13 +45,23 @@ public class StepManager {
         return sInstance;
     }
 
+    /**
+     *
+     * @return il numero dello step
+     */
     public int getStep(){
 
         return mSharedPreferences.getInt(STEP, INCOMPLETE);
     }
 
+    /**
+     *
+     * @param step il numero dello step
+     * @return lo step settato con un numero
+     */
     public boolean setStep(int step){
 
         return mSharedPreferences.edit().putInt(STEP,step).commit();
     }
+
 }
