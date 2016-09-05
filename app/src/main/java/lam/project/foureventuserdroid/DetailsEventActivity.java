@@ -303,7 +303,8 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
         //Se il costo del biglietto è inferiore al bilancio del portafoglio dell'utente
         if (Float.parseFloat(mCurrentEvent.mPrice) <= MainActivity.mCurrentUser.balance
-                && !mCurrentEvent.willPartecipate()) {
+                && !mCurrentEvent.willPartecipate()
+                && mCurrentEvent.mParticipation < mCurrentEvent.mMaxTicket) {
 
             message = "Il biglietto ha un costo di " + mCurrentEvent.mPrice + " €." +
                     "\n\nHai un totale di " + MainActivity.mCurrentUser.balance + " €.\nVuoi acquistarlo?";
@@ -363,8 +364,19 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                 }
             };
 
+
+        }
+        //Se il numero di partecipazioni è uguale al numero massimo di ticket
+        else if(mCurrentEvent.mParticipation == mCurrentEvent.mMaxTicket) {
+
+            title = "Disponibilità terminata";
+            message = "Mi dispiace, ma sono finiti tutti i biglietti disponibili!";
+
+            positiveListener = null;
+            positiveListenerText = null;
+        }
         //Altrimenti, se l'utente non ha credito a sufficienza e non partecipa all'evento
-        } else if(!mCurrentEvent.willPartecipate()) {
+        else if(!mCurrentEvent.willPartecipate()) {
 
             title = "Credito insufficiente";
             message = "Non hai abbastanza crediti per acquistare questo biglietto, ricarica il portafoglio!!";
