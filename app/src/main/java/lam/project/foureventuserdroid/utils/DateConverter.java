@@ -124,20 +124,4 @@ public class DateConverter {
 
         return time;
     }
-
-    /**
-     * Data completa formattata
-     * @param date data
-     * @return stringa convertita in long
-     */
-    public static long addYear(String date) {
-        GregorianCalendar cal = new GregorianCalendar();
-        try {
-            return Long.valueOf(toMillisComplete(date.split(" - ")[0] + "/" + cal.get(Calendar.YEAR) + " - "+ date.split(" - ")[1]));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return 0;
-        }
-
-    }
 }

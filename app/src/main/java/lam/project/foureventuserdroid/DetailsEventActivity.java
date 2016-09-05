@@ -197,8 +197,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         //Si setta l'indirizzo con via e città
         String address = event.mStreetAddress +", "+event.mAddress;
 
-        //Se la data di fine è presente
-        if(event.mEndDate != null) {
+        if(event.mEndDate != null && date.length() > 12) {
 
             final SpannableStringBuilder str = new SpannableStringBuilder(date);
             str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 4, 15, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
