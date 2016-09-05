@@ -170,7 +170,7 @@ public class Step1Info extends AbstractStep{
                 mCurrentUser.addGender(genderField.getText().toString());
             }
 
-            //Inserisco nel modello dell'utente, i dati correnti
+            //Inserisco nel modello dell'utente i dati correnti
             getStepDataFor(1).putParcelable(User.Keys.USER, mCurrentUser);
         }
 

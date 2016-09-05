@@ -53,7 +53,7 @@ public class Category implements Parcelable{
 
     //Endregion
 
-    //Region lettura/scrittua Json
+    //Region lettura/scrittura Json
 
     public static Category fromJson(final JSONObject jsonObject) throws JSONException {
 

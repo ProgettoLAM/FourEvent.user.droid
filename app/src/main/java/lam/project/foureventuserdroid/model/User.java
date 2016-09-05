@@ -369,9 +369,6 @@ public class User implements Parcelable{
 
         private String mImage;
 
-        //TODO completare la classe, aggiungendo i parametri, completare i metodi e usare la classe
-        //TODO parcelable, utilizzare il metodo opzionale anche per trasformazione JSON
-
         private Builder(final String email){
 
             this.mEmail = email;

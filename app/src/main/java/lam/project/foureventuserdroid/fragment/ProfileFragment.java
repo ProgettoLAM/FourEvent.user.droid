@@ -325,7 +325,7 @@ public class ProfileFragment extends Fragment {
     }
 
     /**
-     * L'immagine viete settata nell'item corrispondente
+     * L'immagine viene settata nell'item corrispondente
      */
     private void setImage() {
 
