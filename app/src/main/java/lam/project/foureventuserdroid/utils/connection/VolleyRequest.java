@@ -10,12 +10,12 @@ import com.android.volley.toolbox.Volley;
 public class VolleyRequest {
 
     private static RequestQueue mRequestQueue;
-    private VolleyRequest instance;
-    private Context context;
+    private static VolleyRequest instance;
+    private static Context context;
 
     private VolleyRequest(Context context) {
 
-        this.context = context;
+        VolleyRequest.context = context;
 
         if(mRequestQueue == null) {
 
@@ -29,7 +29,7 @@ public class VolleyRequest {
     }
 
     //Singleton, si crea una sola istanza della classe
-    public VolleyRequest get(Context context) {
+    public static VolleyRequest get(Context context) {
 
         if(instance == null) {
 
@@ -39,7 +39,7 @@ public class VolleyRequest {
         return instance;
     }
 
-    public VolleyRequest get(){
+    public static VolleyRequest get(){
 
         if(instance == null){
 
