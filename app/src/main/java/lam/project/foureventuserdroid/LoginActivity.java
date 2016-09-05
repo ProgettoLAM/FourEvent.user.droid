@@ -24,13 +24,8 @@ import lam.project.foureventuserdroid.complete_profile.StepManager;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
-import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
-
-/**
- * Created by Vale on 31/07/2016.
- */
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -50,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_login);
 
+        //Activity con display intero
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -64,7 +60,124 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Login dell'utente
+     * @param view view dell'Activity
+     */
+    public void login(final View view) {
+
+        //Se i campi della view sono stati compilati
+        if(controlUser()) {
+
+            //Creazione di un progress dialog per l'attesa
+            progressDialog = new ProgressDialog(this);
+
+            progressDialog.setMessage("Login in corso...");
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+
+            progressDialog.show();
+
+            email = emailField.getText().toString();
+            password = passwordField.getText().toString();
+
+            try {
+                //Creo l'url per la richiesta
+                String url = FourEventUri.Builder.create(FourEventUri.Keys.USER).getUri();
+
+                //Invio al server un JsonObject con email e password dell'utente per il confronto
+                final JSONObject user = new JSONObject("{\"email\": \""+email+"\", \"password\" : \""+password+"\"}");
+
+                CustomRequest request = new CustomRequest(Request.Method.POST, url, user,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+
+                                try {
+
+                                    //Se l'utente è verificato si rimuove il suo id e si inserisce
+                                    // nel modello dell'utente
+                                    String email = response.getString("_id");
+                                    response.remove("_id");
+                                    response.put(User.Keys.EMAIL,email);
+
+                                    next(User.fromJson(response));
+                                }
+                                catch (JSONException ex ) {}
+
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Snackbar snackbarError = Snackbar.make(view, "Email / password sbagliata",
+                                Snackbar.LENGTH_LONG);
+
+                        snackbarError.getView().setBackgroundColor(ContextCompat
+                                .getColor(getApplicationContext(), R.color.lightRed));
+                        snackbarError.show();
+
+                        progressDialog.dismiss();
+                    }
+                });
+
+                VolleyRequest.get(this).add(request);
+            }
+            catch (JSONException ex) { ex.printStackTrace();}
+        }
+    }
+
+    /**
+     * Si prosegue per la MainActivity
+     * @param user utente corrente
+     */
+    private void next(User user){
+
+        //Si salva l'utente corrente nelle preferences
+        UserManager.get(this).save(user);
+
+        //Non viene visualizzato il completamento del profilo
+        StepManager.get(this).setStep(StepManager.COMPLETE);
+
+        //Reindirizzamento alla MainActivity
+        Intent intent = new Intent(this, MainActivity.class);
+
+        progressDialog.dismiss();
+        finish();
+        startActivity(intent);
+    }
+
+    //Region controllo dei campi
+
+    /**
+     * Listener della scrittura in un campo di testo
+     */
+    private final TextWatcher watcher = new TextWatcher() {
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+        public void afterTextChanged(Editable s) {
+
+            //Se la lunghezza del campo della email e/o password è diversa da 0,
+            // l'icona di warning non viene più visualizzata
+            if (emailField.getText().toString().length() != 0) {
+                ic_warning_email.setVisibility(View.INVISIBLE);
+            }
+            if(passwordField.getText().toString().length() != 0){
+                ic_warning_password.setVisibility(View.INVISIBLE);
+            }
+        }
+    };
+
+    /**
+     * Controllo dell'user per il login
+     * @return un booleano, se i campi non sono vuoti ritorna true
+     */
     public boolean controlUser() {
+
         email = emailField.getText().toString();
         password = passwordField.getText().toString();
 
@@ -81,102 +194,5 @@ public class LoginActivity extends AppCompatActivity {
             return true;
     }
 
-    public void login(final View view) {
-        if(controlUser()) {
-
-            progressDialog = new ProgressDialog(this);
-
-            progressDialog.setMessage("Login in corso...");
-            progressDialog.setIndeterminate(true);
-            progressDialog.setCancelable(false);
-            progressDialog.setCanceledOnTouchOutside(false);
-
-            progressDialog.show();
-
-                email = emailField.getText().toString();
-                password = passwordField.getText().toString();
-
-            try {
-                String url = FourEventUri.Builder.create(FourEventUri.Keys.USER).getUri();
-
-                final JSONObject user = new JSONObject("{\"email\": \""+email+"\", \"password\" : \""+password+"\"}");
-
-                CustomRequest request = new CustomRequest(Request.Method.POST, url, user,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-
-                                try {
-
-                                    String email = response.getString("_id");
-
-                                    response.remove("_id");
-                                    response.put(User.Keys.EMAIL,email);
-
-                                    next(User.fromJson(response));
-                                }
-                                catch (JSONException ex ) {}
-
-
-
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-
-                        Snackbar snackbarError = Snackbar.make(view, "Email / password sbagliata",
-                                Snackbar.LENGTH_LONG);
-
-                        View snackbarView = snackbarError.getView();
-
-                        snackbarView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.lightRed));
-
-                        snackbarError.show();
-
-                        progressDialog.dismiss();
-                    }
-                });
-
-                VolleyRequest.get(this).add(request);
-            }
-            catch (JSONException ex) {
-
-            }
-        }
-    }
-
-    private void next(User user){
-
-        UserManager.get(this).save(user);
-
-        //non visualizzo lo stepper
-        StepManager.get(this).setStep(StepManager.COMPLETE);
-
-        Intent intent = new Intent(this, MainActivity.class);
-
-        progressDialog.dismiss();
-        finish();
-        startActivity(intent);
-    }
-
-    private final TextWatcher watcher = new TextWatcher() {
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        public void afterTextChanged(Editable s) {
-            if (emailField.getText().toString().length() != 0) {
-                ic_warning_email.setVisibility(View.INVISIBLE);
-            }
-            if(passwordField.getText().toString().length() != 0){
-                ic_warning_password.setVisibility(View.INVISIBLE);
-            }
-        }
-    };
-
+    //Endregion
 }

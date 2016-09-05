@@ -158,6 +158,45 @@ public class WalletFragment extends Fragment {
     }
 
     /**
+     * Si setta il titolo
+     */
+    private void setTitle () {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);
+    }
+
+    /**
+     * Si raccoglie dal server il numero di record con cui riempire la timeline
+     */
+    private void setModel() {
+
+        String uri = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
+                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
+
+        RecordListRequest recordListRequest = new RecordListRequest(uri, null,
+                new Response.Listener<List<Record>>() {
+                    @Override
+                    public void onResponse(List<Record> response) {
+
+                        mDataList.clear();
+                        mDataList.addAll(response);
+
+                        Collections.reverse(mDataList);
+
+                        mTimeLineAdapter.notifyDataSetChanged();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        Toast.makeText(getContext(), HandlerManager.handleError(error),Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        VolleyRequest.get(getContext()).add(recordListRequest);
+    }
+
+    /**
      * Metodo per aggiornare l'importo del portafoglio
      * @param mRootView view del fragment
      */
@@ -240,45 +279,6 @@ public class WalletFragment extends Fragment {
 
             mTxtBalance.setText(Float.toString(MainActivity.mCurrentUser.balance));
         }
-    }
-
-    /**
-     * Si setta il titolo
-     */
-    private void setTitle () {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);
-    }
-
-    /**
-     * Si raccoglie dal server il numero di record con cui riempire la timeline
-     */
-    private void setModel() {
-
-        String uri = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
-                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
-
-        RecordListRequest recordListRequest = new RecordListRequest(uri, null,
-                new Response.Listener<List<Record>>() {
-                    @Override
-                    public void onResponse(List<Record> response) {
-
-                        mDataList.clear();
-                        mDataList.addAll(response);
-
-                        Collections.reverse(mDataList);
-
-                        mTimeLineAdapter.notifyDataSetChanged();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        Toast.makeText(getContext(), HandlerManager.handleError(error),Toast.LENGTH_LONG).show();
-                    }
-                });
-
-        VolleyRequest.get(getContext()).add(recordListRequest);
     }
 
     /**

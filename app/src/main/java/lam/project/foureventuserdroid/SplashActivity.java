@@ -28,11 +28,13 @@ public class SplashActivity extends AppCompatActivity {
     private long mStartTime = -1L;
     private boolean mIsDone;
 
+    //Gestione del messaggio
     private Handler mHandler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
 
+            //Se il messaggio è di proseguire, si aspetta il tempo minimo e poi si va avanti
             if(msg.what == GO_AHEAD_WHAT){
 
                 long elapsedTime = SystemClock.uptimeMillis() - mStartTime;
@@ -53,7 +55,7 @@ public class SplashActivity extends AppCompatActivity {
 
             mStartTime = SystemClock.uptimeMillis();
         }
-
+        //Si invia il messaggio di proseguire
         final Message goAheadMessage = mHandler.obtainMessage(GO_AHEAD_WHAT);
         mHandler.sendMessageAtTime(goAheadMessage,mStartTime+MAX_WAIT_INTERVAL);
     }
@@ -62,6 +64,7 @@ public class SplashActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
 
+        //Salvataggio del valore booleano se il tempo massimo è trascorso e del tempo stesso
         outState.putBoolean(IS_DONE_KEY,mIsDone);
         outState.putLong(START_TIME_KEY,mStartTime);
     }
@@ -69,15 +72,18 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+
+        //Recupero del valore booleano se il tempo è trascorso o no
         this.mIsDone = savedInstanceState.getBoolean(IS_DONE_KEY);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        //fullscreen
+        //Activity su display intero, nascondendo anche i comandi di navigazione
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -86,14 +92,14 @@ public class SplashActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
 
         if(savedInstanceState != null) {
-
+            //Si fa il restore del tempo trascorso dall'avvio della app
             this.mStartTime = savedInstanceState.getLong(START_TIME_KEY);
         }
 
         final ImageView logoImageView = (ImageView) findViewById(R.id.splash_imageview);
         assert logoImageView != null;
 
-        //TODO goahead senza il click dell'immagine
+        //Con il click sul logo, si va avanti nella app, aspettando il tempo massimo
         logoImageView.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
@@ -111,6 +117,10 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Si va avanti, prendendo l'utente corrente se presente e reindirizzarlo nella MainActivity,
+     * altrimenti nella registrazione
+     */
     private void goAhead() {
 
         Intent intent;

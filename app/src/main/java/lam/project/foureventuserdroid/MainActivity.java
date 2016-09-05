@@ -27,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +58,6 @@ import lam.project.foureventuserdroid.utils.shared_preferences.FavouriteManager;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
 import static lam.project.foureventuserdroid.DetailsEventActivity.OPEN_FRAGMENT_WALLET;
-
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -90,7 +90,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
+
         super.onResume();
+        //Al resume della Activity il numero di volte che si è cliccato il tasto Back si resetta
         clicked = 0;
     }
 
@@ -98,98 +100,17 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //se il profilo è completo
+        //Se il profilo è completo
         if (StepManager.get(this).getStep() == StepManager.COMPLETE) {
 
+            //Si inserisce come fragment da visualizzare lo sliding tab degli eventi
             mNextFragment = new EventsFragment();
 
             setContentView(R.layout.activity_main);
 
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            toolbar.setTitle(R.string.title_events);
-            setSupportActionBar(toolbar);
+            initView();
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.setDrawerListener(toggle);
-            toggle.syncState();
-
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-
-            //Setto la pagina principale come quella di ricerca degli eventi
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.anchor_point, new EventsFragment())
-                    .commit();
-
-            mCurrentUser = UserManager.get(getApplicationContext()).getUser();
-
-            headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
-
-            TextView name = (TextView) headerView.findViewById(R.id.name);
-            TextView location = (TextView) headerView.findViewById(R.id.location);
-            imgUser = (CircleImageView) headerView.findViewById(R.id.profile_image);
-
-            name.setText(mCurrentUser.name);
-            location.setText(mCurrentUser.location);
-
-            setImage();
-
-
-            if (getIntent().hasExtra(OPEN_FRAGMENT_WALLET))
-            {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.anchor_point, new WalletFragment())
-                        .commit();
-            }
-
-
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addApi(LocationServices.API)
-                    .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-
-                        int CAUSE_SERVICE_DISCONNECTED = 1;
-                        int CAUSE_NETWORK_LOST = 2;
-
-                        @Override
-                        public void onConnected(Bundle bundle) {
-
-                            manageLocationPermission();
-                        }
-
-                        @Override
-                        public void onConnectionSuspended(int i) {
-
-                        }
-                    })
-                    .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                        @Override
-                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-                            if (mResolvingError) {
-
-                                return;
-                            } else if (connectionResult.hasResolution()) {
-
-                                try {
-
-                                    mResolvingError = true;
-                                    connectionResult.startResolutionForResult(MainActivity.this,
-                                            REQUEST_RESOLVE_ERROR);
-
-                                } catch (IntentSender.SendIntentException e) {
-
-                                    mGoogleApiClient.connect();
-                                }
-                            } else {
-
-                                mResolvingError = true;
-                            }
-                        }
-                    })
-                    .build();
-
+        //Altrimenti si viene reindirizzati al completamento del profilo
         } else {
 
             Intent completeProfileIntent = new Intent(this, CompleteProfileActivity.class);
@@ -198,8 +119,61 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //region Navigation Drawer
+    /**
+     * Inizializzazione della view della Activity
+     */
+    private void initView() {
 
+        //Si setta il titolo della Activity
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.title_events);
+        setSupportActionBar(toolbar);
+
+        //Individuazione della Navigation drawer ed aggiunta del suo listener
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //Setto la pagina principale come quella di visualizzazione degli eventi
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.anchor_point, new EventsFragment())
+                .commit();
+
+        //Si salva in una variabile l'utente corrente
+        mCurrentUser = UserManager.get(getApplicationContext()).getUser();
+
+        //Salvataggio della view della navigation, per settare nome, immagine e indirizzo dell'utente
+        headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        TextView name = (TextView) headerView.findViewById(R.id.name);
+        TextView location = (TextView) headerView.findViewById(R.id.location);
+        imgUser = (CircleImageView) headerView.findViewById(R.id.profile_image);
+
+        name.setText(mCurrentUser.name);
+        location.setText(mCurrentUser.location);
+
+        setImage();
+
+        //Se la MainActivity è il risultato di un Intent precedente, si controlla il codice che ritorna
+        if (getIntent().hasExtra(OPEN_FRAGMENT_WALLET)) {
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.anchor_point, new WalletFragment())
+                    .commit();
+        }
+
+        setGoogleServices();
+    }
+
+    //Region Navigation Drawer
+
+    /**
+     * Si setta l'immagine nell'header
+     */
     private void setImage () {
 
         Bitmap imageContent = ImageManager.get().readImage(mCurrentUser.email);
@@ -209,8 +183,11 @@ public class MainActivity extends AppCompatActivity
             imgUser.setImageBitmap(imageContent);
         }
         else {
+
             if(mCurrentUser.gender != null) {
+
                 if(mCurrentUser.gender.equals("F")) {
+
                     imgUser.setImageResource(R.drawable.img_female);
                 }
                 else {
@@ -226,18 +203,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
-
+        //Quando si preme il pulsante back, se la navigation è aperta, viene chiusa
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
 
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-
+        }
+        else {
+            //Se il numero di click è uguale a 0, viene mostrato un messaggio per ripremere nuovamente
             if(clicked == 0) {
 
                 Toast.makeText(this,"Clicca ancora per chiudere l'app",Toast.LENGTH_LONG).show();
                 clicked ++;
-
             } else {
 
                 super.onBackPressed();
@@ -254,10 +231,15 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Si visualizza un fragment al click di un item della navigation drawer
+     * @param menuItem item del menu della nav
+     */
     private void showFragment(final MenuItem menuItem) {
 
         final int itemId = menuItem.getItemId();
 
+        //Se si preme sul logout, si cancellano tutte le info, categorie e preferiti dell'utente
         if(itemId == R.id.nav_logout) {
 
             UserManager.get().remove();
@@ -268,7 +250,6 @@ public class MainActivity extends AppCompatActivity
             finish();
 
             return;
-
         }
 
         else if(itemId == R.id.nav_vote) {
@@ -315,31 +296,86 @@ public class MainActivity extends AppCompatActivity
                 throw new IllegalArgumentException("No fragment given");
         }
 
+        //Apertura del fragment corrispondente al click
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.anchor_point, mNextFragment)
                 .commit();
     }
 
+    /**
+     * Aggiornamento della location della navigation drawer
+     * @param addressText indirizzo della localizzazione dell'utente
+     */
     private void updateDrawerHeader(final String addressText) {
 
         TextView txtLocation = (TextView) headerView.findViewById(R.id.location);
-
         txtLocation.setText(addressText);
     }
 
-    //endregion
+    //Endregion
 
-    //region Google maps
+    //Region Google maps
+
+    /**
+     * Connessione ai Google Play Services per settare Google Maps API
+     */
+    private void setGoogleServices() {
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+
+                    int CAUSE_SERVICE_DISCONNECTED = 1;
+                    int CAUSE_NETWORK_LOST = 2;
+
+                    @Override
+                    public void onConnected(Bundle bundle) {
+
+                        manageLocationPermission();
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {}
+
+                })
+                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                        if (mResolvingError) { return;}
+
+                        else if (connectionResult.hasResolution()) {
+
+                            try {
+
+                                mResolvingError = true;
+                                connectionResult.startResolutionForResult(MainActivity.this,
+                                        REQUEST_RESOLVE_ERROR);
+
+                            } catch (IntentSender.SendIntentException e) {
+
+                                mGoogleApiClient.connect();
+                            }
+                        } else {
+
+                            mResolvingError = true;
+                        }
+                    }
+                })
+                .build();
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
 
+        //Se non sono presenti errori, si apre la connessione ai servizi
         if (!mResolvingError) {
 
             mGoogleApiClient.connect();
         }
 
+        //Se è presente la locazione corrente, viene passata nel geocode
         if(mCurrentLocation != null){
 
             getGeocodeLocation(mCurrentLocation);
@@ -349,14 +385,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
 
+        //Disconnessione dai servizi allo stop dell'Activity
         mGoogleApiClient.disconnect();
         super.onStop();
     }
 
+    /**
+     * Classe per la gestione degli errori
+     */
     public static class ErrorDialogFragment extends DialogFragment {
 
-        public ErrorDialogFragment() {
-        }
+        public ErrorDialogFragment() {}
 
         @NonNull
         @Override
@@ -375,21 +414,26 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void onDialogDismissed() {
-    }
+    private void onDialogDismissed() {}
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
+
+        //Viene salvato lo stato dell'errore
         outState.putBoolean(RESOLVING_ERROR_STATE_KEY, mResolvingError);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        //Se il codice di richiesta è un errore, si setta la variabile di risoluzione degli errori a false
         if (requestCode == REQUEST_RESOLVE_ERROR) {
 
             mResolvingError = false;
 
+            //Se il codice del risultato è OK e non si è connessi ai servizi Google,
+            //si avvia la connessione
             if (resultCode == RESULT_OK) {
 
                 if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
@@ -399,10 +443,14 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
+        //Implementazione dell'onActivityResult presente nel fragment del profilo
         profileFragment.onActivityResult(requestCode, resultCode, data);
 
     }
 
+    /**
+     * Gestione dei permessi per accedere a Google Maps API
+     */
     public void manageLocationPermission() {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -492,11 +540,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Listener della location
+     */
     public void startLocationListener() {
 
         updateLocation();
     }
 
+    /**
+     * Aggiornamento della location: si fa la localizzazione e si passa nella variabile
+     * della location corrente
+     */
     private void updateLocation() {
 
         LocationRequest locationRequest = LocationRequest.create()
@@ -526,6 +581,10 @@ public class MainActivity extends AppCompatActivity
                 });
     }
 
+    /**
+     * Si prende la localizzazione e si richiama il Geocoder asincrono
+     * @param location location corrente
+     */
     public void getGeocodeLocation(final Location location) {
 
         if (location != null) {
@@ -561,8 +620,6 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected List<android.location.Address> doInBackground(Location... params) {
 
-            //context null
-
             MainActivity activity = mActivityRef;
 
             if(activity == null) {
@@ -574,9 +631,10 @@ public class MainActivity extends AppCompatActivity
 
             final Location location = params[0];
 
+            //Si crea una lista di indirizzi e si inserisce la latitudine e longitudine della location
             List<android.location.Address> geoAddress = null;
 
-            try{
+            try {
 
                 geoAddress = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(), mMaxResult);
 
@@ -591,6 +649,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(List<android.location.Address> addresses) {
 
+            //Aggiornamento della location nella navigation drawer
             if(addresses != null) {
 
                 updateDrawerHeader(addresses.get(0).getLocality());
@@ -599,27 +658,30 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //endregion
+    //Endregion
 
+    /**
+     * Metodo per l'apertura di un dialog nel quale votare l'app
+     */
     private void voteApp() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Invia un feedback!");
-        RatingBar ratingBar;
-        final TextView text;
 
         LayoutInflater inflater = this.getLayoutInflater();
-        final View view = inflater.inflate(R.layout.dialog_vote_app, null);
+        final View view = inflater.inflate(R.layout.dialog_vote_app, (ViewGroup) getWindow().getDecorView(), false);
         builder.setView(view);
 
-        ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
-        text = (TextView) view.findViewById(R.id.text_rating);
+        RatingBar ratingBar = (RatingBar) view.findViewById(R.id.rating_bar);
+        final TextView text = (TextView) view.findViewById(R.id.text_rating);
 
+        //Al cambiamento del rating
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(final RatingBar ratingBar, float rating, boolean fromUser) {
                 text.setVisibility(View.VISIBLE);
 
+                //Timer dopo il quale viene cancellato il dialog
                 final int interval = 1000;
                 Handler handler = new Handler();
                 Runnable runnable = new Runnable(){
@@ -638,6 +700,7 @@ public class MainActivity extends AppCompatActivity
                 dialog.dismiss();
             }
         });
+
        dialog = builder.show();
     }
 }
