@@ -31,7 +31,6 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +38,7 @@ import java.util.Locale;
 
 import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
-import lam.project.foureventuserdroid.fragment.TimeLine.TimeLineAdapter;
+import lam.project.foureventuserdroid.fragment.timeLine.TimeLineAdapter;
 import lam.project.foureventuserdroid.model.Record;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
@@ -49,9 +48,7 @@ import lam.project.foureventuserdroid.utils.connection.RecordListRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class WalletFragment extends Fragment {
 
     private static AlertDialog dialog;
@@ -67,29 +64,34 @@ public class WalletFragment extends Fragment {
 
     private AlertDialog.Builder builder;
 
-    private View mRootView;
-
     private final static float MIN_VAL = 0.0f;
 
-    public WalletFragment() {
-        // Required empty public constructor
-    }
-
+    public WalletFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        mRootView = inflater.inflate(R.layout.fragment_wallet, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        setTitle();
+
+        return initView(inflater.inflate(R.layout.fragment_wallet, container, false));
+
+    }
+
+    /**
+     * Metodo per inizializzare i campi del fragment
+     * @param mRootView la view del portafoglio
+     * @return la view completa di tutti i campi
+     */
+    private View initView(View mRootView) {
 
         mProgressBar = (ProgressBar) mRootView.findViewById(R.id.progress_bar);
         mTxtBalance = (TextView) mRootView.findViewById(R.id.user_balance);
 
-        setTitle();
-        updateBalance();
+        updateBalance(mRootView);
 
         FloatingActionButton fab = (FloatingActionButton) mRootView.findViewById(R.id.fab_wallet);
 
+        //Listener di ogni importo scelto dall'utente per ricaricare il portafoglio
         final Button.OnClickListener rechargeButtonListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,8 +112,7 @@ public class WalletFragment extends Fragment {
             }
         };
 
-
-
+        //Al click del fab si scegliere di quanto ricaricare il portafoglio
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,7 +120,8 @@ public class WalletFragment extends Fragment {
                 builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Ricarica il portafoglio");
 
-                View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.dialog_recharge, (ViewGroup) getView(), false);
+                View viewInflated = LayoutInflater.from(getContext())
+                        .inflate(R.layout.dialog_recharge, (ViewGroup) getView(), false);
 
                 viewInflated.findViewById(R.id.button_1_recharge).setOnClickListener(rechargeButtonListener);
                 viewInflated.findViewById(R.id.button_2_recharge).setOnClickListener(rechargeButtonListener);
@@ -153,87 +155,18 @@ public class WalletFragment extends Fragment {
         setModel();
 
         return mRootView;
-
     }
 
-    private void updateBalance() {
-
-        ObjectAnimator animation = ObjectAnimator.ofInt (mProgressBar, "progress", 0, 500);
-        animation.setDuration (1000);
-        animation.setInterpolator (new DecelerateInterpolator());
-        animation.start ();
-
-        //mostro progress bar e nascondo tutto il resto
-        mProgressBar.setVisibility(View.VISIBLE);
-
-        mTxtBalance.setVisibility(View.INVISIBLE);
-        mRootView.findViewById(R.id.symbol_euro).setVisibility(View.INVISIBLE);
-
-        String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
-                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
-
-        CustomRequest getBalanceRequest = new CustomRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-
-                            MainActivity.mCurrentUser.balance = BigDecimal.valueOf(response.getDouble(User.Keys.BALANCE)).floatValue();
-
-                            mProgressBar.setVisibility(View.INVISIBLE);
-
-                            mTxtBalance.setVisibility(View.VISIBLE);
-                            mRootView.findViewById(R.id.symbol_euro).setVisibility(View.VISIBLE);
-
-                            animateBalance(MIN_VAL);
-
-                        } catch (JSONException e) {
-
-                            e.printStackTrace();
-                        }
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        error.printStackTrace();
-                    }
-                });
-
-        VolleyRequest.get(getContext()).add(getBalanceRequest);
-    }
-
-    private void animateBalance(float minValue) {
-
-        if(MainActivity.mCurrentUser.balance > 0) {
-
-            ValueAnimator animator = new ValueAnimator();
-            animator.setFloatValues(minValue, MainActivity.mCurrentUser.balance);
-            animator.setDuration(500);
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-                public void onAnimationUpdate(ValueAnimator animation) {
-
-                    float val = Float.parseFloat(""+animation.getAnimatedValue());
-
-                    mTxtBalance.setText(String.format(Locale.ITALY,"%.1f", new BigDecimal(val)));
-                }
-            });
-            animator.start();
-
-        } else {
-
-            mTxtBalance.setText(Float.toString(MainActivity.mCurrentUser.balance));
-        }
-    }
-
+    /**
+     * Si setta il titolo
+     */
     private void setTitle () {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);
     }
 
+    /**
+     * Si raccoglie dal server il numero di record con cui riempire la timeline
+     */
     private void setModel() {
 
         String uri = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
@@ -263,6 +196,96 @@ public class WalletFragment extends Fragment {
         VolleyRequest.get(getContext()).add(recordListRequest);
     }
 
+    /**
+     * Metodo per aggiornare l'importo del portafoglio
+     * @param mRootView view del fragment
+     */
+    private void updateBalance(final View mRootView) {
+
+        //Animazione della progress bar, durante la ricerca dell'importo
+        ObjectAnimator animation = ObjectAnimator.ofInt (mProgressBar, "progress", 0, 500);
+        animation.setDuration (1000);
+        animation.setInterpolator (new DecelerateInterpolator());
+        animation.start ();
+
+        //Mostro progress bar e nascondo tutto il resto
+        mProgressBar.setVisibility(View.VISIBLE);
+
+        mTxtBalance.setVisibility(View.INVISIBLE);
+        mRootView.findViewById(R.id.symbol_euro).setVisibility(View.INVISIBLE);
+
+        //Creo l'url della richiesta
+        String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
+                .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
+
+        CustomRequest getBalanceRequest = new CustomRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+
+                            MainActivity.mCurrentUser.balance = BigDecimal.valueOf(response
+                                    .getDouble(User.Keys.BALANCE)).floatValue();
+
+                            mProgressBar.setVisibility(View.INVISIBLE);
+
+                            mTxtBalance.setVisibility(View.VISIBLE);
+                            mRootView.findViewById(R.id.symbol_euro).setVisibility(View.VISIBLE);
+
+                            animateBalance(MIN_VAL);
+
+                        } catch (JSONException e) {
+
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        error.printStackTrace();
+                    }
+                });
+
+        VolleyRequest.get(getContext()).add(getBalanceRequest);
+    }
+
+    /**
+     * Animazione del valore dell'importo
+     * @param minValue valore di partenza
+     */
+    private void animateBalance(float minValue) {
+
+        if(MainActivity.mCurrentUser.balance > 0) {
+
+            ValueAnimator animator = new ValueAnimator();
+            animator.setFloatValues(minValue, MainActivity.mCurrentUser.balance);
+            animator.setDuration(500);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+                public void onAnimationUpdate(ValueAnimator animation) {
+
+                    float val = Float.parseFloat(""+animation.getAnimatedValue());
+
+                    mTxtBalance.setText(String.format(Locale.ITALY,"%.1f", new BigDecimal(val)));
+                }
+            });
+            animator.start();
+
+        } else {
+
+            mTxtBalance.setText(Float.toString(MainActivity.mCurrentUser.balance));
+        }
+    }
+
+    /**
+     * Metodo per ricaricare il portafoglio
+     * @param amount l'importo scelto dall'utente
+     * @throws JSONException
+     */
     private void recharge(Float amount) throws JSONException {
 
         final float balance = MainActivity.mCurrentUser.balance;
@@ -274,7 +297,7 @@ public class WalletFragment extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
 
-
+        //Creo l'url della richiesta
         String uri = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
                 .appendEncodedPath(MainActivity.mCurrentUser.email).getUri();
 
@@ -284,22 +307,23 @@ public class WalletFragment extends Fragment {
                     .build().toJson();
 
             CustomRequest createRecordRequest = new CustomRequest(Request.Method.PUT,
-                    uri, record,
-                    new Response.Listener<JSONObject>() {
+                    uri, record, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
 
                             try {
 
                                 dialog.dismiss();
-                                //ritorna l'oggetto che viene parsato e aggiunto
+
+                                //Ritorna l'oggetto che viene parsato e aggiunto
                                 Record insertedRecord = Record.fromJson(response);
 
+                                //Si aggiunge il nuovo record all'inizio della timeline
                                 mDataList.addFirst(insertedRecord);
 
                                 mTimeLineAdapter.notifyDataSetChanged();
 
-                                //update balance
+                                //Update del totale del portafoglio
                                 MainActivity.mCurrentUser.updateBalance(insertedRecord.mAmount);
 
                                 animateBalance(balance);

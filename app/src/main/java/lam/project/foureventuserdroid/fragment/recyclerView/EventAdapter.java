@@ -11,17 +11,10 @@ import java.util.List;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.Event;
 
-/**
- * Created by spino on 21/08/16.
- *
- */
-
 public final class EventAdapter extends RecyclerView.Adapter<EventViewHolder>{
-
 
     private final Activity mSenderActivity;
     private final List<Event> mModel;
-
 
     public EventAdapter(final Activity senderActivity, final List<Event> model){
 

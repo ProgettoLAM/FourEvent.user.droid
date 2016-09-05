@@ -1,6 +1,5 @@
 package lam.project.foureventuserdroid.model;
 
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -16,7 +15,7 @@ import java.util.List;
 import lam.project.foureventuserdroid.utils.DateConverter;
 
 /**
- * Created by spino on 29/07/16.
+ * Classe che rappresenta il modello dell'utente, con i relativi campi
  */
 public class User implements Parcelable{
 
@@ -48,18 +47,6 @@ public class User implements Parcelable{
         this.balance = balance;
         this.image = image;
     }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 
     public void updateBalance(float amount) {
 
@@ -95,6 +82,20 @@ public class User implements Parcelable{
         this.image = image;
         return this;
     }
+
+    //Region metodi parcelable
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     protected User(Parcel in) {
 
@@ -145,6 +146,64 @@ public class User implements Parcelable{
 
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeString(email);
+        dest.writeFloat(balance);
+
+        if (name != null) {
+            dest.writeByte(Keys.PRESENT);
+            dest.writeString(name);
+        }
+        else
+            dest.writeByte(Keys.NOT_PRESENT);
+
+        if (birthDate != null) {
+            dest.writeByte(Keys.PRESENT);
+            dest.writeString(birthDate);
+        }
+        else
+            dest.writeByte(Keys.NOT_PRESENT);
+
+        if (location != null) {
+            dest.writeByte(Keys.PRESENT);
+            dest.writeString(location);
+        }
+        else
+            dest.writeByte(Keys.NOT_PRESENT);
+
+        if (gender != null) {
+            dest.writeByte(Keys.PRESENT);
+            dest.writeString(gender);
+        }
+        else
+            dest.writeByte(Keys.NOT_PRESENT);
+
+        if (categories != null) {
+
+            dest.writeByte(Keys.PRESENT);
+            dest.writeTypedList(categories);
+        }
+        else
+            dest.writeByte(Keys.NOT_PRESENT);
+
+        if (image != null) {
+            dest.writeByte(Keys.PRESENT);
+            dest.writeString(image);
+        }
+        else
+            dest.writeByte(Keys.NOT_PRESENT);
+    }
+
+    //Endregion
+
+    //Region lettura/scrittura Json
 
     public static User fromJson(final JSONObject jsonObject) throws JSONException{
 
@@ -185,6 +244,7 @@ public class User implements Parcelable{
             List<Category> categories = new LinkedList<>();
             JSONArray jsonArray = new JSONArray(jsonObject.getString(Keys.CATEGORIES));
 
+            //Per ogni categoria si aggiunge il suo modello nell'array dell'utente
             for(int i=0; i<jsonArray.length(); i++) {
 
                 Category category = Category.fromJson(jsonArray.getJSONObject(i));
@@ -258,59 +318,9 @@ public class User implements Parcelable{
         return jsonObject;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+    //Endregion
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(email);
-        dest.writeFloat(balance);
-
-        if (name != null) {
-            dest.writeByte(Keys.PRESENT);
-            dest.writeString(name);
-        }
-        else
-            dest.writeByte(Keys.NOT_PRESENT);
-
-        if (birthDate != null) {
-            dest.writeByte(Keys.PRESENT);
-            dest.writeString(birthDate);
-        }
-        else
-            dest.writeByte(Keys.NOT_PRESENT);
-
-        if (location != null) {
-            dest.writeByte(Keys.PRESENT);
-            dest.writeString(location);
-        }
-        else
-            dest.writeByte(Keys.NOT_PRESENT);
-
-        if (gender != null) {
-            dest.writeByte(Keys.PRESENT);
-            dest.writeString(gender);
-        }
-        else
-            dest.writeByte(Keys.NOT_PRESENT);
-
-        if (categories != null) {
-
-            dest.writeByte(Keys.PRESENT);
-            dest.writeTypedList(categories);
-        }
-        else
-            dest.writeByte(Keys.NOT_PRESENT);
-
-        if (image != null) {
-            dest.writeByte(Keys.PRESENT);
-            dest.writeString(image);
-        }
-        else
-            dest.writeByte(Keys.NOT_PRESENT);
-    }
+    //Region Keys
 
     public static class Keys{
 
@@ -338,6 +348,10 @@ public class User implements Parcelable{
 
         public static final Byte NOT_PRESENT = 0;
     }
+
+    //Endregion
+
+    //Region Builder
 
     public static class Builder{
 
@@ -408,4 +422,6 @@ public class User implements Parcelable{
             return new User(mEmail,mName,mBirthDate,mLocation,mGender,mBalance,mImage);
         }
     }
+
+    //Endregion
 }

@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by spino on 10/08/16.
+ * Classe del modello delle categorie, con i relativi campi tag e nome
  */
 public class Category implements Parcelable{
 
@@ -21,9 +21,12 @@ public class Category implements Parcelable{
     }
 
     protected Category(Parcel in) {
+
         id = in.readInt();
         name = in.readString();
     }
+
+    //Region metodi parcelable
 
     public static final Creator<Category> CREATOR = new Creator<Category>() {
         @Override
@@ -36,6 +39,21 @@ public class Category implements Parcelable{
             return new Category[size];
         }
     };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+    }
+
+    //Endregion
+
+    //Region lettura/scrittua Json
 
     public static Category fromJson(final JSONObject jsonObject) throws JSONException {
 
@@ -55,16 +73,9 @@ public class Category implements Parcelable{
         return jsonObject;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+    //Endregion
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(name);
-    }
+    //Region Keys
 
     public static class Keys{
 
@@ -73,8 +84,11 @@ public class Category implements Parcelable{
         public static final String CATEGORY = "categories";
     }
 
-    public static class Builder{
+    //Endregion
 
+    //Region Builder
+
+    public static class Builder{
 
         public final int id;
         public final String name;
@@ -95,4 +109,6 @@ public class Category implements Parcelable{
             return new Category(this.id,this.name);
         }
     }
+
+    //Endregion
 }

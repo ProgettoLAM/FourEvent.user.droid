@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -23,7 +22,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -32,10 +30,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.github.fcannizzaro.materialstepper.AbstractStep;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -43,7 +38,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.DateConverter;
-import lam.project.foureventuserdroid.utils.ImageManager;
+import lam.project.foureventuserdroid.utils.shared_preferences.ImageManager;
 import lam.project.foureventuserdroid.utils.Utility;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.connection.HandlerManager;
@@ -55,7 +50,6 @@ public class Step1Info extends AbstractStep{
 
     public static final int REQUEST_CODE = 1;
 
-    //TODO gestire in modo diverso
     private TextView dateInfo;
 
     private String mDate;
@@ -73,10 +67,11 @@ public class Step1Info extends AbstractStep{
     private String mImageUri;
     private User mCurrentUser = UserManager.get().getUser();
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Focus non automatico su un campo da compilare
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
     }
@@ -94,6 +89,12 @@ public class Step1Info extends AbstractStep{
         return initView(inflater.inflate(R.layout.step1_info, container, false));
     }
 
+    /**
+     * Metodo per inizializzare i campi necessari per aggiungere le info dell'utente
+     * @param rootView view dalla quale ricercare gli id degli items
+     * @return view completa dei vari riferimenti
+     * @see View nell'onCreateView
+     */
     private View initView(final View rootView) {
 
         dateInfo = (TextView) rootView.findViewById(R.id.date_info);
@@ -130,20 +131,22 @@ public class Step1Info extends AbstractStep{
     @Override
     public boolean nextIf() {
 
-
         boolean isNotEmptyName = !txtName.getText().toString().matches("") &&
                 !txtSurname.getText().toString().matches("");
 
+        //Controllo che il campo nome e cognome non siano vuoti ed aggiungo all'user i vari campi
         if(isNotEmptyName){
 
             mCurrentUser.addName(txtName.getText().toString()+ " "
                     + txtSurname.getText().toString());
 
+            //Controllo che esista l'immagine del profilo
             if(mImageUri != null) {
+
                 mCurrentUser.updateImage(mImageUri);
             }
 
-            //controllo che esista la location
+            //Controllo che esista la location
             String location = txtLocation.getText().toString();
 
             if(!location.matches("")) {
@@ -151,35 +154,33 @@ public class Step1Info extends AbstractStep{
                 mCurrentUser.addLocation(location);
             }
 
-            //controllo che esista il giorno di nascita
+            //Controllo che esista la data di nascita
             String birthDate = mDate;
             if(birthDate != null && !birthDate.matches("")) {
 
                 mCurrentUser.addBirthDate(birthDate);
             }
 
-            //controllo che esista il sesso
+            //Controllo che esista il sesso
             int selectedId = radioGroup.getCheckedRadioButtonId();
 
             if(selectedId != -1) {
+
                 RadioButton genderField = (RadioButton) getActivity().findViewById(selectedId);
                 mCurrentUser.addGender(genderField.getText().toString());
             }
 
+            //Inserisco nel modello dell'utente, i dati correnti
             getStepDataFor(1).putParcelable(User.Keys.USER, mCurrentUser);
-
         }
 
         return isNotEmptyName;
     }
 
     @Override
-    public String error() {
+    public String error() { return "Inserisci nome, cognome.";}
 
-        return "Inserisci nome, cognome.";
-    }
-
-    //region intent salvataggio immagine
+    //Region intent salvataggio dell'immagine
 
     private void selectImage() {
 
@@ -222,9 +223,10 @@ public class Step1Info extends AbstractStep{
         startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
     }
 
-    //endregion
+    //Endregion
 
-    //region fetch/scatta immagine + upload server
+    //Region fetch/scatta immagine + upload server
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -242,8 +244,6 @@ public class Step1Info extends AbstractStep{
 
                         galleryIntent();
 
-                } else {
-                    //Codice per negare i permessi TODO @Valentina
                 }
 
                 break;
@@ -260,22 +260,22 @@ public class Step1Info extends AbstractStep{
 
         if (resultCode == Activity.RESULT_OK) {
 
-            if (requestCode == SELECT_FILE)
+            if (requestCode == SELECT_FILE) onSelectFromGalleryResult(data);
 
-                onSelectFromGalleryResult(data);
+            else if (requestCode == REQUEST_CAMERA) onCaptureImageResult(data);
 
-            else if (requestCode == REQUEST_CAMERA)
-
-                onCaptureImageResult(data);
-
-        }else if(requestCode == REQUEST_CODE){
+        //Se ritorna un altro codice, si prende il risultato del datePicker e si setta la data
+        } else if(requestCode == REQUEST_CODE){
 
             mDate = data.getStringExtra(SelectDateFragment.DATE_RESULT);
             dateInfo.setText(mDate);
         }
     }
 
-    //Risultato dell'immagine scelta dalla galleria
+    /**
+     * Risultato dell'immagine scelta dalla galleria
+     * @param data intent che deriva dal risultato della Activity
+     */
     private void onSelectFromGalleryResult(Intent data) {
 
         try {
@@ -294,7 +294,10 @@ public class Step1Info extends AbstractStep{
         }
     }
 
-    //Risultato dell'immagine scattata dalla fotocamera
+    /**
+     * Risultato dell'immagine scattata dalla fotocamera
+     * @param data intent che deriva dal risultato della Activity
+     */
     private void onCaptureImageResult(Intent data) {
 
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
@@ -307,12 +310,18 @@ public class Step1Info extends AbstractStep{
         }
     }
 
+    /**
+     * Caricamento dell'immagine sul server
+     * @param toUploadFile File preso dalla galleria del dispositivo o scattato dalla fotocamera
+     */
     private void uploadImage(File toUploadFile) {
 
         String url = FourEventUri.Builder.create(FourEventUri.Keys.USER)
-                .appendPath("img").appendEncodedPath(UserManager.get(getContext()).getUser().email).getUri();
+                .appendPath("img").appendEncodedPath(UserManager.get(getContext()).getUser().email)
+                .getUri();
 
-        final ProgressDialog loading = ProgressDialog.show(getContext(), "Immagine del profilo", "Caricamento in corso..", false, false);
+        final ProgressDialog loading = ProgressDialog
+                .show(getContext(), "Immagine del profilo", "Caricamento in corso..", false, false);
 
         MultipartRequest mMultipartRequest = new MultipartRequest(url,
                 new Response.ErrorListener() {
@@ -324,7 +333,9 @@ public class Step1Info extends AbstractStep{
                     Snackbar errorSnackbar = Snackbar.make(getView(), HandlerManager.handleError(error),
                             Snackbar.LENGTH_SHORT);
 
-                    errorSnackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightRed));
+                    errorSnackbar.getView().setBackgroundColor(ContextCompat
+                            .getColor(getContext(), R.color.lightRed));
+
                     errorSnackbar.show();
 
                     }
@@ -338,7 +349,9 @@ public class Step1Info extends AbstractStep{
                         Snackbar successSnackbar = Snackbar.make(getView(), "Immagine caricata!",
                                 Snackbar.LENGTH_SHORT);
 
-                        successSnackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightGreen));
+                        successSnackbar.getView().setBackgroundColor(ContextCompat
+                                .getColor(getContext(), R.color.lightGreen));
+
                         successSnackbar.show();
 
                         mImageUri = response;
@@ -349,9 +362,9 @@ public class Step1Info extends AbstractStep{
         VolleyRequest.get(getContext()).add(mMultipartRequest);
     }
 
-    //endregion
+    //Endregion
 
-    //Classe relativa alla visualizzazione del dialog del calendario per la selezione della mData di nascita
+    //Classe relativa alla visualizzazione del calendario per la selezione della data di nascita
     public static class SelectDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         public static String DATE_RESULT = "date";
@@ -363,6 +376,8 @@ public class Step1Info extends AbstractStep{
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Calendar calendar = Calendar.getInstance();
+
+            //Si setta come età minima 16 anni
             calendar.add(Calendar.YEAR,-16);
             int yy = calendar.get(Calendar.YEAR);
             int mm = calendar.get(Calendar.MONTH);
@@ -379,8 +394,16 @@ public class Step1Info extends AbstractStep{
         }
 
         public void onDateSet(DatePicker view, int yy, int mm, int dd) {
+
             populateSetDate(yy, mm, dd);
         }
+
+        /**
+         * Popolamento dei dati, convertiti attraverso la classe DateConverter
+         * @param year
+         * @param month
+         * @param day
+         */
         public void populateSetDate(int year, int month, int day) {
 
             final Calendar calendar = Calendar.getInstance();
@@ -390,6 +413,10 @@ public class Step1Info extends AbstractStep{
             sendResult(REQUEST_CODE);
         }
 
+        /**
+         * Invio del risultato della data alla Activity
+         * @param REQUEST_CODE
+         */
         private void sendResult(int REQUEST_CODE) {
 
             Intent intent = new Intent();

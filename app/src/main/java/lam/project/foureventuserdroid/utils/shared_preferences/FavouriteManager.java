@@ -14,9 +14,8 @@ import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.Event;
 
 /**
- * Created by Vale on 14/08/2016.
+ * Manager degli eventi preferiti
  */
-
 public final class FavouriteManager {
 
     private static FavouriteManager sInstance;
@@ -54,6 +53,10 @@ public final class FavouriteManager {
         return sInstance;
     }
 
+    /**
+     *
+     * @return lista di eventi preferiti
+     */
     public List<Event> getFavouriteEvents(){
 
         if(!mDirty && mEventCache != null){
@@ -94,6 +97,11 @@ public final class FavouriteManager {
         return mEventCache;
     }
 
+    /**
+     * Aggiungere o rimuovere gli eventi preferiti dalla cache
+     * @param event l'evento preferito scelto dall'utente
+     * @return un booleano, se è stato aggiunto o rimosso
+     */
     public Event saveOrRemoveEvent(final Event event) {
 
         getFavouriteEvents();
@@ -124,11 +132,15 @@ public final class FavouriteManager {
         return event;
     }
 
+    /**
+     * Salvataggio della cache dei preferiti
+     * @return un booleano, se il salvataggio è avvenuto o no
+     */
     public boolean save() {
 
         if (mEventCache != null){
 
-            try{
+            try {
                 final JSONArray array = new JSONArray();
 
                 for(Event event : mEventCache){
@@ -151,6 +163,10 @@ public final class FavouriteManager {
         return false;
     }
 
+    /**
+     * Rimozione di tutta la cache
+     * @return un booleano, se la rimozione è avvenuta o no
+     */
     public boolean removeAll() {
 
         mEventCache = null;

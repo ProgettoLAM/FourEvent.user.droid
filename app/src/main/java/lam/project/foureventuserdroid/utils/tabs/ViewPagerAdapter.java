@@ -8,9 +8,8 @@ import lam.project.foureventuserdroid.fragment.eventFragment.NearEventsFragment;
 import lam.project.foureventuserdroid.fragment.eventFragment.PopularsEventsFragment;
 import lam.project.foureventuserdroid.fragment.eventFragment.CategoriesEventsFragment;
 
-
 /**
- * Created by Vale on 19/08/2015.
+ * Adapter dello sliding tab layout degli eventi
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
@@ -18,6 +17,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         private int numOfTabs;
 
         public ViewPagerAdapter(FragmentManager fm, String[] mTitles, int numOfTabs) {
+
             super(fm);
             this.mTitles = mTitles;
             this.numOfTabs = numOfTabs;
@@ -31,6 +31,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         @Override
         public Fragment getItem(int position) {
 
+            //Assegnazione delle posizioni ai fragments degli eventi
             switch (position) {
                 case 0:
                     return PopularsEventsFragment.newInstance(position +1);
@@ -49,7 +50,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            // Generate title based on item position
+
+            //Genera il titolo in base alla posizione del fragment
             return mTitles[position];
         }
 

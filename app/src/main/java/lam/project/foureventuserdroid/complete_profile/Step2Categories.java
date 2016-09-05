@@ -26,11 +26,17 @@ public class Step2Categories extends AbstractStep {
         return inflater.inflate(R.layout.step2_categories, container, false);
     }
 
+    /**
+     * Metodo onClick di ogni categoria
+     * @param view view del bottone selezionato
+     */
     public static void selectedButton(View view) {
 
+        //Si seleziona graficamente il bottone
         view.setSelected(!view.isSelected());
         Button button = (Button) view;
 
+        //Si prende il tag ed il titolo e si inseriscono nell'array presente in CategoryManager
         int tag = Integer.parseInt(button.getTag().toString());
         String title = ((TextView) view).getText().toString();
 
@@ -46,21 +52,24 @@ public class Step2Categories extends AbstractStep {
     public void onNext() {
         super.onNext();
 
+        //Si riprende l'utente creato nello step 1
         User createdUser = getStepDataFor(1).getParcelable(User.Keys.USER);
 
+        //Salvataggio della lista delle categorie in una variabile
         mCategoryList = CategoryManager.get().getFavouriteCategories();
 
-        createdUser.addCategories(mCategoryList);
-
+        //Si aggiungono le categorie all'utente
+        if (createdUser != null) {
+            createdUser.addCategories(mCategoryList);
+        }
         getStepDataFor(2).putParcelable(User.Keys.USER,createdUser);
     }
 
     @Override
     public boolean nextIf() {
 
-        boolean hasCategories = mCategoryList.size() > 0;
-
-        return hasCategories;
+        //Si prosegue nello step 3, se è stata selezionata almeno una categoria
+        return mCategoryList.size() > 0;
     }
 
     @Override

@@ -11,8 +11,7 @@ import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
 
 /**
- * Created by spino on 30/07/16.
- *
+ * Manager dell'utente
  */
 public final class UserManager {
 
@@ -49,6 +48,10 @@ public final class UserManager {
         return sInstance;
     }
 
+    /**
+     *
+     * @return l'utente salvato, se presente nella cache
+     */
     public User getUser(){
 
         if(mChacedUser != null){
@@ -73,11 +76,16 @@ public final class UserManager {
         return mChacedUser;
     }
 
+    /**
+     * Salvataggio delle utente tra le shared preferences
+     * @param user utente passato
+     * @return un booleano, se l'utente è stato salvato o no
+     */
     public boolean save(@NonNull final User user){
 
         mChacedUser = user;
 
-        try{
+        try {
 
             JSONObject item = user.toJson();
             return mSharedPreferences.edit().putString(User.Keys.USER,item.toString()).commit();
@@ -90,6 +98,10 @@ public final class UserManager {
 
     }
 
+    /**
+     * Rimozione dell'utente, dopo il logout
+     * @return un booleano, se l'utente è stato rimosso o no
+     */
     public boolean remove() {
 
         mChacedUser = null;
