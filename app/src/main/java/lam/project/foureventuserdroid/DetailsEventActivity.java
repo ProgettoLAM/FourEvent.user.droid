@@ -51,6 +51,7 @@ import lam.project.foureventuserdroid.model.Record;
 import lam.project.foureventuserdroid.utils.DateConverter;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
+import lam.project.foureventuserdroid.utils.connection.HandlerManager;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
 
@@ -108,6 +109,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                     } else {
 
                         buyTicket();
+
                     }
                     break;
                 case R.id.fab3:
@@ -315,21 +317,13 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                             @Override
                             public void onErrorResponse(VolleyError error) {
 
-                                String json;
+                                Snackbar snackbarError = Snackbar.make(fab, HandlerManager.handleError(error), Snackbar.LENGTH_LONG);
 
-                                NetworkResponse response = error.networkResponse;
-                                if (response != null && response.data != null) {
-                                    switch (response.statusCode) {
-                                        case 403:
-                                            json = new String(response.data);
-                                            json = trimMessage(json, "message");
-                                            if (json != null) displayMessage(json);
-                                            break;
+                                View snackbarView = snackbarError.getView();
 
-                                        default:
-                                            break;
-                                    }
-                                }
+                                snackbarView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.lightRed));
+
+                                snackbarError.show();
                             }
                         });
 
@@ -342,7 +336,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                 }
             };
 
-        } else {
+        } else if(!mCurrentEvent.willPartecipate()) {
 
             title = "Credito insufficiente";
             message = "Non hai abbastanza crediti per acquistare questo biglietto, ricarica il portafoglio!!";
@@ -357,6 +351,15 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                     startActivity(openFragmentBIntent);
                 }
             };
+        }
+
+        else {
+
+            title = "Partecipi già all'evento!";
+            message = "Ehi tigre, sicuro di voler comprare il biglietto di nuovo?";
+
+            positiveListener = null;
+            positiveListenerText = null;
         }
 
         builder.setTitle(title);
@@ -474,37 +477,10 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
     //region handle response + error
 
-    private String trimMessage(String json, String key) {
-        String trimmedString;
-
-        try {
-            JSONObject obj = new JSONObject(json);
-            trimmedString = obj.getString(key);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return trimmedString;
-    }
-
-    private void displayMessage(String snackBarString) {
-
-        Snackbar snackbarError = Snackbar.make(fab, snackBarString,
-                Snackbar.LENGTH_LONG);
-
-        View snackbarView = snackbarError.getView();
-
-        snackbarView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.lightRed));
-
-        snackbarError.show();
-    }
-
     private void handleResponse(JSONObject response) {
 
         try {
 
-            //TODO modificare in questo modo anche wallet per le ricariche
             Record insertedRecord = Record.fromJson(response.getJSONObject(Record.Keys.RECORD));
 
             MainActivity.mCurrentUser.updateBalance(insertedRecord.mAmount);
