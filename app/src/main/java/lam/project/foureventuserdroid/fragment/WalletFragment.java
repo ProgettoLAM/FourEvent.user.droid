@@ -20,6 +20,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -42,6 +43,7 @@ import lam.project.foureventuserdroid.model.Record;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
+import lam.project.foureventuserdroid.utils.connection.HandlerManager;
 import lam.project.foureventuserdroid.utils.connection.RecordListRequest;
 import lam.project.foureventuserdroid.utils.connection.VolleyRequest;
 import lam.project.foureventuserdroid.utils.shared_preferences.UserManager;
@@ -272,7 +274,7 @@ public class WalletFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        System.out.println(error.toString());
+                        Toast.makeText(getContext(), HandlerManager.handleError(error),Toast.LENGTH_LONG).show();
                     }
                 });
 
