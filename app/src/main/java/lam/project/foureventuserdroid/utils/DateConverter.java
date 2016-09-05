@@ -70,6 +70,13 @@ public class DateConverter {
         return Long.toString(parsedDate.getTime());
     }
 
+    public static String dateTimeToMillis(String date) throws ParseException{
+
+        Date parsedDate = new SimpleDateFormat(DATETIME_FORMATTER_V2,Locale.ITALY).parse(date);
+
+        return Long.toString(parsedDate.getTime());
+    }
+
     /**
      * Convertitore della data da stringa a millisecondi (versione 1)
      * @param date data

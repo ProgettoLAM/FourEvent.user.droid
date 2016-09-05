@@ -189,10 +189,10 @@ public class Event implements Parcelable{
 
         try {
 
-            jsonObject.put(Keys.START_DATE, DateConverter.dateToMillis(mStartDate));
+            jsonObject.put(Keys.START_DATE, DateConverter.dateTimeToMillis(mStartDate));
 
             if(mEndDate != null) {
-                jsonObject.put(Keys.END_DATE, DateConverter.dateToMillis(mEndDate));
+                jsonObject.put(Keys.END_DATE, DateConverter.dateTimeToMillis(mEndDate));
             }
 
         } catch (ParseException e) {
