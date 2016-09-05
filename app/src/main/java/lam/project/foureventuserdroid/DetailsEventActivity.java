@@ -302,7 +302,8 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         String positiveListenerText;
 
         //Se il costo del biglietto è inferiore al bilancio del portafoglio dell'utente
-        if (Float.parseFloat(mCurrentEvent.mPrice) <= MainActivity.mCurrentUser.balance) {
+        if (Float.parseFloat(mCurrentEvent.mPrice) <= MainActivity.mCurrentUser.balance
+                && !mCurrentEvent.willPartecipate()) {
 
             message = "Il biglietto ha un costo di " + mCurrentEvent.mPrice + " €." +
                     "\n\nHai un totale di " + MainActivity.mCurrentUser.balance + " €.\nVuoi acquistarlo?";
@@ -333,6 +334,8 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
                                     public void onResponse(JSONObject response) {
 
                                         handleResponse(response);
+
+                                        mCurrentEvent.willPartecipate();
 
                                     }
                                 }, new Response.ErrorListener() {
