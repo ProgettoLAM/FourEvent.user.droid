@@ -42,6 +42,7 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -177,7 +178,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
         String address = event.mStreetAddress +", "+event.mAddress;
 
-        if(event.mEndDate != null) {
+        if(event.mEndDate != null && date.length() > 12) {
 
             final SpannableStringBuilder str = new SpannableStringBuilder(date);
             str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 4, 15, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
