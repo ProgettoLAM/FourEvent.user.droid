@@ -15,7 +15,7 @@ import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.Category;
 
 /**
- * Created by spino on 10/08/16.
+ * Manager delle categorie
  */
 public class CategoryManager {
 
@@ -26,7 +26,6 @@ public class CategoryManager {
     private List<Category> mFavouriteCache;
 
     private boolean mDirty;
-
 
     private CategoryManager(final Context context){
 
@@ -55,8 +54,13 @@ public class CategoryManager {
         return sInstance;
     }
 
+    /**
+     *
+     * @return lista di categorie preferite
+     */
     public List<Category> getFavouriteCategories(){
 
+        //Se è presente una cache delle categorie, ritorna questa
         if(!mDirty && mFavouriteCache != null){
 
             return mFavouriteCache;
@@ -64,6 +68,7 @@ public class CategoryManager {
 
         final String categoriesString = mSharedPreferences.getString(Category.Keys.CATEGORY,null);
 
+        //Se l'utente ha scelto delle categorie, vengono inserite in una lista
         if (categoriesString != null){
 
             try{
@@ -85,7 +90,9 @@ public class CategoryManager {
 
                 je.printStackTrace();
             }
-        }else{
+        }
+        //Altrimenti viene inizializzata la cache
+        else{
 
             mFavouriteCache = new LinkedList<>();
         }
@@ -94,6 +101,11 @@ public class CategoryManager {
         return mFavouriteCache;
     }
 
+    /**
+     * Aggiungere o rimuovere le categorie dalla cache
+     * @param newCategory la categoria scelta dall'utente
+     * @return un booleano, se è stato aggiunto o rimosso
+     */
     public boolean AddOrRemoveFavouriteInCache(@NonNull final Category newCategory){
 
         getFavouriteCategories();
@@ -108,6 +120,7 @@ public class CategoryManager {
         for(int i=0; i<mFavouriteCache.size(); i++){
 
             final Category item = mFavouriteCache.get(i);
+
             if(item.id == newCategory.id){
 
                 duplicateIndex = i;
@@ -117,18 +130,21 @@ public class CategoryManager {
 
         if(duplicateIndex > -1){
 
-
             mDirty = false;
-
 
             return mFavouriteCache.remove(duplicateIndex) != null;
 
-        }else{
+        }
+        else{
 
             return mFavouriteCache.add(newCategory);
         }
     }
 
+    /**
+     * Salvataggio della cache delle categorie
+     * @return un booleano, se il salvataggio è avvenuto o no
+     */
     public boolean save(){
 
         if (mFavouriteCache != null){
@@ -155,6 +171,10 @@ public class CategoryManager {
         return false;
     }
 
+    /**
+     * Rimozione di tutta la cache
+     * @return un booleano, se la rimozione è avvenuta o no
+     */
     public boolean removeAll(){
 
         mFavouriteCache = null;

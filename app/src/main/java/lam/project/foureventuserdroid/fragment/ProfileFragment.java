@@ -36,7 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
-import lam.project.foureventuserdroid.utils.ImageManager;
+import lam.project.foureventuserdroid.utils.shared_preferences.ImageManager;
 import lam.project.foureventuserdroid.utils.Utility;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;

@@ -1,6 +1,5 @@
-package lam.project.foureventuserdroid.utils;
+package lam.project.foureventuserdroid.utils.shared_preferences;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
@@ -11,6 +10,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * Manager delle immagini da caricare
+ */
 public class ImageManager {
 
     private static final String TAG = "ImageManager";
@@ -26,13 +28,19 @@ public class ImageManager {
         return instance;
     }
 
+    /**
+     * Scrittura dell'immagine nello storage dell'app
+     * @param name nome dell'immagine
+     * @param bitmap immagine
+     * @return file
+     */
     public File writeImage(String name, Bitmap bitmap) {
 
         File image = getOutputMediaFile(name);
 
         if (image == null) {
             Log.d(TAG,
-                    "Error creating media file, check storage permissions: ");// e.getMessage());
+                    "Errore nella creazione del file, controlla i permessi di storage: ");
             return null;
         }
         try {
@@ -42,21 +50,28 @@ public class ImageManager {
 
             return image;
         } catch (FileNotFoundException e) {
-            Log.d(TAG, "File not found: " + e.getMessage());
+
+            Log.d(TAG, "File non trovato: " + e.getMessage());
             return null;
         } catch (IOException e) {
-            Log.d(TAG, "Error accessing file: " + e.getMessage());
+
+            Log.d(TAG, "Errore nell'accesso al file: " + e.getMessage());
             return null;
         }
     }
 
+    /**
+     * Lettura dell'immagine
+     * @param name nome dell'immagine
+     * @return immagine
+     */
     public Bitmap readImage(String name) {
 
         File image = getOutputMediaFile(name);
 
         if(image == null) {
             Log.d(TAG,
-                    "Error creating media file, check storage permissions: ");// e.getMessage());
+                    "Errore nella creazione del file, controlla i permessi di storage: ");
             return null;
         }
 
@@ -64,7 +79,7 @@ public class ImageManager {
 
     }
 
-    private  File getOutputMediaFile(String name){
+    private File getOutputMediaFile(String name){
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
         File mediaStorageDir = new File(Environment.getExternalStorageDirectory() + "/Android/data/FourEvent");

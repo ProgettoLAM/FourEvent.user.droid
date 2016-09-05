@@ -14,7 +14,6 @@ import com.google.android.gms.gcm.GcmListenerService;
 import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
 
-
 public class GCMPushReceiverService extends GcmListenerService {
 
     private static final String MESSAGE = "message";

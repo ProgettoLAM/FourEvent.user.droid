@@ -19,8 +19,8 @@ package lam.project.foureventuserdroid.utils.qr_code;
 import android.provider.ContactsContract;
 
 public final class Contents {
-    private Contents() {
-    }
+
+    private Contents() {}
 
     public static final class Type {
         
