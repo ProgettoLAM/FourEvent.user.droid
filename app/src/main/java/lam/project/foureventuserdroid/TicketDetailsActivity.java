@@ -44,7 +44,7 @@ public class TicketDetailsActivity extends AppCompatActivity {
     private boolean mIsSearching;
     private Button mButtonNFC;
 
-    private boolean mGoNfc;
+    private boolean mNfcGo;
 
     private String mId;
 
@@ -88,6 +88,11 @@ public class TicketDetailsActivity extends AppCompatActivity {
         if (mNfcAdapter == null) {
 
             Toast.makeText(this,"NFC non supportato, Utilizzare codice QR",Toast.LENGTH_SHORT).show();
+
+        } else {
+
+            mNfcGo = true;
+            enableForegroundDispatchSystem();
         }
     }
 
@@ -302,18 +307,23 @@ public class TicketDetailsActivity extends AppCompatActivity {
 
     private void enableForegroundDispatchSystem() {
 
-        Intent intent = new Intent(this, TicketDetailsActivity.class);
-        intent.setFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
+        if(mNfcGo) {
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,0);
-        IntentFilter[] intentFilters = new IntentFilter[]{};
+            Intent intent = new Intent(this, TicketDetailsActivity.class);
+            intent.setFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
 
-        mNfcAdapter.enableForegroundDispatch(this,pendingIntent,intentFilters,null);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,0);
+            IntentFilter[] intentFilters = new IntentFilter[]{};
+
+            mNfcAdapter.enableForegroundDispatch(this,pendingIntent,intentFilters,null);
+        }
+
     }
 
     private void disableForegroundDispatchSystem() {
 
-        mNfcAdapter.disableForegroundDispatch(this);
+        if(mNfcGo)
+            mNfcAdapter.disableForegroundDispatch(this);
     }
 
     //Endregion
