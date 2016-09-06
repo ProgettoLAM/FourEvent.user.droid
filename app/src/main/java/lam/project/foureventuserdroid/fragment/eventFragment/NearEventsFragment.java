@@ -106,6 +106,8 @@ public class NearEventsFragment extends Fragment {
             }
         });
 
+        setModel();
+
         //Inizio l'animazione della progress bar
         ObjectAnimator animation = ObjectAnimator.ofInt (mProgressBar, "progress", 0, 500);
         animation.setDuration (1000);
@@ -217,6 +219,10 @@ public class NearEventsFragment extends Fragment {
                     });
 
             VolleyRequest.get(getContext()).add(request);
+
+        } else {
+
+            showAndHideViews();
         }
     }
 }
