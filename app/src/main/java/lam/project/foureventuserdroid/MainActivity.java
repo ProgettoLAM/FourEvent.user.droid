@@ -261,8 +261,8 @@ public class MainActivity extends AppCompatActivity
         switch (itemId) {
 
             case R.id.nav_events:
-                startActivity(getIntent());
-                return;
+                mNextFragment = new EventsFragment();
+                break;
 
             case R.id.nav_favourites:
 

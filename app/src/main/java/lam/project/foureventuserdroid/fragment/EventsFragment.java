@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import android.view.ViewGroup;
 import com.astuetz.PagerSlidingTabStrip;
 
 import lam.project.foureventuserdroid.R;
+import lam.project.foureventuserdroid.fragment.eventFragment.CategoriesEventsFragment;
+import lam.project.foureventuserdroid.fragment.eventFragment.NearEventsFragment;
+import lam.project.foureventuserdroid.fragment.eventFragment.PopularsEventsFragment;
 import lam.project.foureventuserdroid.utils.tabs.ViewPagerAdapter;
 
 public class EventsFragment extends Fragment {
@@ -30,8 +34,11 @@ public class EventsFragment extends Fragment {
         final String[] mTabNames = getResources().getStringArray(R.array.tab_names);
 
         //Si ricava il ViewPager e si setta l'adapter per visualizzare gli items
-        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.pager);
-        viewPager.setAdapter(new ViewPagerAdapter(getActivity().getSupportFragmentManager(), mTabNames, NUMBER_OF_TABS));
+        final ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        viewPager.setAdapter(new ViewPagerAdapter(getChildFragmentManager(), mTabNames, mTabNames.length));
+        viewPager.setCurrentItem(0);
+        viewPager.setVisibility(View.VISIBLE);
+
 
         //Si ricava il PagerSliding e si attacca il ViewPager a questo
         PagerSlidingTabStrip tabsStrip = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);

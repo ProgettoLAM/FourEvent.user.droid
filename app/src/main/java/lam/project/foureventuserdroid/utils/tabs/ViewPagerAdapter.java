@@ -12,48 +12,48 @@ import lam.project.foureventuserdroid.fragment.eventFragment.CategoriesEventsFra
 /**
  * Adapter dello sliding tab layout degli eventi
  */
-public class ViewPagerAdapter extends FragmentStatePagerAdapter {
+public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-        private String mTitles[];
-        private int numOfTabs;
+    private String mTitles[];
+    private int numOfTabs;
 
-        public ViewPagerAdapter(FragmentManager fm, String[] mTitles, int numOfTabs) {
+    public ViewPagerAdapter(FragmentManager fm, String[] mTitles, int numOfTabs) {
 
-            super(fm);
-            this.mTitles = mTitles;
-            this.numOfTabs = numOfTabs;
+        super(fm);
+        this.mTitles = mTitles;
+        this.numOfTabs = numOfTabs;
+    }
+
+    @Override
+    public int getCount() {
+        return numOfTabs;
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+
+        //Assegnazione delle posizioni ai fragments degli eventi
+        switch (position) {
+            case 0:
+                return new PopularsEventsFragment();
+
+            case 1:
+                return new NearEventsFragment();
+
+            case 2:
+                return new CategoriesEventsFragment();
+
+            default:
+                throw new IllegalArgumentException("Tab inesistente");
         }
 
-        @Override
-        public int getCount() {
-            return numOfTabs;
-        }
+    }
 
-        @Override
-        public Fragment getItem(int position) {
+    @Override
+    public CharSequence getPageTitle(int position) {
 
-            //Assegnazione delle posizioni ai fragments degli eventi
-            switch (position) {
-                case 0:
-                    return PopularsEventsFragment.newInstance(position);
-
-                case 1:
-                    return NearEventsFragment.newInstance(position);
-
-                case 2:
-                    return CategoriesEventsFragment.newInstance(position);
-
-                default:
-                    throw new IllegalArgumentException("Tab inesistente");
-            }
-
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-
-            //Genera il titolo in base alla posizione del fragment
-            return mTitles[position];
-        }
+        //Genera il titolo in base alla posizione del fragment
+        return mTitles[position];
+    }
 
 }

@@ -44,6 +44,8 @@ public class TicketDetailsActivity extends AppCompatActivity {
     private boolean mIsSearching;
     private Button mButtonNFC;
 
+    private boolean mGoNfc;
+
     private String mId;
 
     @Override
