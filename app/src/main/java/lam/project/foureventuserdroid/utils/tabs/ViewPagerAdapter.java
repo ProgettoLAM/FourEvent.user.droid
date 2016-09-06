@@ -3,6 +3,7 @@ package lam.project.foureventuserdroid.utils.tabs;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import lam.project.foureventuserdroid.fragment.eventFragment.NearEventsFragment;
 import lam.project.foureventuserdroid.fragment.eventFragment.PopularsEventsFragment;
@@ -11,7 +12,7 @@ import lam.project.foureventuserdroid.fragment.eventFragment.CategoriesEventsFra
 /**
  * Adapter dello sliding tab layout degli eventi
  */
-public class ViewPagerAdapter extends FragmentPagerAdapter {
+public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         private String mTitles[];
         private int numOfTabs;
@@ -34,13 +35,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             //Assegnazione delle posizioni ai fragments degli eventi
             switch (position) {
                 case 0:
-                    return PopularsEventsFragment.newInstance(position +1);
+                    return PopularsEventsFragment.newInstance(position);
 
                 case 1:
-                    return NearEventsFragment.newInstance(position +2);
+                    return NearEventsFragment.newInstance(position);
 
                 case 2:
-                    return CategoriesEventsFragment.newInstance(position +3);
+                    return CategoriesEventsFragment.newInstance(position);
 
                 default:
                     throw new IllegalArgumentException("Tab inesistente");

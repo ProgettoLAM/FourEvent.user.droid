@@ -212,6 +212,8 @@ public class Step1Info extends AbstractStep{
     }
 
     private void cameraIntent() {
+        Utility.checkCameraPermission(getActivity());
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_CAMERA);
     }
