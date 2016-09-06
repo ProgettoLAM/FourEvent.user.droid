@@ -36,7 +36,7 @@ public class Record {
         this.mEvent = event;
     }
 
-    //Region lettura/scrittua Json
+    //region lettura/scrittua Json
 
     public static Record fromJson(JSONObject jsonObject) throws JSONException {
 
@@ -90,9 +90,9 @@ public class Record {
         return jsonObject;
     }
 
-    //Endregion
+    //endregion
 
-    //Region Builder
+    //region Builder
 
     public static class Builder {
 
@@ -139,9 +139,9 @@ public class Record {
         }
     }
 
-    //Endregion
+    //endregion
 
-    //Region Keys
+    //region Keys
 
     public static class Keys {
 
@@ -157,5 +157,5 @@ public class Record {
         public static final String BUY = "Acquisto biglietto";
     }
 
-    //Endregion
+    //endregion
 }

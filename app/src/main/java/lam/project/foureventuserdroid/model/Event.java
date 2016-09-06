@@ -97,7 +97,7 @@ public class Event implements Parcelable{
         return this.mWillPartecipate;
     }
 
-    //Region lettura/scrittura Json
+    //region lettura/scrittura Json
 
     public static Event fromJson(final JSONObject jsonObject) throws JSONException{
 
@@ -207,9 +207,9 @@ public class Event implements Parcelable{
         return jsonObject;
     }
 
-    //Endregion
+    //endregion
 
-    //Region metodi parcelable
+    //region metodi parcelable
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
         @Override
@@ -324,9 +324,9 @@ public class Event implements Parcelable{
         mStreetAddress = in.readString();
     }
 
-    //Endregion
+    //endregion
 
-    //Region Keys
+    //region Keys
 
     public static class Keys{
 
@@ -359,9 +359,9 @@ public class Event implements Parcelable{
 
     }
 
-    //Endregion
+    //endregion
 
-    //Region Builder
+    //region Builder
 
     public static class Builder{
 
@@ -468,5 +468,5 @@ public class Event implements Parcelable{
         }
     }
 
-    //Endregion
+    //endregion
 }

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#fff"
+    android:background="@color/white"
     android:paddingTop="50dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -115,7 +115,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
+        android:layout_centerHorizontal="true"
         android:layout_below="@id/date_info">
 
         <RadioButton
@@ -126,7 +126,6 @@
             android:textColor="#999"
             android:textSize="16dp"
             android:paddingRight="15sp"
-            android:layout_marginLeft="19dp"
             android:layout_marginTop="20dp"
             android:buttonTint="#FF9800"/>
 
@@ -141,15 +140,6 @@
             android:buttonTint="#FF9800"/>
 
     </RadioGroup>
-
-    <View
-        android:layout_below="@id/radio_info"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginTop="100dp"
-        android:background="#eee" />
-
-
 
 
 

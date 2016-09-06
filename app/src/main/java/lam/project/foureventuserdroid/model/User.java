@@ -83,7 +83,7 @@ public class User implements Parcelable{
         return this;
     }
 
-    //Region metodi parcelable
+    //region metodi parcelable
 
     public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
@@ -201,9 +201,9 @@ public class User implements Parcelable{
             dest.writeByte(Keys.NOT_PRESENT);
     }
 
-    //Endregion
+    //endregion
 
-    //Region lettura/scrittura Json
+    //region lettura/scrittura Json
 
     public static User fromJson(final JSONObject jsonObject) throws JSONException{
 
@@ -318,9 +318,9 @@ public class User implements Parcelable{
         return jsonObject;
     }
 
-    //Endregion
+    //endregion
 
-    //Region Keys
+    //region Keys
 
     public static class Keys{
 
@@ -349,9 +349,9 @@ public class User implements Parcelable{
         public static final Byte NOT_PRESENT = 0;
     }
 
-    //Endregion
+    //endregion
 
-    //Region Builder
+    //region Builder
 
     public static class Builder{
 
@@ -420,5 +420,5 @@ public class User implements Parcelable{
         }
     }
 
-    //Endregion
+    //endregion
 }
