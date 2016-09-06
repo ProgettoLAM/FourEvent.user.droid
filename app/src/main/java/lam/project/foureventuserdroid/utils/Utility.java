@@ -51,6 +51,46 @@ public class Utility {
         }
     }
 
+    public static void checkCameraPermission(final Activity activity) {
+
+        if (ContextCompat.checkSelfPermission(activity,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                    Manifest.permission.CAMERA)) {
+
+                new AlertDialog.Builder(activity.getBaseContext())
+                        .setTitle("title")
+                        .setMessage("message")
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                ActivityCompat.requestPermissions(activity,
+                                        new String[]{Manifest.permission.CAMERA},
+                                        Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                            }
+                        })
+                        .create()
+                        .show();
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(activity,
+                        new String[]{Manifest.permission.CAMERA},
+                        Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
+
     public static double getKm (double input) {
 
         return Double.parseDouble(new DecimalFormat("#0.00").format(input));
