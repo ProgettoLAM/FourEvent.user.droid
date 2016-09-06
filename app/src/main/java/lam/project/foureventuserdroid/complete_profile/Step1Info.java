@@ -180,7 +180,7 @@ public class Step1Info extends AbstractStep{
     @Override
     public String error() { return "Inserisci nome, cognome.";}
 
-    //Region intent salvataggio dell'immagine
+    //region intent salvataggio dell'immagine
 
     private void selectImage() {
 
@@ -225,9 +225,9 @@ public class Step1Info extends AbstractStep{
         startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
     }
 
-    //Endregion
+    //endregion
 
-    //Region fetch/scatta immagine + upload server
+    //region fetch/scatta immagine + upload server
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -364,7 +364,7 @@ public class Step1Info extends AbstractStep{
         VolleyRequest.get(getContext()).add(mMultipartRequest);
     }
 
-    //Endregion
+    //endregion
 
     //Classe relativa alla visualizzazione del calendario per la selezione della data di nascita
     public static class SelectDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
