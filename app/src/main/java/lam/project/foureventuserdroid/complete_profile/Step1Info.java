@@ -362,7 +362,7 @@ public class Step1Info extends AbstractStep{
             DatePickerDialog pickerDialog = new DatePickerDialog(getActivity(), this, yy, mm, dd);
 
             pickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
-            pickerDialog.getDatePicker().setMinDate(0);
+            //pickerDialog.getDatePicker().setMinDate(0);
 
             pickerDialog.setTitle("");
 
