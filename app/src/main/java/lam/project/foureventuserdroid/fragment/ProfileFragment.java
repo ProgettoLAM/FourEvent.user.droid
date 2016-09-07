@@ -37,7 +37,6 @@ import lam.project.foureventuserdroid.MainActivity;
 import lam.project.foureventuserdroid.R;
 import lam.project.foureventuserdroid.model.User;
 import lam.project.foureventuserdroid.utils.shared_preferences.ImageManager;
-import lam.project.foureventuserdroid.utils.Utility;
 import lam.project.foureventuserdroid.utils.connection.CustomRequest;
 import lam.project.foureventuserdroid.utils.connection.FourEventUri;
 import lam.project.foureventuserdroid.utils.connection.MultipartRequest;
@@ -168,16 +167,14 @@ public class ProfileFragment extends Fragment {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result = Utility.checkPermission(getContext());
+
                 if (items[item].equals("Scatta una foto")) {
                     userChoosenTask = "Scatta una foto";
-                    if(result)
-                        cameraIntent();
+                    cameraIntent();
 
                 } else if (items[item].equals("Scegli dalla galleria")) {
                     userChoosenTask = "Scegli dalla galleria";
-                    if(result)
-                        galleryIntent();
+                    galleryIntent();
 
                 } else if (items[item].equals("Annulla")) {
                     dialog.dismiss();
@@ -188,8 +185,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void cameraIntent() {
-
-        Utility.checkCameraPermission(getActivity());
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         getActivity().startActivityForResult(intent, REQUEST_CAMERA);
@@ -205,22 +200,6 @@ public class ProfileFragment extends Fragment {
     //Endregion
 
     //Region fetch/scatta immagine + upload del server
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
-        switch (requestCode) {
-            case Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    if (userChoosenTask.equals("Take Photo")) cameraIntent();
-
-                    else if (userChoosenTask.equals("Choose from Library")) galleryIntent();
-                }
-
-                break;
-        }
-    }
 
     //Risultato della scelta dell'immagine in base al codice che ritorna:
     //se ritorna "SELECT_FILE" si richiama il metodo per la scelta dalla galleria
