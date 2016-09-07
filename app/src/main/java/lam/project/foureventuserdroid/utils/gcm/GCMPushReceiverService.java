@@ -18,15 +18,19 @@ public class GCMPushReceiverService extends GcmListenerService {
 
     private static final String MESSAGE = "message";
     private static final String TITLE = "title";
+    private static final String AUTHOR = "author";
 
     private String mMessage;
     private String mTitle;
+    private String mAuthor;
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
 
         mMessage = data.getString(MESSAGE);
         mTitle = data.getString(TITLE);
+        mAuthor = data.getString(AUTHOR);
+
 
         sendNotification();
     }
@@ -40,8 +44,10 @@ public class GCMPushReceiverService extends GcmListenerService {
         NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(mMessage))
                 .setContentTitle(mTitle)
+                .setContentText(mMessage)
                 .setSmallIcon(R.drawable.ic_inbox_notification)
                 .setAutoCancel(true)
+                .setSubText(mAuthor)
                 .setContentIntent(pendingIntent)
                 .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
  
