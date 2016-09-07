@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity
         setGoogleServices();
     }
 
-    //Region Navigation Drawer
+    //region Navigation Drawer
 
     /**
      * Si setta l'immagine nell'header
@@ -312,9 +312,9 @@ public class MainActivity extends AppCompatActivity
         txtLocation.setText(addressText);
     }
 
-    //Endregion
+    //endregion
 
-    //Region Google maps
+    //region Google maps
 
     /**
      * Connessione ai Google Play Services per settare Google Maps API
@@ -460,8 +460,7 @@ public class MainActivity extends AppCompatActivity
                     Manifest.permission.ACCESS_COARSE_LOCATION)) {
 
                 new AlertDialog.Builder(this)
-                        .setTitle("title")
-                        .setMessage("message")
+                        .setTitle("Consentire a FourEvent di acquisire la posizione corrente?")
                         .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -487,8 +486,7 @@ public class MainActivity extends AppCompatActivity
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
                 new AlertDialog.Builder(this)
-                        .setTitle("title")
-                        .setMessage("message")
+                        .setTitle("Consentire a FourEvent di acquisire la posizione corrente?")
                         .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -527,8 +525,8 @@ public class MainActivity extends AppCompatActivity
             } else {
 
                 new AlertDialog.Builder(this)
-                        .setTitle("Title")
-                        .setMessage("Message")
+                        .setTitle("Errori di permessi")
+                        .setMessage("E' necessario abilitare la geolocalizzazione per ricercare gli eventi vicini")
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -658,7 +656,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //Endregion
+    //endregion
 
     /**
      * Metodo per l'apertura di un dialog nel quale votare l'app
