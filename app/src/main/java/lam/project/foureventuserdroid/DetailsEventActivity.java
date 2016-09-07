@@ -73,7 +73,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
 
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
 
-    //Region fabListener
+    //region fabListener
 
     private View.OnClickListener fabClickListener = new View.OnClickListener() {
         @Override
@@ -119,7 +119,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         }
     };
 
-    //Endregion
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -284,7 +284,7 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         detailTickets.setText(participations);
     }
 
-    //Region dei comportamenti dei fab
+    //region dei comportamenti dei fab
 
     /**
      * Acquisto del biglietto, al click del fab corrispondente
@@ -530,9 +530,9 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         startActivity(intent);
     }
 
-    //Endregion
+    //endregion
 
-    //Region handle response + error
+    //region handle response + error
 
     /**
      * Gestione della risposta, quando si acquista un biglietto
@@ -633,5 +633,5 @@ public class DetailsEventActivity extends AppCompatActivity implements OnMapRead
         showMap();
     }
 
-    //Endregion
+    //endregion
 }

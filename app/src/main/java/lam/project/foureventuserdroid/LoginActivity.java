@@ -148,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //Region controllo dei campi
+    //region controllo dei campi
 
     /**
      * Listener della scrittura in un campo di testo
@@ -194,5 +194,5 @@ public class LoginActivity extends AppCompatActivity {
             return true;
     }
 
-    //Endregion
+    //endregion
 }

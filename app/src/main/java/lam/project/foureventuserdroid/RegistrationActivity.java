@@ -190,7 +190,7 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     }
 
-    //Region nuova activity
+    //region nuova activity
 
     public void goToLogin(final View view) {
 
@@ -218,9 +218,9 @@ public class RegistrationActivity extends AppCompatActivity {
         finish();
     }
 
-    //Endregion
+    //endregion
 
-    //Region controllo dei campi
+    //region controllo dei campi
 
     /**
      * Listener della scrittura in un campo di testo
@@ -292,7 +292,7 @@ public class RegistrationActivity extends AppCompatActivity {
         return !(password2.equals("") || !password.equals(password2));
     }
 
-    //Endregion
+    //endregion
 
     /**
      * Gestione del Google Cloud Messaging, per la ricezione di notifiche

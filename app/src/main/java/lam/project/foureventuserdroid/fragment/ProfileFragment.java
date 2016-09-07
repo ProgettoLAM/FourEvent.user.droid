@@ -155,7 +155,7 @@ public class ProfileFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(NAME);
     }
 
-    //Region intent salvataggio dell'immagine
+    //region intent salvataggio dell'immagine
 
     private void selectImage() {
 
@@ -197,9 +197,9 @@ public class ProfileFragment extends Fragment {
         getActivity().startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
     }
 
-    //Endregion
+    //endregion
 
-    //Region fetch/scatta immagine + upload del server
+    //region fetch/scatta immagine + upload del server
 
     //Risultato della scelta dell'immagine in base al codice che ritorna:
     //se ritorna "SELECT_FILE" si richiama il metodo per la scelta dalla galleria
@@ -328,7 +328,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    //Endregion
+    //endregion
 
     /**
      * Update della password, al click dell'icona corrispondente
