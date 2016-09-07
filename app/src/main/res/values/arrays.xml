@@ -2,7 +2,7 @@
 <resources>
     <array name="tab_names">
         <item>Popolari</item>
-        <item>Vicini a te</item>
         <item>Categorie</item>
+        <item>Vicini a te</item>
     </array>
 </resources>

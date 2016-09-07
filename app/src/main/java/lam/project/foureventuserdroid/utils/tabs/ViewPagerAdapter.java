@@ -37,10 +37,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 return new PopularsEventsFragment();
 
             case 1:
-                return new NearEventsFragment();
+                return new CategoriesEventsFragment();
 
             case 2:
-                return new CategoriesEventsFragment();
+                return new NearEventsFragment();
 
             default:
                 throw new IllegalArgumentException("Tab inesistente");
