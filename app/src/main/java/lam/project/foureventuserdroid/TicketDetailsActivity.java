@@ -88,6 +88,8 @@ public class TicketDetailsActivity extends AppCompatActivity {
         if (mNfcAdapter == null) {
 
             Toast.makeText(this,"NFC non supportato, Utilizzare codice QR",Toast.LENGTH_SHORT).show();
+            mButtonNFC.setEnabled(false);
+            mButtonNFC.setAlpha(0.5f);
 
         } else
             mNfcGo = true;
@@ -131,7 +133,7 @@ public class TicketDetailsActivity extends AppCompatActivity {
         builder.show();
     }
 
-    //Region NFC
+    //region NFC
 
     private void nfcButton(View v) {
 
@@ -323,5 +325,5 @@ public class TicketDetailsActivity extends AppCompatActivity {
             mNfcAdapter.disableForegroundDispatch(this);
     }
 
-    //Endregion
+    //endregion
 }
