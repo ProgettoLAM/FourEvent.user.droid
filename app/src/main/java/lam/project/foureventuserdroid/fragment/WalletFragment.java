@@ -296,6 +296,7 @@ public class WalletFragment extends Fragment {
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
         //Creo l'url della richiesta
         String uri = FourEventUri.Builder.create(FourEventUri.Keys.RECORD)
@@ -313,7 +314,6 @@ public class WalletFragment extends Fragment {
 
                             try {
 
-                                dialog.dismiss();
 
                                 //Ritorna l'oggetto che viene parsato e aggiunto
                                 Record insertedRecord = Record.fromJson(response);
@@ -329,6 +329,8 @@ public class WalletFragment extends Fragment {
                                 animateBalance(balance);
 
                                 UserManager.get().save(MainActivity.mCurrentUser);
+
+                                dialog.dismiss();
 
 
                             } catch (JSONException e) {
