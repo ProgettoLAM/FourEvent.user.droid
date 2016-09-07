@@ -12,7 +12,7 @@ import lam.project.foureventuserdroid.fragment.eventFragment.CategoriesEventsFra
 /**
  * Adapter dello sliding tab layout degli eventi
  */
-public class ViewPagerAdapter extends FragmentPagerAdapter {
+public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     private String mTitles[];
     private int numOfTabs;
@@ -32,7 +32,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        //Assegnazione delle posizioni ai fragments degli eventi
         switch (position) {
             case 0:
                 return new PopularsEventsFragment();

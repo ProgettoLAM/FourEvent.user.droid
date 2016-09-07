@@ -67,7 +67,6 @@ public class NearEventsFragment extends Fragment {
         View view = initView(inflater.inflate(R.layout.fragment_near_events, container, false));
 
         setModel();
-
         FavouriteManager.get(getContext());
 
         return view;

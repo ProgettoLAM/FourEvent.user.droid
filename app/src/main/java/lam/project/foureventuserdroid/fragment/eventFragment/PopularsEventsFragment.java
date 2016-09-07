@@ -65,7 +65,6 @@ public class PopularsEventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = initView(inflater.inflate(R.layout.fragment_populars_event, container, false));
-
         setModel();
 
         FavouriteManager.get(getContext());

@@ -36,8 +36,25 @@ public class EventsFragment extends Fragment {
         //Si ricava il ViewPager e si setta l'adapter per visualizzare gli items
         final ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.pager);
         viewPager.setAdapter(new ViewPagerAdapter(getChildFragmentManager(), mTabNames, mTabNames.length));
-        viewPager.setCurrentItem(0);
         viewPager.setVisibility(View.VISIBLE);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                viewPager.setCurrentItem(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
 
         //Si ricava il PagerSliding e si attacca il ViewPager a questo
