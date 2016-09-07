@@ -89,11 +89,8 @@ public class TicketDetailsActivity extends AppCompatActivity {
 
             Toast.makeText(this,"NFC non supportato, Utilizzare codice QR",Toast.LENGTH_SHORT).show();
 
-        } else {
-
+        } else
             mNfcGo = true;
-            enableForegroundDispatchSystem();
-        }
     }
 
     /**
